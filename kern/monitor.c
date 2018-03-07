@@ -65,8 +65,8 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
 
 /***** Kernel monitor command interpreter *****/
 
-#define WHITESPACE "\t\r\n "
-#define MAXARGS 16
+#define WHITESPACE "\t\r\n "		// horizontal tab, carriage return, new line, space		four characters in total
+#define MAXARGS 16					// a program recieves 16 command line arguments at most.
 
 static int
 runcmd(char *buf, struct Trapframe *tf)
@@ -75,14 +75,14 @@ runcmd(char *buf, struct Trapframe *tf)
 	char *argv[MAXARGS];
 	int i;
 
-	// Parse the command buffer into whitespace-separated arguments
+	// Parse the command buffer into whitespace-separated arguments. This part of code doesn't cerate any new string. It set all whitespaces to '\0' and store pointers to each word of the buf string in argv, which is really tricky but efficient.
 	argc = 0;
 	argv[argc] = 0;
 	while (1) {
 		// gobble whitespace
-		while (*buf && strchr(WHITESPACE, *buf))
+		while (*buf && strchr(WHITESPACE, *buf))		// set all whitespaces to zero until encounting a non-whitespace character
 			*buf++ = 0;
-		if (*buf == 0)
+		if (*buf == 0)		// end of string in buf
 			break;
 
 		// save and scan past next arg
@@ -91,7 +91,7 @@ runcmd(char *buf, struct Trapframe *tf)
 			return 0;
 		}
 		argv[argc++] = buf;
-		while (*buf && !strchr(WHITESPACE, *buf))
+		while (*buf && !strchr(WHITESPACE, *buf))		// increase buf until the end of string or a whitespace
 			buf++;
 	}
 	argv[argc] = 0;
