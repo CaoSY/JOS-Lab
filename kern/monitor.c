@@ -93,7 +93,7 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
 			cprintf(" %08x", ebp[i]);
 		}
 		cprintf("\n");
-		ebp = *ebp;
+		ebp = (uint32_t *) (*ebp);
 	}
 
 	return 0;
