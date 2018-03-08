@@ -162,6 +162,14 @@ cga_init(void)
 static void
 cga_putc(int c)
 {
+	/*
+	* reference:
+	* 1. http://blog.csdn.net/scnu20142005027/article/details/51264186
+	* 2. https://en.wikipedia.org/wiki/VGA-compatible_text_mode#Text_buffer
+	* 3. https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
+	* 4. http://ascii-table.com/ansi-escape-sequences.php
+	* 5. http://rrbrandt.dee.ufcg.edu.br/en/docs/ansi/
+	*/
 	// if no attribute given, then use black on white
 	if (!(c & ~0xFF))
 		c |= 0x0700;
