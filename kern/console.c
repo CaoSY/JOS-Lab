@@ -170,6 +170,7 @@ cga_putc(int c)
 	* 4. http://ascii-table.com/ansi-escape-sequences.php
 	* 5. http://rrbrandt.dee.ufcg.edu.br/en/docs/ansi/
 	*/
+	c |= 0x0B00;
 	// if no attribute given, then use black on white
 	if (!(c & ~0xFF))
 		c |= 0x0700;
