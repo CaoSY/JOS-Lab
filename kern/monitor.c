@@ -57,7 +57,45 @@ mon_kerninfo(int argc, char **argv, struct Trapframe *tf)
 int
 mon_backtrace(int argc, char **argv, struct Trapframe *tf)
 {
-	// Your code here.
+/*
+ * Stack Structure
+ *
+ *    High Address ->  +------------------------------+
+ *                     :              .               :
+ *                     :              .               :
+ *                     :              .               :
+ *                     |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
+ *                     |            arg 5             |
+ *                     |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
+ *                     :              .               |
+ *                     :              .               |
+ *                     :              .               |
+ *                     |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
+ *                     |            arg 1             |
+ *                     |        return address        |
+ *    callee ebp --->  |          caller ebp          |
+ *                     |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
+ *                     :              .               :
+ *                     :              .               :
+ *                     :              .               :
+ *    0 ------------>  +------------------------------+
+ *
+ * (*) Note: ebp, addresses, args are all 4-bytes in 32-bit system.
+ */
+
+
+	cprintf("Stack backtrace:\n");
+	uint32_t *ebp = (uint32_t *) read_ebp();
+
+	while(ebp) {
+		cprintf("  ebp %08x  eip %08x  args", ebp, ebp[1]);
+		for(int i = 2; i < 7; ++i) {
+			cprintf(" %08x", ebp[i]);
+		}
+		cprintf("\n");
+		ebp = *ebp;
+	}
+
 	return 0;
 }
 
