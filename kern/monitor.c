@@ -83,16 +83,17 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
  * (*) Note: ebp, addresses, args are all 4-bytes in 32-bit system.
  */
 
-
-	cprintf("Stack backtrace:\n");
+	struct Eipdebuginfo info;
 	uint32_t *ebp = (uint32_t *) read_ebp();
+	cprintf("Stack backtrace:\n");
 
 	while(ebp) {
 		cprintf("  ebp %08x  eip %08x  args", ebp, ebp[1]);
 		for(int i = 2; i < 7; ++i) {
 			cprintf(" %08x", ebp[i]);
 		}
-		cprintf("\n");
+		debuginfo_eip(ebp[1], &info);
+		cprintf("\n       %s:%d: %.*s+%d\n", info.eip_file, info.eip_line, info.eip_fn_namelen, info.eip_fn_name, ebp[1]-info.eip_fn_addr);
 		ebp = (uint32_t *) (*ebp);
 	}
 
