@@ -6,6 +6,7 @@
 #include <inc/memlayout.h>
 #include <inc/assert.h>
 #include <inc/x86.h>
+#include <inc/color.h>
 
 #include <kern/console.h>
 #include <kern/monitor.h>
@@ -154,7 +155,17 @@ monitor(struct Trapframe *tf)
 
 	cprintf("Welcome to the JOS kernel monitor!\n");
 	cprintf("Type 'help' for a list of commands.\n");
-	cprintf("%m%s\n%m%s\n%m%s\n", 0x0100, "blue", 0x0200, "green", 0x0400, "red");
+
+	char *ph = "aaaaaaaaaaaaaaaaaaa";
+	char *wph = "                   ";
+	cprintf("%m%s%m%s%m%s%m%s\n\n", FORE_GROUND(TEXT_GRAY), ph, FORE_GROUND(TEXT_BLUE), ph, BACK_GROUND(TEXT_GREEN), ph, BACK_GROUND(TEXT_CYAN), ph);
+	for (int i = 0; i < 16; ++i) {
+		cprintf("%m%s", BACK_GROUND(i), wph);
+		cprintf("%m%s", FORE_GROUND(i), ph);
+		cprintf("%m%s", TEXT_COLOR(i+1, i), ph);
+		cprintf("%m%s\n", TEXT_COLOR(i, i+1), ph);
+	}
+	cprintf("%s\n", "default color test");
 
 	while (1) {
 		buf = readline("K> ");

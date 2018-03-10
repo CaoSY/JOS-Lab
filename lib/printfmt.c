@@ -92,7 +92,7 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap)
 	while (1) {
 		while ((ch = *(unsigned char *) fmt++) != '%') {
 			if (ch == '\0') {
-				textcolor = DF_TEXT_COLOR;		// reset textcolor after string is output
+				RESET_TEXT_COLOR();		// reset textcolor after string is output
 				return;
 			}
 			putch(ch, putdat);
@@ -176,7 +176,7 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap)
 		
 		// change text color
 		case 'm':
-			textcolor = getint(&ap, lflag);
+			SET_TEXT_COLOR(getint(&ap, lflag));
 			break;
 
 		// string

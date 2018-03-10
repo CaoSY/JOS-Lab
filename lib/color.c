@@ -1,3 +1,3 @@
 #include <inc/color.h>
 
-int textcolor = DF_TEXT_COLOR;
+int __textcolor = TEXT_DF_COLOR;
