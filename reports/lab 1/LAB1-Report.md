@@ -218,7 +218,7 @@ Since 16-bit mode can only access 1MB memory. Different combinations of segment 
 
 Using `tee` we can dump GDB output to files. After filtering out GDB prompts, we get the first few lines of BIOS assembly code as shown below.
 
-```assembly
+```assembly {.line-numbers}
 [f000:fff0]    0xffff0:	ljmp   $0xf000,$0xe05b	; Jump from the top of the reserved area to the beginning of BIOS program
 [f000:e05b]    0xfe05b: cmpl   $0x0,%cs:0x6c48  ; Whether the dword stored in %cs:0x6c48, i.e. 0xf6c48, is zero.
                                                 ; Maybe this is a sanity check but I'm not sure.
@@ -299,7 +299,7 @@ If the disk is bootable, the first sector is called the ***boot sector***, since
 
 > Q 1: At what point does the processor start executing 32-bit code? What exactly causes the switch from 16- to 32-bit mode?
 
-```assembly
+```assembly {.line-numbers}
   ...
   lgdt    gdtdesc                     # Load Global Descriptor Table Register
   movl    %cr0, %eax                  # These three instructions, toggle on CR0 PE bit, switch on Protected mode. After these intructions is executed, CPU begins to decode instruction in 32-bit mode.
@@ -449,7 +449,7 @@ The load address and the link address are the same for bootloader. But it's not 
 
 We changed the boot loader's link address in `boot/Makefrag` from 0x7c00 to 0x8c00 and recompile the lab. Below in the new `boot/boot.asm`. As we can see, the new bootloader was compiled to execute from 0x8c00. But 0x7c00 is hardcoded into BIOS. Thus BIOS still loaded bootloader into memory starting from 0x7c00. The first several instructions that are not related to memory address still worked fine. The fisrt instruction that did the wrong thing was `lgdt gdtdesc` as it would load the  Global Descriptor Table to a wrong place. However, the program didn't broke up until now. The instruction that killed the bootloader was the long jump, `ljmp $0x8,$0x8c32`. From bootloader's perspective, it started at 0x8c00 so 0x8c32 was the right place to jump to. But BIOS loaded bootloader into 0x7C00, which meant the target code didn't reside at 0x8C32 at all. After `ljmp $0x8,$0x8c32`, BIOS took control and executed from `[f000:e05b] 0xfe05b: cmpl $0x0 %cs:0x6c48`.
 
-```assembly
+```assembly {.line-numbers}
 ...
 
 start:
@@ -612,7 +612,7 @@ index 28e01c9..72dad76 100644
 
 > Q: Explain the following from console.c: 
 
-```c
+```c {.line-numbers}
 if (crt_pos >= CRT_SIZE) {
     int i;
     memmove(crt_buf, crt_buf + CRT_COLS, (CRT_SIZE - CRT_COLS) * sizeof(uint16_t));
@@ -625,7 +625,7 @@ if (crt_pos >= CRT_SIZE) {
 Scroll up one line automatically when the screen is full.
 
 > Q: Trace the execution of the following code step-by-step:
-> ```c 
+> ```c {.line-numbers}
 > int x = 1, y = 3, z = 4;
 > cprintf("x %d, y %x, z %d\n", x, y, z);
 > ```
@@ -635,7 +635,7 @@ Scroll up one line automatically when the screen is full.
 In the call to `cprintf()`, *fmt* point to the format string of its arguments. In this case, *fmt* should point to some place in *.rodata* because ""x %d, y %x, z %d\n" is a const string and will be compiled into program. *ap* points to arguments after fmt. Those arguments should reside on stack.
 
 > Q: Run the following code. 
-> ```c
+> ```c {.line-numbers}
 > unsigned int i = 0x00646c72;
 > cprintf("H%x Wo%s", 57616, &i);
 > ```
@@ -663,58 +663,225 @@ Push an integer after the last argument indicating the number of arguments. This
 
 ### Challenge
 
-> Enhance the console to allow text to be printed in different colors. If you're feeling really adventurous, you could try switching the VGA hardware into a graphics mode and making the console draw text onto the graphical frame buffer. 
+> Enhance the console to allow text to be printed in different colors. If you're feeling really adventurous, you could try switching the VGA hardware into a graphics mode and making the console draw text onto the graphical frame buffer.
 
-![Challenge1](assets/ch1.png)
+A specifier "%m" is provide for setting text color. A global varaible `__textcolor` is defined for storing text color attribute. Text color set in one `cprintf` call is expired after the `cprintf` call is finished and reset to default setting. Some macros are defined in `inc/color.h` for convenience.
 
-First I create a globl variable `textcolor` under `inc/textcolor.h`, than in `lib/printfmt.c`
+The method for displaying colored text is using the 8-bit attribute part in each character in cga buffer. Actually, in cga buffer, each character is stored using 16 bit. The structure is shown below.
 
+<center>
+
+```ditaa {cmd=true args=["-E"]}
+  +-----------------------------------------------+-----------------------------------------------+
+  |                   Attribute                   |                   Character                   |
+  +-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
+  |  7  |  6  |  5  |  4  |  3  |  2  |  1  |  0  |  7  |  6  |  5  |  4  |  3  |  2  |  1  |  0  |
+  +-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+-----+
+  |    Background color   |    Foreground color   |                  Code point                   |
+  +-----------------------+-----------------------+-----------------------------------------------+
 ```
-while (1) {
-  while ((ch = * (unsigned char * ) fmt++) != '%') {
-    if (ch == '\0')
-+			{
-+				textcolor = 0x0700;
-      return;
-+			}
-    putch(ch, putdat);
+
+</center>
+
+To test my implementation, I added the following code in `monitor.c/monitor` :
+
+```c {.line-numbers}
+  char *ph = "aaaaaaaaaaaaaaaaaaa";
+  char *wph = "                   ";
+  cprintf("%m%s%m%s%m%s%m%s\n\n", FORE_GROUND(TEXT_GRAY), ph, FORE_GROUND(TEXT_BLUE), ph, BACK_GROUND(TEXT_GREEN), ph, BACK_GROUND(TEXT_CYAN), ph);
+  for (int i = 0; i < 16; ++i) {
+    cprintf("%m%s", BACK_GROUND(i), wph);
+    cprintf("%m%s", FORE_GROUND(i), ph);
+    cprintf("%m%s", TEXT_COLOR(i+1, i), ph);
+    cprintf("%m%s\n", TEXT_COLOR(i, i+1), ph);
   }
-
-...
-
-switch ...
-
-+		// text color
-+		case 'm':
-+			num = getint(&ap, lflag);
-+			textcolor = num;
-+			break;
-
+  cprintf("%s\n", "default color test");
 ```
 
-in  `kern/console.c`
+The test result is shown in the following image.
 
-```
-cga_putc(int c)
-{
- // if no attribute given, then use black on white
--	if (!(c & ~0xFF))
--		c |= 0x0700;
-+	c |= textcolor;
+![colored text](colored-text.png)
+
+The code for colored text is list in the following `git diff` log.
+
+```git
+diff --git a/inc/color.h b/inc/color.h
+new file mode 100644
+index 0000000..4857652
+--- /dev/null
++++ b/inc/color.h
+@@ -0,0 +1,61 @@
++#ifndef JOS_INC_COLOR_H
++#define JOS_INC_COLOR_H
 +
-+//	if (!(c & ~0xFF))
-+//		c |= 0x0700;
-
- switch (c & 0xff) {
- case '\b':
-```
-
-in `kern/monitor.c`
-```
-cprintf("Welcome to the JOS kernel monitor!\n");
-cprintf("Type 'help' for a list of commands.\n");
++
++/*
++ * To control text color, each 8-bit are prefixed with another 8-bit attribute. If the character is
++ * sent to a CGA device, all 16 bits are written into the crt buffer and a colored character is displayed.
++ * If the character is sent to a serial port or a lpt port, the 16 bits is truncated to 8 bits. Only
++ * 8-bit character part is sent.
++ * 
++ * +-----------------------------------------------+-----------------------------------------------+
++ * |                   Attribute                   |                  Character                    |
++ * +-----------------------------------------------+-----------------------------------------------+
++ * |  7  |  6  |  5  |  4  |  3  |  2  |  1  |  0  |  7  |  6  |  5  |  4  |  3  |  2  |  1  |  0  |
++ * +-----------------------+-----------------------+-----------------------------------------------+
++ * |    Background color   |    Foreground color   |                  Code point                   |
++ * +-----------------------+-----------------------+-----------------------------------------------+
++ * 
++ * 
++ * reference:
++ * 1. http://blog.csdn.net/scnu20142005027/article/details/51264186
++ * 2. https://en.wikipedia.org/wiki/VGA-compatible_text_mode#Text_buffer
++ * 3. https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
++ * 4. http://ascii-table.com/ansi-escape-sequences.php
++ * 5. http://rrbrandt.dee.ufcg.edu.br/en/docs/ansi/
++ */
++
++
++extern int __textcolor;                     // global variable for text color attribute
++
++#define BACK_SHIFT                          12
++#define FORE_SHIFT                          8
++#define BACK_GROUND(_COLOR_)                ( ((_COLOR_) << BACK_SHIFT) | (TEXT_SILVER << FORE_SHIFT))
++#define FORE_GROUND(_COLOR_)                ( (_COLOR_) << FORE_SHIFT )
++#define TEXT_COLOR(_FORE_, _BACK_)          ( ((_FORE_) << FORE_SHIFT) | ((_BACK_) << BACK_SHIFT) )
++#define SET_TEXT_COLOR(_color_)             ( __textcolor = _color_ )
++#define RESET_TEXT_COLOR()                  ( __textcolor = TEXT_DF_COLOR )
++#define SET_CHAR_COLOR(_char_, _color_)     ( _char_ |= (~0xff & _color_) )
++
++
++#define TEXT_BLACK              0x00        // black foreground color, RGB: #000000
++#define TEXT_NAVY_BLUE          0x01        // navy blue foreground color, RGB: #000080
++#define TEXT_OFFICE_GREEN       0x02        // office green foreground color, RGB: #008000
++#define TEXT_TEAL               0x03        // teal foreground color, RGB: #008080 
++#define TEXT_MAROON             0x04        // maroon foreground color, RGB: #800000
++#define TEXT_PURPLE             0x05        // purple foreground color, RGB: #800080
++#define TEXT_OLIVE              0x06        // olive foreground color, RGB: #808000
++#define TEXT_SILVER             0x07        // sliver foreground, RGB: #808000
++#define TEXT_GRAY               0x08        // gray foreground color, RGB: #808000
++#define TEXT_BLUE               0x09        // blue foreground color, RGB: #0000ff
++#define TEXT_GREEN              0x0a        // green foreground color, RGB: #00ff00
++#define TEXT_CYAN               0x0b        // cyan foreground color, RGB: #00ffff
++#define TEXT_RED                0x0c        // red foregound color, RGB: #ff0000
++#define TEXT_MAGENTA            0x0d        // magenta foreground color, RGB: #ff00ff
++#define TEXT_YELLOW             0x0e        // yellow foreground color, RGB: #ffff00
++#define TEXT_WHITE              0x0f        // white foreground color, RGB: #ffffff
++
++#define TEXT_DF_COLOR           TEXT_COLOR(TEXT_SILVER, TEXT_BLACK)   // defualt text color
++
++
++#endif /* !JOS_INC_COLOR_H */
+\ No newline at end of file
+diff --git a/kern/Makefrag b/kern/Makefrag
+index 3b2982e..8ff9a6e 100644
+--- a/kern/Makefrag
++++ b/kern/Makefrag
+@@ -28,6 +28,7 @@ KERN_SRCFILES :=	kern/entry.S \
+      kern/sched.c \
+      kern/syscall.c \
+      kern/kdebug.c \
++     lib/color.c \
+      lib/printfmt.c \
+      lib/readline.c \
+      lib/string.c
+diff --git a/kern/console.c b/kern/console.c
+index e125b39..fdd4516 100644
+--- a/kern/console.c
++++ b/kern/console.c
+@@ -5,7 +5,7 @@
+ #include <inc/kbdreg.h>
+ #include <inc/string.h>
+ #include <inc/assert.h>
 -
-+	cprintf("%m%s\n%m%s\n%m%s\n", 0x0100, "blue", 0x0200, "green", 0x0400, "red");
++#include <inc/color.h>
+ #include <kern/console.h>
+ 
+ static void cons_intr(int (*proc)(void));
+@@ -173,7 +173,7 @@ cga_putc(int c)
+ 	
+ 	// if no attribute given, then use black on white
+ 	if (!(c & ~0xFF))
+-		c |= 0x0700;
++		SET_CHAR_COLOR(c, __textcolor);
+ 
+ 	switch (c & 0xff) {
+ 	case '\b':
+diff --git a/kern/monitor.c b/kern/monitor.c
+index 5f9275c..1f96df0 100644
+--- a/kern/monitor.c
++++ b/kern/monitor.c
+@@ -6,6 +6,7 @@
+ #include <inc/memlayout.h>
+ #include <inc/assert.h>
+ #include <inc/x86.h>
++#include <inc/color.h>
+ 
+ #include <kern/console.h>
+ #include <kern/monitor.h>
+@@ -155,6 +156,16 @@ monitor(struct Trapframe *tf)
+ 	cprintf("Welcome to the JOS kernel monitor!\n");
+ 	cprintf("Type 'help' for a list of commands.\n");
+ 
++	char *ph = "aaaaaaaaaaaaaaaaaaa";
++	char *wph = "                   ";
++	cprintf("%m%s%m%s%m%s%m%s\n\n", FORE_GROUND(TEXT_GRAY), ph, FORE_GROUND(TEXT_BLUE), ph, BACK_GROUND(TEXT_GREEN), ph, BACK_GROUND(TEXT_CYAN), ph);
++	for (int i = 0; i < 16; ++i) {
++		cprintf("%m%s", BACK_GROUND(i), wph);
++		cprintf("%m%s", FORE_GROUND(i), ph);
++		cprintf("%m%s", TEXT_COLOR(i+1, i), ph);
++		cprintf("%m%s\n", TEXT_COLOR(i, i+1), ph);
++	}
++	cprintf("%s\n", "default color test");
+ 
+ 	while (1) {
+ 		buf = readline("K> ");
+diff --git a/lib/color.c b/lib/color.c
+new file mode 100644
+index 0000000..80b29d5
+--- /dev/null
++++ b/lib/color.c
+@@ -0,0 +1,3 @@
++#include <inc/color.h>
++
++int __textcolor = TEXT_DF_COLOR;
+\ No newline at end of file
+diff --git a/lib/printfmt.c b/lib/printfmt.c
+index caadf07..3e0b986 100644
+--- a/lib/printfmt.c
++++ b/lib/printfmt.c
+@@ -7,6 +7,7 @@
+ #include <inc/string.h>
+ #include <inc/stdarg.h>
+ #include <inc/error.h>
++#include <inc/color.h>
+ 
+ /*
+  * Space or zero padding and a field width are supported for the numeric
+@@ -90,8 +91,10 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap)
+ 
+ 	while (1) {
+ 		while ((ch = *(unsigned char *) fmt++) != '%') {
+-			if (ch == '\0')
++			if (ch == '\0') {
++				RESET_TEXT_COLOR();		// reset textcolor after string is output
+ 				return;
++			}
+ 			putch(ch, putdat);
+ 		}
+ 
+@@ -170,6 +173,11 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap)
+ 			else
+ 				printfmt(putch, putdat, "%s", p);
+ 			break;
++		
++		// change text color
++		case 'm':
++			SET_TEXT_COLOR(getint(&ap, lflag));
++			break;
+ 
+ 		// string
+ 		case 's':
 ```
 
 ### The Stack
@@ -830,7 +997,7 @@ To get all this info, we need get the debug info `Eipdebuginfo`, this struct sto
 // Debug information about a particular instruction pointer
 struct Eipdebuginfo {
 	const char *eip_file;		// Source code filename for EIP
-	int eip_line;			// Source code linenumber for EIP
+	int eip_line;			// Source![colored-text](undefined) code linenumber for EIP
 
 	const char *eip_fn_name;	// Name of function containing EIP
 					//  - Note: not null terminated!
