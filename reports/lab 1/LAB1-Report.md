@@ -1,11 +1,7 @@
 ---
 title: "Lab 1 Report"
 author: Shuyang Cao
-output:
-  pdf_document:
-    toc: true
-    number_sections: true
-    highlight: tango
+output: rtf_document
 ---
 
 # <center> Lab Report </center>
