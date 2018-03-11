@@ -155,7 +155,7 @@ monitor(struct Trapframe *tf)
 
 	cprintf("Welcome to the JOS kernel monitor!\n");
 	cprintf("Type 'help' for a list of commands.\n");
-
+/*
 	char *ph = "aaaaaaaaaaaaaaaaaaa";
 	char *wph = "                   ";
 	cprintf("%m%s%m%s%m%s%m%s\n\n", FORE_GROUND(TEXT_GRAY), ph, FORE_GROUND(TEXT_BLUE), ph, BACK_GROUND(TEXT_GREEN), ph, BACK_GROUND(TEXT_CYAN), ph);
@@ -166,7 +166,7 @@ monitor(struct Trapframe *tf)
 		cprintf("%m%s\n", TEXT_COLOR(i, i+1), ph);
 	}
 	cprintf("%s\n", "default color test");
-
+*/
 	while (1) {
 		buf = readline("K> ");
 		if (buf != NULL)

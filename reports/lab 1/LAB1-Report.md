@@ -884,76 +884,163 @@ index caadf07..3e0b986 100644
  		case 's':
 ```
 
-### The Stack
+## The Stack
 
-**Exercise 9**
----
->Q: Determine where the kernel initializes its stack, and exactly where in memory its stack is located. How does the kernel reserve space for its stack? And at which "end" of this reserved area is the stack pointer initialized to point to?
+### Exercise 9
 
-In the `entry.S`
-```
+> Q :  Determine where the kernel initializes its stack, and exactly where in memory its stack is located. How does the kernel reserve space for its stack? And at which "end" of this reserved area is the stack pointer initialized to point to? 
+
+In `entry.S`, the following code initializes kernel's stack.
+
+```assembly {.line-numbers}
 # Clear the frame pointer register (EBP)
 # so that once we get into debugging C code,
 # stack backtraces will be terminated properly.
-movl  $0x0,%ebp     # nuke frame pointer
+  movl    $0x0,%ebp			# nuke frame pointer
 
 # Set the stack pointer
-movl  $(bootstacktop),%esp
-
+  movl    $(bootstacktop),%esp
 ```
 
-In obj/kern/kernel.asm
+In `obj/kern/kernel`, the corresponding instructions are :
+
+```assembly {.line-numbers}
+  # Clear the frame pointer register (EBP)
+  # so that once we get into debugging C code,
+  # stack backtraces will be terminated properly.
+  movl    $0x0,%ebp                 # nuke frame pointer
+f010002f:   bd 00 00 00 00          mov    $0x0,%ebp
+
+  # Set the stack pointer
+  movl    $(bootstacktop),%esp
+f0100034:   bc 00 00 11 f0          mov    $0xf0110000,%esp
 ```
-# Clear the frame pointer register (EBP)
-# so that once we get into debugging C code,
-# stack backtraces will be terminated properly.
-movl	$0x0,%ebp			# nuke frame pointer
-f010002f:	bd 00 00 00 00       	mov    $0x0,%ebp
 
-# Set the stack pointer
-movl	$(bootstacktop),%esp
-f0100034:	bc 00 00 11 f0       	mov    $0xf0110000,%esp
+From the disassembly code, we conclude that the stack initialize is initialized to point to 0xf0110000. The stack space is reserved by the following code. Note that on Intel^®^ 80386 the stack grows from higher address to lower address and the stack space is *KSTKSIZE* (32KB). Thus our kernel stack space range 0xf0108000 through 0xf0110000.
+
+```assembly {.line-numbers}
+.data
+###################################################################
+# boot stack
+###################################################################
+    .p2align        PGSHIFT       # force page alignment
+    .globl          bootstack
+bootstack:
+    .space          KSTKSIZE
+    .globl          bootstacktop
+bootstacktop:
 ```
 
-So, the stack starts at 0xf0110000, its range is 0xf0108000-0xf0110000.
+```c {.line-numbers}
 
-**Exercise 10**
----
->Q: To become familiar with the C calling conventions on the x86, find the address of the test_backtrace function in obj/kern/kernel.asm, set a breakpoint there, and examine what happens each time it gets called after the kernel starts. How many 32-bit words does each recursive nesting level of test_backtrace push on the stack, and what are those words?
-Note that, for this exercise to work properly, you should be using the patched version of QEMU available on the tools page or on Athena. Otherwise, you'll have to manually translate all breakpoint and memory addresses to linear addresses.
-
-Before test_backtrace(5), we push the function parameter to stack, then we push the return address to stack. Above all, we are still at the caller-stack. Next, we enter C calling conventions
+# inc/memlayout.h
+. . .
+#define PGSIZE        4096            // bytes mapped by a page
+. . .
+#define KSTKSIZE      (8*PGSIZE)      // size of a kernel stack
 ```
-           push   %ebp
-           mov    %esp,%ebp
-           push   %ebx
-           sub    $0xc,%esp
-```
-These belong to the callee-stack.
 
-**Exercise 11**
----
+### Exeercise 10
 
->Q: Implement the backtrace function as specified above and hook this new function into the kernel monitor's command list
+> Q : To become familiar with the C calling conventions on the x86, find the address of the test_backtrace function in obj/kern/kernel.asm, set a breakpoint there, and examine what happens each time it gets called after the kernel starts. How many 32-bit words does each recursive nesting level of test_backtrace push on the stack, and what are those words?
 
+The prologue of test_backtrace() is the following,
+
+```assembly {.line-numbers}
+push      %ebp
+mov       %esp,%ebp
+push      %ebx
 ```
-int
-mon_backtrace(int argc, char **argv, struct Trapframe *tf)
-{
-	// Your code here.
-	unsigned int *ebp = ((unsigned int*)read_ebp());
-	cprintf("Stack backtrace:\n");
-	while(ebp) {
-		cprintf("ebp %08x ", ebp);
-		cprintf("eip %08x args", ebp[1]);
-		for(int i = 2; i <= 6; i++)
-			cprintf(" %08x", ebp[i]);
-		cprintf("\n");
-		ebp = (unsigned int*)(*ebp);
-	}
-	return 0;
-}
+
+### Exercise 11 & 12
+
+> Q :  Implement the backtrace function as specified and hook this new function into the kernel monitor's command list so that it can be invoked interactively by the user. Modify your stack backtrace function to display, for each eip, the function name, source file name, and line number corresponding to that eip.
+
+The code added is listed in the following `git diff` log.
+
+```git
+diff --git a/kern/kdebug.c b/kern/kdebug.c
+index 9547143..6234ed5 100644
+--- a/kern/kdebug.c
++++ b/kern/kdebug.c
+@@ -178,7 +178,13 @@ debuginfo_eip(uintptr_t addr, struct Eipdebuginfo *info)
+ 	//	There's a particular stabs type used for line numbers.
+ 	//	Look at the STABS documentation and <inc/stab.h> to find
+ 	//	which one.
+-	// Your code here.
++	stab_binsearch(stabs, &lline, &rline, N_SLINE, addr);
++	if (lline <= rline) {
++		info->eip_line = stabs[rline].n_desc;
++	} else {
++		return -1;
++	}
++
+ 
+ 
+ 	// Search backwards from the line number for the relevant filename
+diff --git a/kern/monitor.c b/kern/monitor.c
+index e137e92..5f9275c 100644
+--- a/kern/monitor.c
++++ b/kern/monitor.c
+@@ -24,6 +24,7 @@ struct Command {
+ static struct Command commands[] = {
+ 	{ "help", "Display this list of commands", mon_help },
+ 	{ "kerninfo", "Display information about the kernel", mon_kerninfo },
++	{ "backtrace", "Display the current call stack", mon_backtrace},
+ };
+ 
+ /***** Implementations of basic kernel monitor commands *****/
+@@ -57,7 +58,46 @@ mon_kerninfo(int argc, char **argv, struct Trapframe *tf)
+ int
+ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
+ {
+-	// Your code here.
++/*
++ * Stack Structure
++ *
++ *    High Address ->  +------------------------------+
++ *                     :              .               :
++ *                     :              .               :
++ *                     :              .               :
++ *                     |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
++ *                     |            arg 5             |
++ *                     |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
++ *                     :              .               |
++ *                     :              .               |
++ *                     :              .               |
++ *                     |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
++ *                     |            arg 1             |
++ *                     |        return address        |
++ *    callee ebp --->  |          caller ebp          |
++ *                     |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|
++ *                     :              .               :
++ *                     :              .               :
++ *                     :              .               :
++ *    0 ------------>  +------------------------------+
++ *
++ * (*) Note: ebp, addresses, args are all 4-bytes in 32-bit system.
++ */
++
++	struct Eipdebuginfo info;
++	uint32_t *ebp = (uint32_t *) read_ebp();
++	cprintf("Stack backtrace:\n");
++
++	while(ebp) {
++		cprintf("  ebp %08x  eip %08x  args", ebp, ebp[1]);
++		for(int i = 2; i < 7; ++i) {
++			cprintf(" %08x", ebp[i]);
++		}
++		debuginfo_eip(ebp[1], &info);
++		cprintf("\n       %s:%d: %.*s+%d\n", info.eip_file, info.eip_line, info.eip_fn_namelen, info.eip_fn_name, ebp[1]-info.eip_fn_addr);
++		ebp = (uint32_t *) (*ebp);
++	}
++
+ 	return 0;
+ }
+ 
+@@ -65,8 +105,8 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
 ```
+
 
 Here is the result:
 ```
