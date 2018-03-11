@@ -5,14 +5,16 @@ AUTHOR: "Shuyang Cao"
 
 # Lab Report
 
-## Environment Configuration
+## Development Environment
+
+### Environment Configuration
 
 + Hardware Environment
   + Host
     + Memory:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8GB
-    + Processor:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Intel® Core™ i5-4500M CPU @ 2.50GHz
-    + Integrated GPU:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Intel® HD Graphics 4600
-    + Discrete GPU:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NVIDIA GeForce GT 755M
+    + Processor:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Intel^®^ Core^™^ i5-4500M CPU @ 2.50GHz
+    + Integrated GPU:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Intel^®^ HD Graphics 4600
+    + Discrete GPU:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NVIDIA^®^ GeForce^®^ GT 755M
     + Hard Disk:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1TB
     + SSD:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;128GB
   + Guest
@@ -66,7 +68,7 @@ boot block is 390 bytes (max 510)
 + mk obj/kern/kernel.img
 ```
 
-After compiling, we're ready to run [QEMU], supplying the file obj/kern/kernel.img, created above, as the contents of the emulated PC's "virtual hard disk." This hard disk image contains both our boot loader (obj/boot/boot) and our kernel (obj/kernel). 
+After compiling, we're ready to run [QEMU](https://www.qemu.org/ "QEMU Homepage"), supplying the file obj/kern/kernel.img, created above, as the contents of the emulated PC's "virtual hard disk." This hard disk image contains both our boot loader (obj/boot/boot) and our kernel (obj/kernel). 
 
 Now we run the QEMU like running a real PC. Below we run our initial JOS and test two commands provided by it, "*help*", "*kerninfo*".
 
@@ -295,7 +297,7 @@ If the disk is bootable, the first sector is called the ***boot sector***, since
 
   The paragraphs are quoted from sections 1.2.6, 1.2.7 and 1.2.8 [PC Assembly Language](https://pdos.csail.mit.edu/6.828/2014/readings/pcasm-book.pdf), Or you may refer to Intel architecture manuals.
 
-### **Exercise 3**
+### Exercise 3
 
 > Q 1: At what point does the processor start executing 32-bit code? What exactly causes the switch from 16- to 32-bit mode?
 
@@ -443,7 +445,7 @@ Program Header:
 
 The load address and the link address are the same for bootloader. But it's not true for kernel. How this works is eplained [here]().
 
-### **Exercise 5**
+### Exercise 5
 
 > Q:  Trace through the first few instructions of the boot loader again and identify the first instruction that would "break" or otherwise do the wrong thing if you were to get the boot loader's link address wrong. Then change the link address in boot/Makefrag to something wrong, run make clean, recompile the lab with make, and trace into the boot loader again to see what happens. Don't forget to change the link address back and make clean again afterward!
 
@@ -487,7 +489,7 @@ protcseg:
   ...
 ```
 
-### **Exercise 6**
+### Exercise 6
 
 > Q: Examine the 8 words of memory at 0x00100000 at the point the BIOS enters the boot loader, and then again at the point the boot loader enters the kernel. Why are they different? What is there at the second breakpoint?
 
@@ -956,6 +958,103 @@ push      %ebx
 
 > Q :  Implement the backtrace function as specified and hook this new function into the kernel monitor's command list so that it can be invoked interactively by the user. Modify your stack backtrace function to display, for each eip, the function name, source file name, and line number corresponding to that eip.
 
+The content on the stack each time a function is called is shown as below. We can use **ebp** to trace call stack backwards.
+
+<center>
+
+```ditaa {cmd=true args=["-E"]}
+0xFFFFFFFF->+---------=----------+
+            |         .          |
+            |         .          |
+            |         .          |
+            |                    |
+            +--------------------+
+            |       arg 5        |
+            +--------------------+
+            :         .          |
+            :         .          |
+            :         .          |
+            +--------------------+
+            |       arg 1        |
+            +--------------------+
+            |   return address   |
+            +--------------------+
+callee ebp->|     caller ebp     |
+            +--------------------+
+            :         .          :
+            :         .          :
+            :         .          :
+0x00000000->+--------------------+
+```
+
+</center>
+
+Furthermore, we want to know which function the return address belongs to, which file this function belongs to, which line the return address corresponds to in the file. The debug information is stored in a table of `struct Eipdebuginfo`. We need turn to `int debuginfo_eip(uintptr_t, struct Eipdebuginfo *)` to find the entry corresponding to our return address. The `struct Eipdebuginfo` is defined in `kern/kdebug.h`.
+
+```c {.line-numbers}
+// kern/kdebug.h
+// Debug information about a particular instruction pointer
+struct Eipdebuginfo {
+const char *eip_file;     // Source code filename for EIP
+    int eip_line;       // Source code linenumber for EIP
+
+    const char *eip_fn_name;    // Name of function containing EIP
+                    //  - Note: not null terminated!
+    int eip_fn_namelen;       // Length of function name
+    uintptr_t eip_fn_addr;        // Address of start of function
+    int eip_fn_narg;        // Number of function arguments
+};
+```
+
+The result is shown below.
+
+```bash
+$ make qemu
+sed "s/localhost:1234/localhost:26000/" < .gdbinit.tmpl > .gdbinit
+qemu-system-i386 -drive file=obj/kern/kernel.img,index=0,media=disk,format=raw -serial mon:stdio -gdb tcp::26000 -D qemu.log
+6828 decimal is 15254 octal!
+entering test_backtrace 5
+entering test_backtrace 4
+entering test_backtrace 3
+entering test_backtrace 2
+entering test_backtrace 1
+entering test_backtrace 0
+Stack backtrace:
+  ebp f010ff18  eip f010007b  args 00000000 00000000 00000000 00000000 f010094a
+       kern/init.c:18: test_backtrace+59
+  ebp f010ff38  eip f0100068  args 00000000 00000001 f010ff78 00000000 f010094a
+       kern/init.c:16: test_backtrace+40
+  ebp f010ff58  eip f0100068  args 00000001 00000002 f010ff98 00000000 f010094a
+       kern/init.c:16: test_backtrace+40
+  ebp f010ff78  eip f0100068  args 00000002 00000003 f010ffb8 00000000 f010094a
+       kern/init.c:16: test_backtrace+40
+  ebp f010ff98  eip f0100068  args 00000003 00000004 00000000 00000000 00000000
+       kern/init.c:16: test_backtrace+40
+  ebp f010ffb8  eip f0100068  args 00000004 00000005 00000000 00010094 00010094
+       kern/init.c:16: test_backtrace+40
+  ebp f010ffd8  eip f01000d4  args 00000005 00001aac 00000660 00000000 00000000
+       kern/init.c:39: i386_init+64
+  ebp f010fff8  eip f010003e  args 00111021 00000000 00000000 00000000 00000000
+       kern/entry.S:83: <unknown>+0
+leaving test_backtrace 0
+leaving test_backtrace 1
+leaving test_backtrace 2
+leaving test_backtrace 3
+leaving test_backtrace 4
+leaving test_backtrace 5
+Welcome to the JOS kernel monitor!
+Type 'help' for a list of commands.
+K> backtrace
+Stack backtrace:
+  ebp f010ff68  eip f0100916  args 00000001 f010ff80 00000000 f010ffc8 f0112560
+       kern/monitor.c:173: monitor+256
+  ebp f010ffd8  eip f01000e1  args 00000000 00001aac 00000660 00000000 00000000
+       kern/init.c:43: i386_init+77
+  ebp f010fff8  eip f010003e  args 00111021 00000000 00000000 00000000 00000000
+       kern/entry.S:83: <unknown>+0
+K>
+```
+
 The code added is listed in the following `git diff` log.
 
 ```git
@@ -1042,98 +1141,11 @@ index e137e92..5f9275c 100644
 ```
 
 
-Here is the result:
-```
-6828 decimal is 15254 octal!
-entering test_backtrace 5
-entering test_backtrace 4
-entering test_backtrace 3
-entering test_backtrace 2
-entering test_backtrace 1
-entering test_backtrace 0
-Stack backtrace:
-ebp f010ff18 eip f010007b args 00000000 00000000 00000000 00000000 f010093f
-ebp f010ff38 eip f0100068 args 00000000 00000001 f010ff78 00000000 f010093f
-ebp f010ff58 eip f0100068 args 00000001 00000002 f010ff98 00000000 f010093f
-ebp f010ff78 eip f0100068 args 00000002 00000003 f010ffb8 00000000 f010093f
-ebp f010ff98 eip f0100068 args 00000003 00000004 00000000 00000000 00000000
-ebp f010ffb8 eip f0100068 args 00000004 00000005 00000000 00010094 00010094
-ebp f010ffd8 eip f01000d4 args 00000005 00001aac 00000648 00000000 00000000
-ebp f010fff8 eip f010003e args 00111021 00000000 00000000 00000000 00000000
-leaving test_backtrace 0
-leaving test_backtrace 1
-leaving test_backtrace 2
-leaving test_backtrace 3
-leaving test_backtrace 4
-leaving test_backtrace 5
-Welcome to the JOS kernel monitor!
-Type 'help' for a list of commands.
-blue
-green
-red
-```
-**Exercise 12**
----
+## Grade
+Finally, we got our grade.
 
->Q: Modify your stack backtrace function to display, for each eip, the function name, source file name, and line number corresponding to that eip.
-
-In This Question, we know the eip(the return address), and we want to know which function this eip belong to, which file this function belong to. And which line this eip in the file.
-
-To get all this info, we need get the debug info `Eipdebuginfo`, this struct stores all the information we need.
-```
-// Debug information about a particular instruction pointer
-struct Eipdebuginfo {
-	const char *eip_file;		// Source code filename for EIP
-	int eip_line;			// Source![colored-text](undefined) code linenumber for EIP
-
-	const char *eip_fn_name;	// Name of function containing EIP
-					//  - Note: not null terminated!
-	int eip_fn_namelen;		// Length of function name
-	uintptr_t eip_fn_addr;		// Address of start of function
-	int eip_fn_narg;		// Number of function arguments
-};
-```
-
-To get this struct, we need the `debuginfo_eip(addr, info)` function. This function search the `STAB` table to Fill in the 'info' structure with information about the specified instruction address, 'addr'. The debuginfo_eip function has been given in `kdebug.c`, we just need to add this.
-```c
-// Your code here.
-stab_binsearch(stabs, &lline, &rline, N_SLINE, addr);
-info->eip_line = stabs[lline].n_desc;
-```
-
-In `monitor.c`
-```
-int
-mon_backtrace(int argc, char **argv, struct Trapframe *tf)
-{
-	// Your code here.
-	unsigned int *ebp = ((unsigned int*)read_ebp());
-	cprintf("Stack backtrace:\n");
-
-	while(ebp) {
-		cprintf("ebp %08x ", ebp);
-		cprintf("eip %08x args", ebp[1]);
-		for(int i = 2; i <= 6; i++)
-			cprintf(" %08x", ebp[i]);
-		cprintf("\n");
-
-		unsigned int eip = ebp[1];
-		struct Eipdebuginfo info;
-		debuginfo_eip(eip, &info);
-		cprintf("\t%s:%d: %.*s+%d\n",
-		info.eip_file, info.eip_line,
-		info.eip_fn_namelen, info.eip_fn_name,
-		eip-info.eip_fn_addr);
-
-		ebp = (unsigned int*)(*ebp);
-	}
-	return 0;
-}
-```
-
-Finally, we got this.
-```
-running JOS: (1.1s)
+```bash
+running JOS: (1.0s)
   printf: OK
   backtrace count: OK
   backtrace arguments: OK
@@ -1141,7 +1153,5 @@ running JOS: (1.1s)
   backtrace lines: OK
 Score: 50/50
 ```
+
 ## This Complete The Lab.
-
-[QEMU]: https://www.qemu.org/ "QEMU Homepage"
-
