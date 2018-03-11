@@ -1,7 +1,15 @@
 ---
-title: "Lab 1 Report"
-author: Shuyang Cao
-output: rtf_document
+export_on_save:
+  ebook: true
+
+ebook:
+  title: "Lab 1 Report"
+  author: "Shuyang Cao"
+  language: English
+  pubdate: "`r format(Sys.time(), '%d %B, %Y`"
+  include_toc: true
+  html:
+    cdn: true
 ---
 
 # <center> Lab Report </center>
