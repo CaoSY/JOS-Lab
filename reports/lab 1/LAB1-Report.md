@@ -1,9 +1,46 @@
 ---
-LAB NUMBER: "Lab 1"
-AUTHOR: "Shuyang Cao"
+title: "Lab 1 Report"
+author: Shuyang Cao
+output:
+  pdf_document:
+    toc: true
+    number_sections: true
+    highlight: tango
 ---
 
-# Lab Report
+# <center> Lab Report </center>
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+* [ Lab Report ](#center-lab-report-center)
+	* [Development Environment](#development-environment)
+		* [Environment Configuration](#environment-configuration)
+		* [Set up & Test Development Environment](#set-up-test-development-environment)
+	* [PC Bootstrap](#pc-bootstrap)
+		* [Simulating the x86](#simulating-the-x86)
+		* [The PC's Physical Address Space](#the-pcs-physical-address-space)
+		* [The ROM BIOS](#the-rom-bios)
+		* [Exercise 2](#exercise-2)
+	* [The Boot Loader](#the-boot-loader)
+		* [Exercise 3](#exercise-3)
+		* [Loading the Kernel](#loading-the-kernel)
+		* [Exercise 5](#exercise-5)
+		* [Exercise 6](#exercise-6)
+	* [The Kernel](#the-kernel)
+		* [Exercise 7](#exercise-7)
+	* [Formatted Printing to the Console](#formatted-printing-to-the-console)
+		* [Exercise 8](#exercise-8)
+		* [Challenge](#challenge)
+	* [The Stack](#the-stack)
+		* [Exercise 9](#exercise-9)
+		* [Exeercise 10](#exeercise-10)
+		* [Exercise 11 & 12](#exercise-11-12)
+	* [Grade](#grade)
+	* [This Complete The Lab.](#this-complete-the-lab)
+
+<!-- /code_chunk_output -->
 
 ## Development Environment
 
