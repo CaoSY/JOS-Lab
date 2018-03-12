@@ -95,7 +95,8 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
 			cprintf(" %08x", ebp[i]);
 		}
 		debuginfo_eip(ebp[1], &info);
-		cprintf("\n       %s:%d: %.*s+%d\n", info.eip_file, info.eip_line, info.eip_fn_namelen, info.eip_fn_name, ebp[1]-info.eip_fn_addr);
+		cprintf("\n       %s:%d: %.*s+%d\n", info.eip_file,\
+			info.eip_line, info.eip_fn_namelen, info.eip_fn_name, ebp[1]-info.eip_fn_addr);
 		ebp = (uint32_t *) (*ebp);
 	}
 
@@ -106,7 +107,8 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
 
 /***** Kernel monitor command interpreter *****/
 
-#define WHITESPACE "\t\r\n "		// horizontal tab, carriage return, new line, space		four characters in total
+#define WHITESPACE "\t\r\n "		// horizontal tab, carriage return, new line, space
+									// four characters in total
 #define MAXARGS 16					// a program recieves 16 command line arguments at most.
 
 static int
@@ -116,12 +118,15 @@ runcmd(char *buf, struct Trapframe *tf)
 	char *argv[MAXARGS];
 	int i;
 
-	// Parse the command buffer into whitespace-separated arguments. This part of code doesn't cerate any new string. It set all whitespaces to '\0' and store pointers to each word of the buf string in argv, which is really tricky but efficient.
+	// Parse the command buffer into whitespace-separated arguments.
+	// This part of code doesn't cerate any new string. It set all
+	// whitespaces to '\0' and store pointers to each word of the buf
+	// string in argv, which is really tricky but efficient.
 	argc = 0;
 	argv[argc] = 0;
 	while (1) {
 		// gobble whitespace
-		while (*buf && strchr(WHITESPACE, *buf))		// set all whitespaces to zero until encounting a non-whitespace character
+		while (*buf && strchr(WHITESPACE, *buf))	// set all whitespaces to zero until encounting a non-whitespace character
 			*buf++ = 0;
 		if (*buf == 0)		// end of string in buf
 			break;
@@ -132,7 +137,7 @@ runcmd(char *buf, struct Trapframe *tf)
 			return 0;
 		}
 		argv[argc++] = buf;
-		while (*buf && !strchr(WHITESPACE, *buf))		// increase buf until the end of string or a whitespace
+		while (*buf && !strchr(WHITESPACE, *buf))	// increase buf until the end of string or a whitespace
 			buf++;
 	}
 	argv[argc] = 0;
@@ -155,18 +160,7 @@ monitor(struct Trapframe *tf)
 
 	cprintf("Welcome to the JOS kernel monitor!\n");
 	cprintf("Type 'help' for a list of commands.\n");
-/*
-	char *ph = "aaaaaaaaaaaaaaaaaaa";
-	char *wph = "                   ";
-	cprintf("%m%s%m%s%m%s%m%s\n\n", FORE_GROUND(TEXT_GRAY), ph, FORE_GROUND(TEXT_BLUE), ph, BACK_GROUND(TEXT_GREEN), ph, BACK_GROUND(TEXT_CYAN), ph);
-	for (int i = 0; i < 16; ++i) {
-		cprintf("%m%s", BACK_GROUND(i), wph);
-		cprintf("%m%s", FORE_GROUND(i), ph);
-		cprintf("%m%s", TEXT_COLOR(i+1, i), ph);
-		cprintf("%m%s\n", TEXT_COLOR(i, i+1), ph);
-	}
-	cprintf("%s\n", "default color test");
-*/
+
 	while (1) {
 		buf = readline("K> ");
 		if (buf != NULL)

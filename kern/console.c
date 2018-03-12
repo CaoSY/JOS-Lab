@@ -62,8 +62,13 @@ serial_intr(void)
 		cons_intr(serial_proc_data);
 }
 
+
+/*
+ * Output a byte to serial port COM1. The byte will be output anyway,
+ * though in some cases the operation may fail.
+ */
 static void
-serial_putc(int c)				// output a byte to serial port COM1. The byte will be output anyway, though in some case the operation may fail.
+serial_putc(int c)
 {
 	int i;
 
@@ -162,14 +167,6 @@ cga_init(void)
 static void
 cga_putc(int c)
 {
-	/*
-	* reference:
-	* 1. http://blog.csdn.net/scnu20142005027/article/details/51264186
-	* 2. https://en.wikipedia.org/wiki/VGA-compatible_text_mode#Text_buffer
-	* 3. https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
-	* 4. http://ascii-table.com/ansi-escape-sequences.php
-	* 5. http://rrbrandt.dee.ufcg.edu.br/en/docs/ansi/
-	*/
 	
 	// if no attribute given, then use black on white
 	if (!(c & ~0xFF))
@@ -394,7 +391,10 @@ kbd_init(void)
 #define CONSBUFSIZE 512
 
 static struct {
-	uint8_t buf[CONSBUFSIZE];		// console circular I/O buffer. That the buffer is circular means when rpos or wpos reaches the end of buffer it jump back to the beginning of buffer. This mechanism means this buffer can cache at most "CONSBUFSIZE" bytes. Otherwise previous contents unread would be lost.
+	uint8_t buf[CONSBUFSIZE];		// console circular I/O buffer. That the buffer is circular means when rpos
+									// or wpos reaches the end of buffer it jump back to the beginning of buffer.
+									// This mechanism means this buffer can cache at most "CONSBUFSIZE" bytes.
+									// Otherwise previous contents unread would be lost.
 	uint32_t rpos;					// position in the buffer where next character to be read from locates.
 	uint32_t wpos;					// position in the buffer where next character to be written in to locates.
 } cons;
