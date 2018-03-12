@@ -304,15 +304,17 @@ Using `tee` we can dump GDB output to files. After filtering out GDB prompts, we
                                                   ; According to next instruction, the result of last instruction is equality.
 [f000:e066]    0xfe066:    xor    %dx,%dx         ; Initialize %dx to zero.
 [f000:e068]    0xfe068:    mov    %dx,%ss         ; Initialize stack segment register to zero.
-[f000:e06a]    0xfe06a:    mov    $0x7000,%esp    ; Initialize stack pointer register to $0x7000. But why 0x7000 is chosen remains unknown.
-[f000:e070]    0xfe070:    mov    $0xf3691,%edx   ;
-[f000:e076]    0xfe076:    jmp    0xfd165         ; Unconditional jump. Taking several instructions before and after this instruction, it looks like BIOS is calling a C function from assembly code.
+[f000:e06a]    0xfe06a:    mov    $0x7000,%esp    ; Initialize stack pointer register to $0x7000.
+                                                  ; But why 0x7000 is chosen remains unknown.
+[f000:e070]    0xfe070:    mov    $0xf3691,%edx
+[f000:e076]    0xfe076:    jmp    0xfd165         ; Unconditional jump. Taking several instructions before and after this instruction,
+                                                  ; it looks like BIOS is calling a C function from assembly code.
                                                   ; For example, BIOS has initialized its data stack, stored an argument in %edx
-[f000:d165]    0xfd165:    mov    %eax,%ecx        ; Don't  know where %eax is intialized.
-[f000:d168]    0xfd168:    cli                     ; Disable interrupt
-[f000:d169]    0xfd169:    cld                     ; Clear direction flag,
+[f000:d165]    0xfd165:    mov    %eax,%ecx       ; Don't  know where %eax is intialized.
+[f000:d168]    0xfd168:    cli                    ; Disable interrupt
+[f000:d169]    0xfd169:    cld                    ; Clear direction flag,
 [f000:d16a]    0xfd16a:    mov    $0x8f,%eax
-[f000:d170]    0xfd170:    out    %al,$0x70        ;
+[f000:d170]    0xfd170:    out    %al,$0x70
 [f000:d172]    0xfd172:    in     $0x71,%al
 [f000:d174]    0xfd174:    in     $0x92,%al
 [f000:d176]    0xfd176:    or     $0x2,%al
@@ -381,13 +383,15 @@ If the disk is bootable, the first sector is called the ***boot sector***, since
 ```assembly {.line-numbers}
   ...
   lgdt    gdtdesc                     # Load Global Descriptor Table Register
-  movl    %cr0, %eax                  # These three instructions, toggle on CR0 PE bit, switch on Protected mode. After these intructions is executed, CPU begins to decode instruction in 32-bit mode.
+  movl    %cr0, %eax                  # These three instructions, toggle on CR0 PE bit, switch on Protected mode.
+                                      # After these intructions is executed, CPU begins to decode instruction in 32-bit mode.
   orl     $CR0_PE_ON, %eax
   movl    %eax, %cr0
-  ljmp    $PROT_MODE_CSEG, $protcseg  # Jump to next instruction, but in 32-bit code segment.
-                                      # Switches processor into 32-bit mode.
-                                      # The reason why there is such a peculiar jump is because of the pipeline design in modern CPU
-                                      # Even though CPU starts to decode instructions in 32-bit mode, CPU has already prefetched instructions and decode them in 16-bit mode, which should be decoded in 32-bit. So we need a long jump to force CPU to flush its pipeline and re-decode next instruction properly.
+  ljmp    $PROT_MODE_CSEG, $protcseg  # Jump to next instruction, but in 32-bit code segment. Switches processor into 32-bit mode.
+                                      # The reason why there is such a peculiar jump is because of the pipeline design in modern CPU.
+                                      # Even though CPU starts to decode instructions in 32-bit mode, CPU has already prefetched
+                                      # instructions and decode them in 16-bit mode, which should be decoded in 32-bit. So we need
+                                      # a long jump to force CPU to flush its pipeline and re-decode next instruction properly.
 
   .code32                             # Assemble for 32-bit mode
 protcseg:
@@ -613,7 +617,8 @@ They are kernel code. The address 0x00100000 comes from *field* __p_vaddr__, the
    0x10002d:  jmp    *%eax
    0x10002f:  mov    $0x0,%ebp
    0x100034:  mov    $0xf0110000,%esp
-(gdb) x/10i 0xf010000c                       # What resides at 0xf010000c, "add %al,(%eax)" means contents there are all zero.
+(gdb) x/10i 0xf010000c                       # What resides at 0xf010000c.
+                                             # "add %al,(%eax)" means contents there are all zero.
    0xf010000c <entry>: add    %al,(%eax)
    0xf010000e <entry+2>: add    %al,(%eax)
    0xf0100010 <entry+4>: add    %al,(%eax)

@@ -203,7 +203,10 @@ code.language-yaml {
   </head>
   <body for="html-export">
     <div class="mume markdown-preview">
-    <div><div class="code-chunk" data-id="global" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><div class="code-chunk" data-id="code-chunk-id-1" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><div class="code-chunk" data-id="code-chunk-id-2" data-cmd="toc"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><ul>
+    <div><div class="code-chunk" data-id="global" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><div class="code-chunk" data-id="code-chunk-id-1" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><p><span style="display:inline-block;width:50%;text-align:left">Created: Mar 8 2018 23:18:00</span><span style="display:inline-block;width:50%;text-align:right">Last Updated: Mar 12 2018 19:54:56</span></p>
+<h1 style="font-style:italic; font-family:Times; font-size:4em" ebook-toc-level-1="" heading="&lt;center&gt;Lab 1 Report&lt;/center&gt;"><center>Lab 1 Report</center></h1>
+<div style="font-style:italic; font-family:Times; font-size:1.2em"><center>Shuyang Cao</center><center>Mar 12 2018</center></div>
+</div></div><div class="code-chunk" data-id="code-chunk-id-2" data-cmd="toc"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><ul>
 <li><a href="#development-environment">Development Environment</a>
 <ul>
 <li><a href="#environment-configuration">Environment Configuration</a></li>
@@ -430,15 +433,17 @@ The target architecture is assumed to be i8086
                                                   ; According to next instruction, the result of last instruction is equality.
 [f000:e066]    0xfe066:    xor    %dx,%dx         ; Initialize %dx to zero.
 [f000:e068]    0xfe068:    mov    %dx,%ss         ; Initialize stack segment register to zero.
-[f000:e06a]    0xfe06a:    mov    $0x7000,%esp    ; Initialize stack pointer register to $0x7000. But why 0x7000 is chosen remains unknown.
-[f000:e070]    0xfe070:    mov    $0xf3691,%edx   ;
-[f000:e076]    0xfe076:    jmp    0xfd165         ; Unconditional jump. Taking several instructions before and after this instruction, it looks like BIOS is calling a C function from assembly code.
+[f000:e06a]    0xfe06a:    mov    $0x7000,%esp    ; Initialize stack pointer register to $0x7000.
+                                                  ; But why 0x7000 is chosen remains unknown.
+[f000:e070]    0xfe070:    mov    $0xf3691,%edx
+[f000:e076]    0xfe076:    jmp    0xfd165         ; Unconditional jump. Taking several instructions before and after this instruction,
+                                                  ; it looks like BIOS is calling a C function from assembly code.
                                                   ; For example, BIOS has initialized its data stack, stored an argument in %edx
-[f000:d165]    0xfd165:    mov    %eax,%ecx        ; Don&apos;t  know where %eax is intialized.
-[f000:d168]    0xfd168:    cli                     ; Disable interrupt
-[f000:d169]    0xfd169:    cld                     ; Clear direction flag,
+[f000:d165]    0xfd165:    mov    %eax,%ecx       ; Don&apos;t  know where %eax is intialized.
+[f000:d168]    0xfd168:    cli                    ; Disable interrupt
+[f000:d169]    0xfd169:    cld                    ; Clear direction flag,
 [f000:d16a]    0xfd16a:    mov    $0x8f,%eax
-[f000:d170]    0xfd170:    out    %al,$0x70        ;
+[f000:d170]    0xfd170:    out    %al,$0x70
 [f000:d172]    0xfd172:    in     $0x71,%al
 [f000:d174]    0xfd174:    in     $0x92,%al
 [f000:d176]    0xfd176:    or     $0x2,%al
@@ -461,7 +466,7 @@ The target architecture is assumed to be i386
 =&gt; 0xf3691:   push   %ebx
 =&gt; 0xf3692:   sub    $0x20,%esp
 ...
-</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre><h2 class="mume-header" id="the-boot-loader" ebook-toc-level-2="" heading="The Boot Loader">The Boot Loader</h2>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre><h2 class="mume-header" id="the-boot-loader" ebook-toc-level-2="" heading="The Boot Loader">The Boot Loader</h2>
 
 <ul>
 <li><strong>What is <code>boot loader</code> ?</strong></li>
@@ -519,19 +524,21 @@ The 80386 introduced 32-bit protected mode. There are two major differences betw
 </blockquote>
 <pre data-role="codeBlock" data-info="assembly {.line-numbers}" class="language-assembly line-numbers"><code>  ...
   lgdt    gdtdesc                     # Load Global Descriptor Table Register
-  movl    %cr0, %eax                  # These three instructions, toggle on CR0 PE bit, switch on Protected mode. After these intructions is executed, CPU begins to decode instruction in 32-bit mode.
+  movl    %cr0, %eax                  # These three instructions, toggle on CR0 PE bit, switch on Protected mode.
+                                      # After these intructions is executed, CPU begins to decode instruction in 32-bit mode.
   orl     $CR0_PE_ON, %eax
   movl    %eax, %cr0
-  ljmp    $PROT_MODE_CSEG, $protcseg  # Jump to next instruction, but in 32-bit code segment.
-                                      # Switches processor into 32-bit mode.
-                                      # The reason why there is such a peculiar jump is because of the pipeline design in modern CPU
-                                      # Even though CPU starts to decode instructions in 32-bit mode, CPU has already prefetched instructions and decode them in 16-bit mode, which should be decoded in 32-bit. So we need a long jump to force CPU to flush its pipeline and re-decode next instruction properly.
+  ljmp    $PROT_MODE_CSEG, $protcseg  # Jump to next instruction, but in 32-bit code segment. Switches processor into 32-bit mode.
+                                      # The reason why there is such a peculiar jump is because of the pipeline design in modern CPU.
+                                      # Even though CPU starts to decode instructions in 32-bit mode, CPU has already prefetched
+                                      # instructions and decode them in 16-bit mode, which should be decoded in 32-bit. So we need
+                                      # a long jump to force CPU to flush its pipeline and re-decode next instruction properly.
 
   .code32                             # Assemble for 32-bit mode
 protcseg:
   movw    $PROT_MODE_DSEG, %ax        # Our data segment selector
   ...
-</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre><blockquote>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre><blockquote>
 <p>Q 2: What is the last instruction of the boot loader executed, and what is the first instruction of the kernel it just loaded?</p>
 </blockquote>
 <p>The last instruction of the boot loader executed:<br>
@@ -684,7 +691,8 @@ Let us make this question more clear. We never load our kernel into 0xf0100000 a
    0x10002d:  jmp    *%eax
    0x10002f:  mov    <span class="token variable">$0x0</span>,%ebp
    0x100034:  mov    <span class="token variable">$0xf0110000</span>,%esp
-<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> x/10i 0xf010000c                       <span class="token comment" spellcheck="true"># What resides at 0xf010000c, "add %al,(%eax)" means contents there are all zero.</span>
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> x/10i 0xf010000c                       <span class="token comment" spellcheck="true"># What resides at 0xf010000c.</span>
+                                             <span class="token comment" spellcheck="true"># "add %al,(%eax)" means contents there are all zero.</span>
    0xf010000c <span class="token operator">&lt;</span>entry<span class="token operator">></span>: add    %al,<span class="token punctuation">(</span>%eax<span class="token punctuation">)</span>
    0xf010000e <span class="token operator">&lt;</span>entry+2<span class="token operator">></span>: add    %al,<span class="token punctuation">(</span>%eax<span class="token punctuation">)</span>
    0xf0100010 <span class="token operator">&lt;</span>entry+4<span class="token operator">></span>: add    %al,<span class="token punctuation">(</span>%eax<span class="token punctuation">)</span>
@@ -1211,7 +1219,8 @@ index e137e92..5f9275c 100644
   backtrace symbols: OK
   backtrace lines: OK
 Score: 50/50
-</pre><div class="code-chunk" data-id="code-chunk-id-3" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div></div>
+</pre><div class="code-chunk" data-id="code-chunk-id-3" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><footer style="width:100%;text-align:center;font-family:Times">End of Lab 1 Report<br>Email: <a mailto="caoshuyang1996@pku.edu.cn" href="file:///d:\Project\JOS-Lab\reports\lab 1">caoshuyang@pku.edu.cn</a> GitHub: <a href="https://github.com/CaoSY/JOS-Lab">JOS-Lab</a></footer>
+</div></div></div>
     </div>
   </body>
 </html>            
