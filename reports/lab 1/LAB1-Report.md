@@ -1,6 +1,6 @@
 ---
-export_on_save:
-  ebook: "html"
+#export_on_save:
+#  ebook: "html"
 
 ebook:
   title: "Lab 1 Report"
@@ -11,66 +11,44 @@ ebook:
     cdn: true
 ---
 
-# <center> Lab Report </center>
+# <center> Lab 1 Report </center>
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+***<center>Shuyang Cao</center>***
 
-<!-- code_chunk_output -->
+***<center>Mar 12, 2018</center>***
 
-* [ Lab Report ](#center-lab-report-center)
-	* [Development Environment](#development-environment)
-		* [Environment Configuration](#environment-configuration)
-		* [Set up & Test Development Environment](#set-up-test-development-environment)
-	* [PC Bootstrap](#pc-bootstrap)
-		* [Simulating the x86](#simulating-the-x86)
-		* [The PC's Physical Address Space](#the-pcs-physical-address-space)
-		* [The ROM BIOS](#the-rom-bios)
-		* [Exercise 2](#exercise-2)
-	* [The Boot Loader](#the-boot-loader)
-		* [Exercise 3](#exercise-3)
-		* [Loading the Kernel](#loading-the-kernel)
-		* [Exercise 5](#exercise-5)
-		* [Exercise 6](#exercise-6)
-	* [The Kernel](#the-kernel)
-		* [Exercise 7](#exercise-7)
-	* [Formatted Printing to the Console](#formatted-printing-to-the-console)
-		* [Exercise 8](#exercise-8)
-		* [Challenge](#challenge)
-	* [The Stack](#the-stack)
-		* [Exercise 9](#exercise-9)
-		* [Exeercise 10](#exeercise-10)
-		* [Exercise 11 & 12](#exercise-11-12)
-	* [Grade](#grade)
-	* [This Complete The Lab.](#this-complete-the-lab)
+```python {cmd=true args=["-v"]}
+print("Verbose will be printed first")
+```
 
-<!-- /code_chunk_output -->
+[TOC]
 
 ## Development Environment
 
 ### Environment Configuration
 
-+ Hardware Environment
-  + Host
-    + Memory:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8GB
-    + Processor:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Intel^®^ Core^™^ i5-4500M CPU @ 2.50GHz
-    + Integrated GPU:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Intel^®^ HD Graphics 4600
-    + Discrete GPU:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NVIDIA^®^ GeForce^®^ GT 755M
-    + Hard Disk:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1TB
-    + SSD:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;128GB
-  + Guest
-    + CPU:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dual Core
-    + Memory:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4GB
-    + Disk:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;30GB
-+ Software Environment
-  + Host
-    + OS:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft Windows10(1709) 64-bit
-    + Virtual Machine:&nbsp;&nbsp;&nbsp;&nbsp;VMware® Workstation 12 Player, 12.5.9 build-7535481
-  + Guest
-    + OS:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ubuntu 16.04 LTS(x86_64)
-    + Kernel:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.13.0-36-generic
-    + GCC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gcc 5.4.0
-    + Make:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GNU Make 4.1
-    + GDB:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GNU gdb 7.11.1
+* Hardware Environment
+  * Host
+    * Memory:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8GB
+    * Processor:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Intel^®^ Core^™^ i5-4500M CPU @ 2.50GHz
+    * Integrated GPU:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Intel^®^ HD Graphics 4600
+    * Discrete GPU:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NVIDIA^®^ GeForce^®^ GT 755M
+    * Hard Disk:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1TB
+    * SSD:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;128GB
+  * Guest
+    * CPU:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dual Core
+    * Memory:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4GB
+    * Disk:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;30GB
+* Software Environment
+  * Host
+    * OS:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Microsoft Windows10(1709) 64-bit
+    * Virtual Machine:&nbsp;&nbsp;&nbsp;&nbsp;VMware® Workstation 12 Player, 12.5.9 build-7535481
+  * Guest
+    * OS:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ubuntu 16.04 LTS(x86_64)
+    * Kernel:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.13.0-36-generic
+    * GCC:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gcc 5.4.0
+    * Make:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GNU Make 4.1
+    * GDB:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GNU gdb 7.11.1
 
 ### Set up & Test Development Environment
 
@@ -108,7 +86,7 @@ boot block is 390 bytes (max 510)
 + mk obj/kern/kernel.img
 ```
 
-After compiling, we're ready to run [QEMU](https://www.qemu.org/ "QEMU Homepage"), supplying the file obj/kern/kernel.img, created above, as the contents of the emulated PC's "virtual hard disk." This hard disk image contains both our boot loader (obj/boot/boot) and our kernel (obj/kernel). 
+After compiling, we're ready to run [QEMU](https://www.qemu.org/ "QEMU Homepage"), supplying the file obj/kern/kernel.img, created above, as the contents of the emulated PC's "virtual hard disk." This hard disk image contains both our boot loader (obj/boot/boot) and our kernel (obj/kernel).
 
 Now we run the QEMU like running a real PC. Below we run our initial JOS and test two commands provided by it, "*help*", "*kerninfo*".
 
@@ -117,7 +95,7 @@ $:~/lab$ make qemu
 ***
 *** Use Ctrl-a x to exit qemu
 ***
-qemu-system-i386 -nographic -drive file=obj/kern/kernel.img,index=0,media=disk,format=raw -serial mon:stdio -gdb tcp::26000 -D qemu.log 
+qemu-system-i386 -nographic -drive file=obj/kern/kernel.img,index=0,media=disk,format=raw -serial mon:stdio -gdb tcp::26000 -D qemu.log
 6828 decimal is XXX octal!
 entering test_backtrace 5
 entering test_backtrace 4
@@ -152,45 +130,45 @@ K>
 <center>
 
 ```ditaa {cmd=true args=["-E"]}
-    +--------------------+  <-=-0xFFFFFFFF
-    | 4GB                |
-    |                    |
-    |    32 bit memory   |
-    |    mapped device   |
-    |                    |
-    |                    |
-    :                    :
-    |                    |
-    |                    |
-    |                    |
-    |                    |
-    |                    |
-    |       unused       |
-    +--------------------+  <-=-depends on amount of RAM
-    |                    |
-    |                    |
-    |  Extended Memory   |
-    |                    |
-    |                    |
-    +--------------------+  <-=-0x00100000 (1MB)
-    |      BIOS ROM      |
-    +--------------------+  <-=-0x000F0000 (960KB)
-    |    16 bit devices, |
-    |    expansion ROMs  |
-    +--------------------+  <-=-0x000C0000 (768KB)
-    |    VGA Display     |
-    +--------------------+  <-=-0x000A0000 (640KB)
-    |                    |
-    |     Low Memory     |
-    |                    |
-    +--------------------+  <-=-0x00000000
++--------------------+ <-=-0xFFFFFFFF
+| 4GB                |
+|                    |
+|    32 bit memory   |
+|    mapped device   |
+|                    |
+|                    |
+:                    :
+|                    |
+|                    |
+|                    |
+|                    |
+|                    |
+|       unused       |
++--------------------+ <-=-depends on amount of RAM
+|                    |
+|                    |
+|  Extended Memory   |
+|                    |
+|                    |
++--------------------+ <-=-0x00100000 (1MB)
+|      BIOS ROM      |
++--------------------+ <-=-0x000F0000 (960KB)
+|    16 bit devices, |
+|    expansion ROMs  |
++--------------------+ <-=-0x000C0000 (768KB)
+|    VGA Display     |
++--------------------+ <-=-0x000A0000 (640KB)
+|                    |
+|     Low Memory     |
+|                    |
++--------------------+ <-=-0x00000000
 ```
 
 </center>
 
 ### The ROM BIOS
 
-+ **Waht is `BIOS` ?**
+* **Waht is `BIOS` ?**
 
 According to [wikipedia](https://en.wikipedia.org/wiki/BIOS "BIOS")
 
@@ -226,18 +204,17 @@ warning: A handler for the OS ABI "GNU/Linux" is not built into this configurati
 of GDB.  Attempting to continue with the default i8086 settings.
 
 The target architecture is assumed to be i8086
-[f000:fff0]    0xffff0:	ljmp   $0xf000,$0xe05b
+[f000:fff0]    0xffff0:    ljmp   $0xf000,$0xe05b
 0x0000fff0 in ?? ()
 + symbol-file obj/kern/kernel
-(gdb) 
+(gdb)
 ```
 
 From GDB output, we konw `ljmp   $0xf000,$0xe05b` is the first intructions to be executed. Here we can conclude a few things about what happened after power up.
 
-+ The IBM PC starts executing at physical address 0x000ffff0, which is at the very top of the 64KB area reserved for the ROM BIOS.
-+ The PC starts executing with CS = 0xf000 and IP = 0xfff0.
-+ The first instruction to be executed is a jmp instruction, which jumps to the segmented address CS = 0xf000 and IP = 0xe05b.
-
+* The IBM PC starts executing at physical address 0x000ffff0, which is at the very top of the 64KB area reserved for the ROM BIOS.
+* The PC starts executing with CS = 0xf000 and IP = 0xfff0.
+* The first instruction to be executed is a jmp instruction, which jumps to the segmented address CS = 0xf000 and IP = 0xe05b.
 
 Up unitl now, our PC still runs in the `real mode`. Memory address is translated as below.
 
@@ -247,12 +224,12 @@ Up unitl now, our PC still runs in the `real mode`. Memory address is translated
 
 Since 16-bit mode can only access 1MB memory. Different combinations of segment and offset will be translated into the same physical address.
 
-+ *What BIOS does*
-  + check hardware status
-  + set up an interrupt descriptor table
-  + initialize various devices such as the VGA display
-  + search for a bootable device such as a floppy, hard drive, or CD-ROM
-  + load `boot loader` into memory from a bootable device and tranfer control to it.
+* *What BIOS does*
+  * check hardware status
+  * set up an interrupt descriptor table
+  * initialize various devices such as the VGA display
+  * search for a bootable device such as a floppy, hard drive, or CD-ROM
+  * load `boot loader` into memory from a bootable device and tranfer control to it.
 
 ### Exercise 2
 
@@ -261,7 +238,7 @@ Since 16-bit mode can only access 1MB memory. Different combinations of segment 
 Using `tee` we can dump GDB output to files. After filtering out GDB prompts, we get the first few lines of BIOS assembly code as shown below.
 
 ```assembly {.line-numbers}
-[f000:fff0]    0xffff0:	ljmp   $0xf000,$0xe05b	; Jump from the top of the reserved area to the beginning of BIOS program
+[f000:fff0]    0xffff0:    ljmp   $0xf000,$0xe05b    ; Jump from the top of the reserved area to the beginning of BIOS program
 [f000:e05b]    0xfe05b: cmpl   $0x0,%cs:0x6c48  ; Whether the dword stored in %cs:0x6c48, i.e. 0xf6c48, is zero.
                                                 ; Maybe this is a sanity check but I'm not sure.
 [f000:e062]    0xfe062: jne    0xfd2e1          ; Conditional jump. According to next instruction, the result of last instruction is equality.
@@ -269,71 +246,71 @@ Using `tee` we can dump GDB output to files. After filtering out GDB prompts, we
 [f000:e068]    0xfe068: mov    %dx,%ss          ; Initialize stack segment register to zero.
 [f000:e06a]    0xfe06a: mov    $0x7000,%esp     ; Initialize stack pointer register to $0x7000. But why 0x7000 is chosen remains unknown.
 [f000:e070]    0xfe070: mov    $0xf3691,%edx    ;
-[f000:e076]    0xfe076:	jmp    0xfd165          ; Unconditional jump. Taking several instructions before and after this instruction, it looks like BIOS is calling a C function from assembly code.
+[f000:e076]    0xfe076:    jmp    0xfd165          ; Unconditional jump. Taking several instructions before and after this instruction, it looks like BIOS is calling a C function from assembly code.
                                                 ; For example, BIOS has initialized its data stack, stored an argument in %edx
 [f000:d165]    0xfd165: mov    %eax,%ecx        ; Don't  know where %eax is intialized.
 [f000:d168]    0xfd168: cli                     ; Disable interrupt
-[f000:d169]    0xfd169: cld                     ; Clear direction flag, 
+[f000:d169]    0xfd169: cld                     ; Clear direction flag,
 [f000:d16a]    0xfd16a: mov    $0x8f,%eax
 [f000:d170]    0xfd170: out    %al,$0x70        ;
-[f000:d172]    0xfd172:	in     $0x71,%al
-[f000:d174]    0xfd174:	in     $0x92,%al
-[f000:d176]    0xfd176:	or     $0x2,%al
-[f000:d178]    0xfd178:	out    %al,$0x92
-[f000:d17a]    0xfd17a:	lidtw  %cs:0x6c38
-[f000:d180]    0xfd180:	lgdtw  %cs:0x6bf4
-[f000:d186]    0xfd186:	mov    %cr0,%eax
-[f000:d189]    0xfd189:	or     $0x1,%eax
-[f000:d18d]    0xfd18d:	mov    %eax,%cr0
-[f000:d190]    0xfd190:	ljmpl  $0x8,$0xfd198
+[f000:d172]    0xfd172:    in     $0x71,%al
+[f000:d174]    0xfd174:    in     $0x92,%al
+[f000:d176]    0xfd176:    or     $0x2,%al
+[f000:d178]    0xfd178:    out    %al,$0x92
+[f000:d17a]    0xfd17a:    lidtw  %cs:0x6c38
+[f000:d180]    0xfd180:    lgdtw  %cs:0x6bf4
+[f000:d186]    0xfd186:    mov    %cr0,%eax
+[f000:d189]    0xfd189:    or     $0x1,%eax
+[f000:d18d]    0xfd18d:    mov    %eax,%cr0
+[f000:d190]    0xfd190:    ljmpl  $0x8,$0xfd198
 The target architecture is assumed to be i386
-=> 0xfd198:	mov    $0x10,%eax
-=> 0xfd19d:	mov    %eax,%ds
-=> 0xfd19f:	mov    %eax,%es
-=> 0xfd1a1:	mov    %eax,%ss
-=> 0xfd1a3:	mov    %eax,%fs
-=> 0xfd1a5:	mov    %eax,%gs
-=> 0xfd1a7:	mov    %ecx,%eax
-=> 0xfd1a9:	jmp    *%edx
-=> 0xf3691:	push   %ebx
-=> 0xf3692:	sub    $0x20,%esp
+=> 0xfd198:   mov    $0x10,%eax
+=> 0xfd19d:   mov    %eax,%ds
+=> 0xfd19f:   mov    %eax,%es
+=> 0xfd1a1:   mov    %eax,%ss
+=> 0xfd1a3:   mov    %eax,%fs
+=> 0xfd1a5:   mov    %eax,%gs
+=> 0xfd1a7:   mov    %ecx,%eax
+=> 0xfd1a9:   jmp    *%edx
+=> 0xf3691:   push   %ebx
+=> 0xf3692:   sub    $0x20,%esp
 ...
 ```
 
 ## The Boot Loader
 
-+ **What is `boot loader` ?**
+* **What is `boot loader` ?**
 
 according to [wikipedia](https://en.wikipedia.org/wiki/Booting)
 >A boot loader is a computer program that loads an operating system or some other system software for the computer after completion of the power-on self-tests; it is the loader for the operating system itself. Within the hard reboot process, it runs after completion of the self-tests, then loads and runs the software.
 
 Floppy and hard disks for PCs are divided into 512 byte regions called ***sectors***. A sector is the disk's minimum transfer granularity: each read or write operation must be one or more sectors in size and aligned on a sector boundary. The virtual disk provided by our QEMU simulates the same mechanism.
 
-If the disk is bootable, the first sector is called the ***boot sector***, since this is where the boot loader code resides. When the BIOS finds a bootable floppy or hard disk, it loads the 512-byte boot sector into memory at physical addresses 0x7c00 through 0x7dff, and then uses a `jmp` instruction to set the CS:IP to 0000:7c00, passing control to the boot loader. Like the BIOS load address, these addresses are fairly arbitrary - but they are fixed and standardized for PCs. 
+If the disk is bootable, the first sector is called the ***boot sector***, since this is where the boot loader code resides. When the BIOS finds a bootable floppy or hard disk, it loads the 512-byte boot sector into memory at physical addresses 0x7c00 through 0x7dff, and then uses a `jmp` instruction to set the CS:IP to 0000:7c00, passing control to the boot loader. Like the BIOS load address, these addresses are fairly arbitrary - but they are fixed and standardized for PCs.
 
-+ **Why 0x7c00 ?**
+* **Why 0x7c00 ?**
 
   The magic number 0x7c00 has its interesting history. You can refer to [here](https://www.glamenv-septzen.net/en/view/6) .
 
-+ **What boot loader does ?**
-  + switch the processor from ***real mode*** to ***32-bit protected mode***
-  + read the kernel from the hard disk by directly accessing the IDE disk device registers via the x86's special I/O instructions.
-  + transfer control to kernel
+* **What boot loader does ?**
+  * switch the processor from ***real mode*** to ***32-bit protected mode***
+  * read the kernel from the hard disk by directly accessing the IDE disk device registers via the x86's special I/O instructions.
+  * transfer control to kernel
 
-+ **What is 32-bit Protected Mode ?**
-  + **Real Mode**
+* **What is 32-bit Protected Mode ?**
+  * **Real Mode**
   In real mode, address range from 0x00000 to 0xFFFFF. These addresses require a 20-bit number. Obviously, a 20-bit number will not fit into any of the 8086’s 16-bit registers. Intel solved this problem, by using two 16-bit values determine an address. The first 16-bit value is called the selector. Selector values must be stored in segment registers. The second 16-bit value is called the offset. The physical address referenced by a 32-bit selector:offset pair iscomputed by the formula:
   *<center>16 * selector + offset</center>*
-  + **16-bit protected mode**
+  * **16-bit protected mode**
   In the 80286’s 16-bit protected mode, selector values are interpreted completely differently than in real mode. In real mode, a selector value is a paragraph number of physical memory. In protected mode, a selector value is an index into a descriptor table.
   In protected mode, the segments are not at fixed positions in physical memory. In fact, they do not have to be in memory at all.
-  + **32-bit protected mode**
+  * **32-bit protected mode**
   The 80386 introduced 32-bit protected mode. There are two major differences between 386 32-bit and 286 16-bit protected modes:
     1. Offsets are expanded to be 32-bits. This allows an offset to range up to 4 billion. Thus, segments can have sizes up to 4 gigabytes.
     2. Segments can be divided into smaller 4K-sized units called ***pages***. The virtual memory system works with pages now instead of segments.
-+ **Why Protected Mode ?**
-  + Protected mode uses a technique called ***virtual memory***. The basic idea of a virtual memory system is to only keep the data and code in memory that programs are currently using. Other data and code are stored temporarily on disk until they are needed again.
-  + Segments/pages are moved between memory and disk as needed. When a segment/page is returned to memory from disk, it is very likely that it will be put into a different area of memory that it was in before being moved to disk. All of this is done *transparently* by the operating system. The program does not have to be written differently for virtual memory to work.
+* **Why Protected Mode ?**
+  * Protected mode uses a technique called ***virtual memory***. The basic idea of a virtual memory system is to only keep the data and code in memory that programs are currently using. Other data and code are stored temporarily on disk until they are needed again.
+  * Segments/pages are moved between memory and disk as needed. When a segment/page is returned to memory from disk, it is very likely that it will be put into a different area of memory that it was in before being moved to disk. All of this is done *transparently* by the operating system. The program does not have to be written differently for virtual memory to work.
 
   The paragraphs are quoted from sections 1.2.6, 1.2.7 and 1.2.8 [PC Assembly Language](https://pdos.csail.mit.edu/6.828/2014/readings/pcasm-book.pdf), Or you may refer to Intel architecture manuals.
 
@@ -398,41 +375,41 @@ The structure of ***ELF*** file is shown below.
 <center>
 
 ```ditaa {cmd=true args=[]}
-                    +----------------------+
-                    |                      |
-                    |     ELF Header       |
-                    |                      |
-                    +----------------------+
-      /----------=--|                      |
-      |   /-----=---| Program header table |
-      |   |         |                      |
-      |   |         +----------------------+
-      |   |         |                      |
-      |   |         |                      |
-      |   |     /-=-|        .text         |<-----------\
-      |   |     |   |                      |            |
-      |   |     |   |                      |            |
-      |   \---->+   +----------------------+            |
-      |         |   |                      |            |
-      |         |   |                      |            |
-      |         \---|       .rodata        |<-------\   |
-      |             |                      |        |   |
-      |         /-=-|                      |        |   |
-      |         |   +----------------------+        |   |
-      |         |                                   |   |
-      |         |             . . .                 |   |
-      \-------->+                                   |   |
-                |   +----------------------+        |   |
-                |   |                      |        |   |
-                |   |                      |        |   |
-                \-=-|        .data         |<---\   |   |
-                    |                      |    |   |   |
-                    |                      |    |   |   |
-                    +----------------------+    |   |   |
-                    |                      |-=--/   |   |
-                    | Section header table |-=------/   |
-                    |                      |-=----------/
-                    +----------------------+
+              +----------------------+
+              |                      |
+              |     ELF Header       |
+              |                      |
+              +----------------------+
+/----------=--|                      |
+|   /-----=---| Program header table |
+|   |         |                      |
+|   |         +----------------------+
+|   |         |                      |
+|   |         |                      |
+|   |     /-=-|        .text         |<-----------\
+|   |     |   |                      |            |
+|   |     |   |                      |            |
+|   \---->+   +----------------------+            |
+|         |   |                      |            |
+|         |   |                      |            |
+|         \---|       .rodata        |<-------\   |
+|             |                      |        |   |
+|         /-=-|                      |        |   |
+|         |   +----------------------+        |   |
+|         |                                   |   |
+|         |             . . .                 |   |
+\-------->+                                   |   |
+          |   +----------------------+        |   |
+          |   |                      |        |   |
+          |   |                      |        |   |
+          \-=-|        .data         |<---\   |   |
+              |                      |    |   |   |
+              |                      |    |   |   |
+              +----------------------+    |   |   |
+              |                      |-=--/   |   |
+              | Section header table |-=------/   |
+              |                      |-=----------/
+              +----------------------+
 ```
 
 </center>
@@ -445,7 +422,7 @@ The link address of a section is the memory address from which the section expec
 > **load address(LMA)**
 The load address of a section is the memory address at which that section should be loaded into memory.
 
-+ program header table of `obj/boot/boot.out`
+* program header table of `obj/boot/boot.out`
   The load address is `paddr`, i.e., 0x00007c00. And the link address is `vaddr`, i.e., 0x00007c00, too.
 
 ```bash
@@ -463,7 +440,7 @@ Program Header:
          filesz 0x00000000 memsz 0x00000000 flags rwx
 ```
 
-+ program header table of `obj/kern/kernel`
+* program header table of `obj/kern/kernel`
   The load address is `paddr`, i.e., 0x00100000. The link address is `vaddr`, i.e. 0xf0100000.
 
 ```bash
@@ -483,7 +460,7 @@ Program Header:
          filesz 0x00000000 memsz 0x00000000 flags rwx
 ```
 
-The load address and the link address are the same for bootloader. But it's not true for kernel. How this works is eplained [here]().
+The load address and the link address are the same for bootloader. But it's not true for kernel. How this works is eplained [here](#the-kernel).
 
 ### Exercise 5
 
@@ -524,7 +501,7 @@ start:
 protcseg:
   # Set up the protected-mode data segment registers
   movw    $PROT_MODE_DSEG, %ax    # Our data segment selector
-    8c32: 66 b8 10 00          	mov    $0x10,%ax
+    8c32: 66 b8 10 00              mov    $0x10,%ax
 
   ...
 ```
@@ -537,23 +514,23 @@ On entering bootloader, the 8 words of memory at 0x00100000 are all zero. I thin
 
 ```plain
 (gdb) x/8x 0x100000
-0x100000: 0x00000000	0x00000000	0x00000000	0x00000000
-0x100010: 0x00000000	0x00000000	0x00000000	0x00000000
+0x100000: 0x00000000    0x00000000    0x00000000    0x00000000
+0x100010: 0x00000000    0x00000000    0x00000000    0x00000000
 ```
 
 On entering kernel, the 8 words of memory at 0x00100000 are
 
 ```plain
 (gdb) x/8x 0x100000
-0x100000: 0x1badb002	0x00000000	0xe4524ffe	0x7205c766
-0x100010: 0x34000004	0x0000b812	0x220f0011	0xc0200fd8
+0x100000: 0x1badb002    0x00000000    0xe4524ffe    0x7205c766
+0x100010: 0x34000004    0x0000b812    0x220f0011    0xc0200fd8
 ```
 
 They are kernel code. The address 0x00100000 comes from *field* __p_vaddr__, the first __Program Header__.
 
 ## The Kernel
 
-+ **How the link address 0xf0100000 works ?**
+* **How the link address 0xf0100000 works ?**
   Let us make this question more clear. We never load our kernel into 0xf0100000 and our simulated PC even doesn't has enough memory for 0xf0100000. How can our kernel start to execute from such a high address, 0xf0100000? The answer is
 
   1. It's a convention. OS kernels often like to be linked and run at very high virtual address, such as 0xf0100000, in order to leave the lower part of the processor's virtual address space for user programs to use. Yet many machines don't have any physical memory at address 0xf0100000, so we can't count on being able to store the kernel there.
@@ -619,8 +596,8 @@ Were the new mapping not established, “jmp *%eax” would fail and the simulat
 
 ## Formatted Printing to the Console
 
-+ **How printf works**
-To understand how `printf` works, we need to know the mechanism behind [Variadic Function in C](http://en.cppreference.com/w/cpp/utility/variadic).
+* **How printf works**
+  To understand how `printf` works, we need to know the mechanism behind [Variadic Function in C](http://en.cppreference.com/w/cpp/utility/variadic).
 
 ### Exercise 8
 
@@ -652,7 +629,7 @@ index 28e01c9..72dad76 100644
 
 "console.c" exports `void cputchar(int)`, `int getchar(void)` and `int iscons(int fdnum)`. In "printf.c", `static void putch(int, int *)` wraps `void cputchar(int)` and is passed by `int vcprintf(const char *, va_list)` to `void vprintfmt(void (*)(int, void*), void *, const char *, va_list)` as the first argument.
 
-> Q: Explain the following from console.c: 
+> Q: Explain the following from console.c:
 
 ```c {.line-numbers}
 if (crt_pos >= CRT_SIZE) {
@@ -676,7 +653,7 @@ Scroll up one line automatically when the screen is full.
 
 In the call to `cprintf()`, *fmt* point to the format string of its arguments. In this case, *fmt* should point to some place in *.rodata* because ""x %d, y %x, z %d\n" is a const string and will be compiled into program. *ap* points to arguments after fmt. Those arguments should reside on stack.
 
-> Q: Run the following code. 
+> Q: Run the following code.
 > ```c {.line-numbers}
 > unsigned int i = 0x00646c72;
 > cprintf("H%x Wo%s", 57616, &i);
@@ -762,7 +739,7 @@ index 0000000..4857652
 + * sent to a CGA device, all 16 bits are written into the crt buffer and a colored character is displayed.
 + * If the character is sent to a serial port or a lpt port, the 16 bits is truncated to 8 bits. Only
 + * 8-bit character part is sent.
-+ * 
++ *
 + * +-----------------------------------------------+-----------------------------------------------+
 + * |                   Attribute                   |                  Character                    |
 + * +-----------------------------------------------+-----------------------------------------------+
@@ -770,8 +747,8 @@ index 0000000..4857652
 + * +-----------------------+-----------------------+-----------------------------------------------+
 + * |    Background color   |    Foreground color   |                  Code point                   |
 + * +-----------------------+-----------------------+-----------------------------------------------+
-+ * 
-+ * 
++ *
++ *
 + * reference:
 + * 1. http://blog.csdn.net/scnu20142005027/article/details/51264186
 + * 2. https://en.wikipedia.org/wiki/VGA-compatible_text_mode#Text_buffer
@@ -796,7 +773,7 @@ index 0000000..4857652
 +#define TEXT_BLACK              0x00        // black foreground color, RGB: #000000
 +#define TEXT_NAVY_BLUE          0x01        // navy blue foreground color, RGB: #000080
 +#define TEXT_OFFICE_GREEN       0x02        // office green foreground color, RGB: #008000
-+#define TEXT_TEAL               0x03        // teal foreground color, RGB: #008080 
++#define TEXT_TEAL               0x03        // teal foreground color, RGB: #008080
 +#define TEXT_MAROON             0x04        // maroon foreground color, RGB: #800000
 +#define TEXT_PURPLE             0x05        // purple foreground color, RGB: #800080
 +#define TEXT_OLIVE              0x06        // olive foreground color, RGB: #808000
@@ -819,7 +796,7 @@ diff --git a/kern/Makefrag b/kern/Makefrag
 index 3b2982e..8ff9a6e 100644
 --- a/kern/Makefrag
 +++ b/kern/Makefrag
-@@ -28,6 +28,7 @@ KERN_SRCFILES :=	kern/entry.S \
+@@ -28,6 +28,7 @@ KERN_SRCFILES :=    kern/entry.S \
       kern/sched.c \
       kern/syscall.c \
       kern/kdebug.c \
@@ -838,17 +815,17 @@ index e125b39..fdd4516 100644
 -
 +#include <inc/color.h>
  #include <kern/console.h>
- 
+
  static void cons_intr(int (*proc)(void));
 @@ -173,7 +173,7 @@ cga_putc(int c)
- 	
- 	// if no attribute given, then use black on white
- 	if (!(c & ~0xFF))
--		c |= 0x0700;
-+		SET_CHAR_COLOR(c, __textcolor);
- 
- 	switch (c & 0xff) {
- 	case '\b':
+
+     // if no attribute given, then use black on white
+     if (!(c & ~0xFF))
+-        c |= 0x0700;
++        SET_CHAR_COLOR(c, __textcolor);
+
+     switch (c & 0xff) {
+     case '\b':
 diff --git a/kern/monitor.c b/kern/monitor.c
 index 5f9275c..1f96df0 100644
 --- a/kern/monitor.c
@@ -858,26 +835,26 @@ index 5f9275c..1f96df0 100644
  #include <inc/assert.h>
  #include <inc/x86.h>
 +#include <inc/color.h>
- 
+
  #include <kern/console.h>
  #include <kern/monitor.h>
 @@ -155,6 +156,16 @@ monitor(struct Trapframe *tf)
- 	cprintf("Welcome to the JOS kernel monitor!\n");
- 	cprintf("Type 'help' for a list of commands.\n");
- 
-+	char *ph = "aaaaaaaaaaaaaaaaaaa";
-+	char *wph = "                   ";
-+	cprintf("%m%s%m%s%m%s%m%s\n\n", FORE_GROUND(TEXT_GRAY), ph, FORE_GROUND(TEXT_BLUE), ph, BACK_GROUND(TEXT_GREEN), ph, BACK_GROUND(TEXT_CYAN), ph);
-+	for (int i = 0; i < 16; ++i) {
-+		cprintf("%m%s", BACK_GROUND(i), wph);
-+		cprintf("%m%s", FORE_GROUND(i), ph);
-+		cprintf("%m%s", TEXT_COLOR(i+1, i), ph);
-+		cprintf("%m%s\n", TEXT_COLOR(i, i+1), ph);
-+	}
-+	cprintf("%s\n", "default color test");
- 
- 	while (1) {
- 		buf = readline("K> ");
+     cprintf("Welcome to the JOS kernel monitor!\n");
+     cprintf("Type 'help' for a list of commands.\n");
+
++    char *ph = "aaaaaaaaaaaaaaaaaaa";
++    char *wph = "                   ";
++    cprintf("%m%s%m%s%m%s%m%s\n\n", FORE_GROUND(TEXT_GRAY), ph, FORE_GROUND(TEXT_BLUE), ph, BACK_GROUND(TEXT_GREEN), ph, BACK_GROUND(TEXT_CYAN), ph);
++    for (int i = 0; i < 16; ++i) {
++        cprintf("%m%s", BACK_GROUND(i), wph);
++        cprintf("%m%s", FORE_GROUND(i), ph);
++        cprintf("%m%s", TEXT_COLOR(i+1, i), ph);
++        cprintf("%m%s\n", TEXT_COLOR(i, i+1), ph);
++    }
++    cprintf("%s\n", "default color test");
+
+     while (1) {
+         buf = readline("K> ");
 diff --git a/lib/color.c b/lib/color.c
 new file mode 100644
 index 0000000..80b29d5
@@ -897,40 +874,40 @@ index caadf07..3e0b986 100644
  #include <inc/stdarg.h>
  #include <inc/error.h>
 +#include <inc/color.h>
- 
+
  /*
   * Space or zero padding and a field width are supported for the numeric
 @@ -90,8 +91,10 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap)
- 
- 	while (1) {
- 		while ((ch = *(unsigned char *) fmt++) != '%') {
--			if (ch == '\0')
-+			if (ch == '\0') {
-+				RESET_TEXT_COLOR();		// reset textcolor after string is output
- 				return;
-+			}
- 			putch(ch, putdat);
- 		}
- 
+
+     while (1) {
+         while ((ch = *(unsigned char *) fmt++) != '%') {
+-            if (ch == '\0')
++            if (ch == '\0') {
++                RESET_TEXT_COLOR();        // reset textcolor after string is output
+                 return;
++            }
+             putch(ch, putdat);
+         }
+
 @@ -170,6 +173,11 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap)
- 			else
- 				printfmt(putch, putdat, "%s", p);
- 			break;
-+		
-+		// change text color
-+		case 'm':
-+			SET_TEXT_COLOR(getint(&ap, lflag));
-+			break;
- 
- 		// string
- 		case 's':
+             else
+                 printfmt(putch, putdat, "%s", p);
+             break;
++
++        // change text color
++        case 'm':
++            SET_TEXT_COLOR(getint(&ap, lflag));
++            break;
+
+         // string
+         case 's':
 ```
 
 ## The Stack
 
 ### Exercise 9
 
-> Q :  Determine where the kernel initializes its stack, and exactly where in memory its stack is located. How does the kernel reserve space for its stack? And at which "end" of this reserved area is the stack pointer initialized to point to? 
+> Q :  Determine where the kernel initializes its stack, and exactly where in memory its stack is located. How does the kernel reserve space for its stack? And at which "end" of this reserved area is the stack pointer initialized to point to?
 
 In `entry.S`, the following code initializes kernel's stack.
 
@@ -938,7 +915,7 @@ In `entry.S`, the following code initializes kernel's stack.
 # Clear the frame pointer register (EBP)
 # so that once we get into debugging C code,
 # stack backtraces will be terminated properly.
-  movl    $0x0,%ebp			# nuke frame pointer
+  movl    $0x0,%ebp            # nuke frame pointer
 
 # Set the stack pointer
   movl    $(bootstacktop),%esp
@@ -1103,37 +1080,37 @@ index 9547143..6234ed5 100644
 --- a/kern/kdebug.c
 +++ b/kern/kdebug.c
 @@ -178,7 +178,13 @@ debuginfo_eip(uintptr_t addr, struct Eipdebuginfo *info)
- 	//	There's a particular stabs type used for line numbers.
- 	//	Look at the STABS documentation and <inc/stab.h> to find
- 	//	which one.
--	// Your code here.
-+	stab_binsearch(stabs, &lline, &rline, N_SLINE, addr);
-+	if (lline <= rline) {
-+		info->eip_line = stabs[rline].n_desc;
-+	} else {
-+		return -1;
-+	}
+     //    There's a particular stabs type used for line numbers.
+     //    Look at the STABS documentation and <inc/stab.h> to find
+     //    which one.
+-    // Your code here.
++    stab_binsearch(stabs, &lline, &rline, N_SLINE, addr);
++    if (lline <= rline) {
++        info->eip_line = stabs[rline].n_desc;
++    } else {
++        return -1;
++    }
 +
- 
- 
- 	// Search backwards from the line number for the relevant filename
+
+
+     // Search backwards from the line number for the relevant filename
 diff --git a/kern/monitor.c b/kern/monitor.c
 index e137e92..5f9275c 100644
 --- a/kern/monitor.c
 +++ b/kern/monitor.c
 @@ -24,6 +24,7 @@ struct Command {
  static struct Command commands[] = {
- 	{ "help", "Display this list of commands", mon_help },
- 	{ "kerninfo", "Display information about the kernel", mon_kerninfo },
-+	{ "backtrace", "Display the current call stack", mon_backtrace},
+     { "help", "Display this list of commands", mon_help },
+     { "kerninfo", "Display information about the kernel", mon_kerninfo },
++    { "backtrace", "Display the current call stack", mon_backtrace},
  };
- 
+
  /***** Implementations of basic kernel monitor commands *****/
 @@ -57,7 +58,46 @@ mon_kerninfo(int argc, char **argv, struct Trapframe *tf)
  int
  mon_backtrace(int argc, char **argv, struct Trapframe *tf)
  {
--	// Your code here.
+-    // Your code here.
 +/*
 + * Stack Structure
 + *
@@ -1160,28 +1137,28 @@ index e137e92..5f9275c 100644
 + * (*) Note: ebp, addresses, args are all 4-bytes in 32-bit system.
 + */
 +
-+	struct Eipdebuginfo info;
-+	uint32_t *ebp = (uint32_t *) read_ebp();
-+	cprintf("Stack backtrace:\n");
++    struct Eipdebuginfo info;
++    uint32_t *ebp = (uint32_t *) read_ebp();
++    cprintf("Stack backtrace:\n");
 +
-+	while(ebp) {
-+		cprintf("  ebp %08x  eip %08x  args", ebp, ebp[1]);
-+		for(int i = 2; i < 7; ++i) {
-+			cprintf(" %08x", ebp[i]);
-+		}
-+		debuginfo_eip(ebp[1], &info);
-+		cprintf("\n       %s:%d: %.*s+%d\n", info.eip_file, info.eip_line, info.eip_fn_namelen, info.eip_fn_name, ebp[1]-info.eip_fn_addr);
-+		ebp = (uint32_t *) (*ebp);
-+	}
++    while(ebp) {
++        cprintf("  ebp %08x  eip %08x  args", ebp, ebp[1]);
++        for(int i = 2; i < 7; ++i) {
++            cprintf(" %08x", ebp[i]);
++        }
++        debuginfo_eip(ebp[1], &info);
++        cprintf("\n       %s:%d: %.*s+%d\n", info.eip_file, info.eip_line, info.eip_fn_namelen, info.eip_fn_name, ebp[1]-info.eip_fn_addr);
++        ebp = (uint32_t *) (*ebp);
++    }
 +
- 	return 0;
+     return 0;
  }
- 
+
 @@ -65,8 +105,8 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
 ```
 
-
 ## Grade
+
 Finally, we got our grade.
 
 ```bash
@@ -1194,4 +1171,4 @@ running JOS: (1.0s)
 Score: 50/50
 ```
 
-## This Complete The Lab.
+## End of *lab 1 Report*
