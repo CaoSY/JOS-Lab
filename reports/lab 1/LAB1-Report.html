@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Lab 1 Report</title>
+    <title>JOS Lab Report</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style> 
@@ -203,13 +203,7 @@ code.language-yaml {
   </head>
   <body for="html-export">
     <div class="mume markdown-preview">
-    <div><h1 class="mume-header" id="center-lab-1-report-center" ebook-toc-level-1="" heading="&lt;center&gt; Lab 1 Report &lt;/center&gt;"><center> Lab 1 Report </center></h1>
-
-<p><strong><em><center>Shuyang Cao</center></em></strong></p>
-<p><strong><em><center>Mar 12, 2018</center></em></strong></p>
-<ul>
-<li><a href="#center-lab-1-report-center"> Lab 1 Report </a>
-<ul>
+    <div><div class="code-chunk" data-id="global" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><div class="code-chunk" data-id="code-chunk-id-1" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><div class="code-chunk" data-id="code-chunk-id-2" data-cmd="toc"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><ul>
 <li><a href="#development-environment">Development Environment</a>
 <ul>
 <li><a href="#environment-configuration">Environment Configuration</a></li>
@@ -251,9 +245,6 @@ code.language-yaml {
 </ul>
 </li>
 <li><a href="#grade">Grade</a></li>
-<li><a href="#end-of-lab-1-report">End of <em>lab 1 Report</em></a></li>
-</ul>
-</li>
 </ul>
 <h2 class="mume-header" id="development-environment" ebook-toc-level-2="" heading="Development Environment">Development Environment</h2>
 
@@ -432,21 +423,22 @@ The target architecture is assumed to be i8086
 <p>Q: Use GDB’s <code>si</code> (Step Instruction) command to trace into the ROM BIOS for a few more instructions, and try to guess what it might be doing.</p>
 </blockquote>
 <p>Using <code>tee</code> we can dump GDB output to files. After filtering out GDB prompts, we get the first few lines of BIOS assembly code as shown below.</p>
-<pre data-role="codeBlock" data-info="assembly {.line-numbers}" class="language-assembly line-numbers"><code>[f000:fff0]    0xffff0:    ljmp   $0xf000,$0xe05b    ; Jump from the top of the reserved area to the beginning of BIOS program
-[f000:e05b]    0xfe05b: cmpl   $0x0,%cs:0x6c48  ; Whether the dword stored in %cs:0x6c48, i.e. 0xf6c48, is zero.
-                                                ; Maybe this is a sanity check but I&apos;m not sure.
-[f000:e062]    0xfe062: jne    0xfd2e1          ; Conditional jump. According to next instruction, the result of last instruction is equality.
-[f000:e066]    0xfe066: xor    %dx,%dx          ; Initialize %dx to zero.
-[f000:e068]    0xfe068: mov    %dx,%ss          ; Initialize stack segment register to zero.
-[f000:e06a]    0xfe06a: mov    $0x7000,%esp     ; Initialize stack pointer register to $0x7000. But why 0x7000 is chosen remains unknown.
-[f000:e070]    0xfe070: mov    $0xf3691,%edx    ;
-[f000:e076]    0xfe076:    jmp    0xfd165          ; Unconditional jump. Taking several instructions before and after this instruction, it looks like BIOS is calling a C function from assembly code.
-                                                ; For example, BIOS has initialized its data stack, stored an argument in %edx
-[f000:d165]    0xfd165: mov    %eax,%ecx        ; Don&apos;t  know where %eax is intialized.
-[f000:d168]    0xfd168: cli                     ; Disable interrupt
-[f000:d169]    0xfd169: cld                     ; Clear direction flag,
-[f000:d16a]    0xfd16a: mov    $0x8f,%eax
-[f000:d170]    0xfd170: out    %al,$0x70        ;
+<pre data-role="codeBlock" data-info="assembly {.line-numbers}" class="language-assembly line-numbers"><code>[f000:fff0]    0xffff0:    ljmp   $0xf000,$0xe05b     ; Jump from the top of the reserved area to the beginning of BIOS program
+[f000:e05b]    0xfe05b:     cmpl   $0x0,%cs:0x6c48    ; Whether the dword stored in %cs:0x6c48, i.e. 0xf6c48, is zero.
+                                                      ; Maybe this is a sanity check but I&apos;m not sure.
+[f000:e062]    0xfe062:    jne    0xfd2e1         ; Conditional jump.
+                                                  ; According to next instruction, the result of last instruction is equality.
+[f000:e066]    0xfe066:    xor    %dx,%dx         ; Initialize %dx to zero.
+[f000:e068]    0xfe068:    mov    %dx,%ss         ; Initialize stack segment register to zero.
+[f000:e06a]    0xfe06a:    mov    $0x7000,%esp    ; Initialize stack pointer register to $0x7000. But why 0x7000 is chosen remains unknown.
+[f000:e070]    0xfe070:    mov    $0xf3691,%edx   ;
+[f000:e076]    0xfe076:    jmp    0xfd165         ; Unconditional jump. Taking several instructions before and after this instruction, it looks like BIOS is calling a C function from assembly code.
+                                                  ; For example, BIOS has initialized its data stack, stored an argument in %edx
+[f000:d165]    0xfd165:    mov    %eax,%ecx        ; Don&apos;t  know where %eax is intialized.
+[f000:d168]    0xfd168:    cli                     ; Disable interrupt
+[f000:d169]    0xfd169:    cld                     ; Clear direction flag,
+[f000:d16a]    0xfd16a:    mov    $0x8f,%eax
+[f000:d170]    0xfd170:    out    %al,$0x70        ;
 [f000:d172]    0xfd172:    in     $0x71,%al
 [f000:d174]    0xfd174:    in     $0x92,%al
 [f000:d176]    0xfd176:    or     $0x2,%al
@@ -469,7 +461,7 @@ The target architecture is assumed to be i386
 =&gt; 0xf3691:   push   %ebx
 =&gt; 0xf3692:   sub    $0x20,%esp
 ...
-</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre><h2 class="mume-header" id="the-boot-loader" ebook-toc-level-2="" heading="The Boot Loader">The Boot Loader</h2>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre><h2 class="mume-header" id="the-boot-loader" ebook-toc-level-2="" heading="The Boot Loader">The Boot Loader</h2>
 
 <ul>
 <li><strong>What is <code>boot loader</code> ?</strong></li>
@@ -1048,13 +1040,12 @@ bootstack:
     .space          KSTKSIZE
     .globl          bootstacktop
 bootstacktop:
-</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre><pre data-role="codeBlock" data-info="c {.line-numbers}" class="language-c line-numbers">
-<span class="token macro property"># inc/memlayout.h</span>
+</code><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></pre><pre data-role="codeBlock" data-info="c {.line-numbers}" class="language-c line-numbers"><span class="token macro property"># inc/memlayout.h</span>
 <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span>
 <span class="token macro property">#<span class="token directive keyword">define</span> PGSIZE        4096            </span><span class="token comment" spellcheck="true">// bytes mapped by a page</span>
 <span class="token punctuation">.</span> <span class="token punctuation">.</span> <span class="token punctuation">.</span>
 <span class="token macro property">#<span class="token directive keyword">define</span> KSTKSIZE      (8*PGSIZE)      </span><span class="token comment" spellcheck="true">// size of a kernel stack</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></pre><h3 class="mume-header" id="exeercise-10" ebook-toc-level-3="" heading="Exeercise 10">Exeercise 10</h3>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></pre><h3 class="mume-header" id="exeercise-10" ebook-toc-level-3="" heading="Exeercise 10">Exeercise 10</h3>
 
 <blockquote>
 <p>Q : To become familiar with the C calling conventions on the x86, find the address of the test_backtrace function in obj/kern/kernel.asm, set a breakpoint there, and examine what happens each time it gets called after the kernel starts. How many 32-bit words does each recursive nesting level of test_backtrace push on the stack, and what are those words?</p>
@@ -1220,9 +1211,7 @@ index e137e92..5f9275c 100644
   backtrace symbols: OK
   backtrace lines: OK
 Score: 50/50
-</pre><h2 class="mume-header" id="end-of-lab-1-report" ebook-toc-level-2="" heading="End of &lt;em&gt;lab 1 Report&lt;/em&gt;">End of <em>lab 1 Report</em></h2>
-
-</div>
+</pre><div class="code-chunk" data-id="code-chunk-id-3" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div></div>
     </div>
   </body>
 </html>            

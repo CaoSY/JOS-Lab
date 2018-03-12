@@ -1,9 +1,9 @@
 ---
-#export_on_save:
-#  ebook: "html"
+export_on_save:
+  ebook: "html"
 
 ebook:
-  title: "Lab 1 Report"
+  title: "JOS Lab Report"
   author: "Shuyang Cao"
   language: English
   include_toc: true
@@ -11,17 +11,76 @@ ebook:
     cdn: true
 ---
 
-# <center> Lab 1 Report </center>
+```python {cmd=true hide=true run_on_save=true output="html" id="global"}
+import time
 
-***<center>Shuyang Cao</center>***
-
-***<center>Mar 12, 2018</center>***
-
-```python {cmd=true args=["-v"]}
-print("Verbose will be printed first")
+# global variables
+labnumber = 1
+title = "Lab {_number} Report".format(_number=labnumber)
+author = "Shuyang Cao"
+createDate = "Mar 8 2018"
+createTime = "23:18:00"
+currentTime = time.localtime()
+updateDate = time.strftime("%b %d %Y", currentTime)
+updateTime = time.strftime("%H:%M:%S", currentTime)
 ```
 
-[TOC]
+```python {cmd=true hide=true run_on_save=true output="html" continue="global"}
+
+ctStyle = 'display:inline-block;width:50%;text-align:left'
+ctSpan = '<span style="{_style}">Created: {_date} {_time}</span>'
+ctSpan = ctSpan.format(_style=ctStyle, _date=createDate, _time=createTime)
+
+mtStyle = 'display:inline-block;width:50%;text-align:right'
+mtSpan = '<span style="{_style}">Last Updated: {_date} {_time}</span>'
+mtSpan = mtSpan.format(_style=mtStyle, _date=updateDate, _time=updateTime)
+
+header = '<p>{_ct}{_mt}</p>'.format(_ct=ctSpan, _mt=mtSpan)
+
+
+titleStyle = "font-style:italic; font-family:Times; font-size:4em"
+titleH1 = '<h1 style="{_style}"><center>{_title}</center></h1>'.format(_style=titleStyle, _title=title)
+
+authorStyle = "font-style:italic; font-family:Times; font-size:1.2em"
+
+authorDiv = '<div style="{_style}"><center>{_author}</center><center>{_updateDate}</center></div>'.format(_style=authorStyle, _author=author, _updateDate=updateDate)
+
+print(header)
+print(titleH1)
+print(authorDiv)
+
+```
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+* [Development Environment](#development-environment)
+	* [Environment Configuration](#environment-configuration)
+	* [Set up & Test Development Environment](#set-up-test-development-environment)
+* [PC Bootstrap](#pc-bootstrap)
+	* [Simulating the x86](#simulating-the-x86)
+	* [The PC's Physical Address Space](#the-pcs-physical-address-space)
+	* [The ROM BIOS](#the-rom-bios)
+	* [Exercise 2](#exercise-2)
+* [The Boot Loader](#the-boot-loader)
+	* [Exercise 3](#exercise-3)
+	* [Loading the Kernel](#loading-the-kernel)
+	* [Exercise 5](#exercise-5)
+	* [Exercise 6](#exercise-6)
+* [The Kernel](#the-kernel)
+	* [Exercise 7](#exercise-7)
+* [Formatted Printing to the Console](#formatted-printing-to-the-console)
+	* [Exercise 8](#exercise-8)
+	* [Challenge](#challenge)
+* [The Stack](#the-stack)
+	* [Exercise 9](#exercise-9)
+	* [Exeercise 10](#exeercise-10)
+	* [Exercise 11 & 12](#exercise-11-12)
+* [Grade](#grade)
+
+<!-- /code_chunk_output -->
+
 
 ## Development Environment
 
@@ -238,21 +297,22 @@ Since 16-bit mode can only access 1MB memory. Different combinations of segment 
 Using `tee` we can dump GDB output to files. After filtering out GDB prompts, we get the first few lines of BIOS assembly code as shown below.
 
 ```assembly {.line-numbers}
-[f000:fff0]    0xffff0:    ljmp   $0xf000,$0xe05b    ; Jump from the top of the reserved area to the beginning of BIOS program
-[f000:e05b]    0xfe05b: cmpl   $0x0,%cs:0x6c48  ; Whether the dword stored in %cs:0x6c48, i.e. 0xf6c48, is zero.
-                                                ; Maybe this is a sanity check but I'm not sure.
-[f000:e062]    0xfe062: jne    0xfd2e1          ; Conditional jump. According to next instruction, the result of last instruction is equality.
-[f000:e066]    0xfe066: xor    %dx,%dx          ; Initialize %dx to zero.
-[f000:e068]    0xfe068: mov    %dx,%ss          ; Initialize stack segment register to zero.
-[f000:e06a]    0xfe06a: mov    $0x7000,%esp     ; Initialize stack pointer register to $0x7000. But why 0x7000 is chosen remains unknown.
-[f000:e070]    0xfe070: mov    $0xf3691,%edx    ;
-[f000:e076]    0xfe076:    jmp    0xfd165          ; Unconditional jump. Taking several instructions before and after this instruction, it looks like BIOS is calling a C function from assembly code.
-                                                ; For example, BIOS has initialized its data stack, stored an argument in %edx
-[f000:d165]    0xfd165: mov    %eax,%ecx        ; Don't  know where %eax is intialized.
-[f000:d168]    0xfd168: cli                     ; Disable interrupt
-[f000:d169]    0xfd169: cld                     ; Clear direction flag,
-[f000:d16a]    0xfd16a: mov    $0x8f,%eax
-[f000:d170]    0xfd170: out    %al,$0x70        ;
+[f000:fff0]    0xffff0:    ljmp   $0xf000,$0xe05b     ; Jump from the top of the reserved area to the beginning of BIOS program
+[f000:e05b]    0xfe05b:     cmpl   $0x0,%cs:0x6c48    ; Whether the dword stored in %cs:0x6c48, i.e. 0xf6c48, is zero.
+                                                      ; Maybe this is a sanity check but I'm not sure.
+[f000:e062]    0xfe062:    jne    0xfd2e1         ; Conditional jump.
+                                                  ; According to next instruction, the result of last instruction is equality.
+[f000:e066]    0xfe066:    xor    %dx,%dx         ; Initialize %dx to zero.
+[f000:e068]    0xfe068:    mov    %dx,%ss         ; Initialize stack segment register to zero.
+[f000:e06a]    0xfe06a:    mov    $0x7000,%esp    ; Initialize stack pointer register to $0x7000. But why 0x7000 is chosen remains unknown.
+[f000:e070]    0xfe070:    mov    $0xf3691,%edx   ;
+[f000:e076]    0xfe076:    jmp    0xfd165         ; Unconditional jump. Taking several instructions before and after this instruction, it looks like BIOS is calling a C function from assembly code.
+                                                  ; For example, BIOS has initialized its data stack, stored an argument in %edx
+[f000:d165]    0xfd165:    mov    %eax,%ecx        ; Don't  know where %eax is intialized.
+[f000:d168]    0xfd168:    cli                     ; Disable interrupt
+[f000:d169]    0xfd169:    cld                     ; Clear direction flag,
+[f000:d16a]    0xfd16a:    mov    $0x8f,%eax
+[f000:d170]    0xfd170:    out    %al,$0x70        ;
 [f000:d172]    0xfd172:    in     $0x71,%al
 [f000:d174]    0xfd174:    in     $0x92,%al
 [f000:d176]    0xfd176:    or     $0x2,%al
@@ -951,7 +1011,6 @@ bootstacktop:
 ```
 
 ```c {.line-numbers}
-
 # inc/memlayout.h
 . . .
 #define PGSIZE        4096            // bytes mapped by a page
@@ -1171,4 +1230,11 @@ running JOS: (1.0s)
 Score: 50/50
 ```
 
-## End of *lab 1 Report*
+```python {cmd=true hide=true run_on_save=true output="html" continue="global"}
+
+footerStyle = "width:100%;text-align:center;font-family:Times"
+footerTemplate = '<footer style="{_style}">End of {_title}<br/>Email: <a mailto="caoshuyang1996@pku.edu.cn">caoshuyang@pku.edu.cn</a> GitHub: <a href="https://github.com/CaoSY/JOS-Lab">JOS-Lab</a></footer>'
+
+# print footer
+print(footerTemplate.format(_style=footerStyle, _title=title))
+```
