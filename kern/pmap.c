@@ -5,6 +5,7 @@
 #include <inc/error.h>
 #include <inc/string.h>
 #include <inc/assert.h>
+#include <inc/memlayout.h>
 
 #include <kern/pmap.h>
 #include <kern/kclock.h>
@@ -102,8 +103,15 @@ boot_alloc(uint32_t n)
 	// to a multiple of PGSIZE.
 	//
 	// LAB 2: Your code here.
+	result = nextfree;
+	nextfree = ROUNDUP(nextfree + n, PGSIZE);
+	if ((uint32_t)nextfree - KERNBASE > npages*PGSIZE) {
+		panic("Out of Memory!\n");
+		nextfree = result;
+		result = NULL;
+	}
 
-	return NULL;
+	return result;
 }
 
 // Set up a two-level page table:
@@ -148,6 +156,8 @@ mem_init(void)
 	// array.  'npages' is the number of physical pages in memory.  Use memset
 	// to initialize all fields of each struct PageInfo to 0.
 	// Your code goes here:
+	pages = (struct PageInfo *) boot_alloc(sizeof(struct PageInfo) * npages);
+	memset(pages, 0, sizeof(struct PageInfo)*npages);
 
 
 	//////////////////////////////////////////////////////////////////////
@@ -251,8 +261,110 @@ page_init(void)
 	// Change the code to reflect this.
 	// NB: DO NOT actually touch the physical memory corresponding to
 	// free pages!
+
+	// Keep in mind memset(pages, 0, sizeof(struct PageInfo)*npages); is 
+	// called before this function, so we can simply assume whichever
+	// field not set is zero.
+
+	/*
+	 * When page_init() is called, the usage of our physical memory is
+	 * shown in Fig.1. After our page table is initialized, our free
+	 * pages are stringed by a linked list, which looks like a stack,
+	 * as shown in Fig.2.
+	 * 
+	 * Figure 1:
+	 * 
+	 *       256MB -------------> +--------------------+
+	 *                            |                    |
+	 *                            |                    |
+	 *                            /\/\/\/\/\/\/\/\/\/\/\
+	 * 
+	 *       boot_alloc(0) -----> /\/\/\/\/\/\/\/\/\/\/\
+	 *                            |                    |
+	 *                            |  used by kernel    |
+	 *                            |                    |
+	 *       0x00100000(1MB) ---> +--------------------+
+	 *                            |     BIOS ROM       |
+	 *       0x000F0000(960KB) -> +--------------------+
+	 *                            |   16-bit devices,  |
+	 *                            |   expansions ROMs  |
+	 *       0x000C0000(768KB) -> +--------------------+
+	 *                            |    VGA Display     |
+	 *       0x000A0000(640KB) -> +--------------------+
+	 *                            |                    |
+	 *                            |     Low Memory     |
+	 *                            |                    |
+	 *       0x00001000(4KB) ---> |  ~~~~~~~~~~~~~~~~~ |
+	 *                            |   page 0 is used   |
+	 *                            |      by BIOS       |
+	 *       0x00000000 --------> +--------------------+
+	 * 
+	 * 
+	 * Figure 2:
+	 * 
+	 *       page N    +--------------------+
+	 *                 |      pp_link       | -----\
+	 *                 +--------------------+      |
+	 *                 |      pp_ref        |      |
+	 *                 +--------------------+      |
+	 *                                             |
+	 *                           /-----------------/
+	 *                           |
+	 *                           v
+	 *       page N-1  +--------------------+
+	 *                 |      pp_link       | -----\
+	 *                 +--------------------+      |
+	 *                 |      pp_ref        |      |
+	 *                 +--------------------+      |
+	 *                                             |
+	 *                           .
+	 *                           .
+	 *                           .
+	 * 
+	 *                           /-----------------/
+	 *                           |
+	 *                           v
+	 *       page 1    +--------------------+
+	 *                 |      pp_link       | -----\
+	 *                 +--------------------+      |
+	 *                 |      pp_ref        |      |
+	 *                 +--------------------+      |
+	 *                                             |
+	 *                           /-----------------/
+	 *                           |
+	 *                           v
+	 *       page 0    +--------------------+
+	 *                 |    pp_link=NULL    |
+	 *                 +--------------------+
+	 *                 |      pp_ref        |
+	 *                 +--------------------+
+	 * 
+	 */
+
+	page_free_list = NULL;
+
+	pages[0].pp_ref = 1;		// mark physical page 0 as in use
 	size_t i;
-	for (i = 0; i < npages; i++) {
+	
+	for (i = 1; i < npages_basemem; ++i) {
+		// The rest of base memory, [PGSIZE, npages_basemem * PGSIZE)
+		// is free.
+		pages[i].pp_ref = 0;
+		pages[i].pp_link = page_free_list;
+		page_free_list = &pages[i];
+	}
+
+	size_t kernel_end_page = ((uint32_t)(boot_alloc(0)) - KERNBASE)/PGSIZE;
+	for (; i < kernel_end_page; ++i) {
+		// IO hole and kernel physical memory reside consecutively
+		// in physcial memory. So initialize their corresponding 
+		// page entries in one loop
+		pages[i].pp_ref = 1;
+		pages[i].pp_link = NULL;
+	}
+	
+	for (; i < npages; ++i) {
+		// The rest of extended memory are not used
 		pages[i].pp_ref = 0;
 		pages[i].pp_link = page_free_list;
 		page_free_list = &pages[i];
@@ -274,8 +386,17 @@ page_init(void)
 struct PageInfo *
 page_alloc(int alloc_flags)
 {
-	// Fill this function in
-	return 0;
+	if (!page_free_list)	// if page_free_list == NULL
+		return NULL;
+	
+	struct PageInfo *page_tobe_free = page_free_list;
+	page_free_list = page_free_list->pp_link;
+	page_tobe_free->pp_link = NULL;
+
+	if (alloc_flags & ALLOC_ZERO)
+		memset(page2kva(page_tobe_free), 0, PGSIZE);
+	
+	return page_tobe_free;
 }
 
 //
@@ -288,6 +409,18 @@ page_free(struct PageInfo *pp)
 	// Fill this function in
 	// Hint: You may want to panic if pp->pp_ref is nonzero or
 	// pp->pp_link is not NULL.
+
+	if (pp->pp_link)		// pp->pp_link is not NULL, double free
+		panic("Double free page %u, pvaddr:%x, ppaddr:%x\n",\
+			(uint32_t)(pp-pages), page2kva(pp), page2pa(pp));
+	
+	if (pp->pp_ref)			// pp->pp_ref is nonzero
+		panic("Free a page in use, pnum:%u, pvaddr:%x, ppaddr:%x\n",\
+			(uint32_t)(pp-pages), page2kva(pp), page2pa(pp));
+	
+	pp->pp_link = page_free_list;
+	page_free_list = pp;
+	return;
 }
 
 //
