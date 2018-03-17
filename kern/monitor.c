@@ -136,7 +136,7 @@ mon_showmappings(int argc, char **argv, struct Trapframe *tf)
 	uint32_t lower_addr = strtol(argv[1], NULL, 0);
 	uint32_t upper_addr = strtol(argv[2], NULL, 0);
 	lower_addr = ROUNDDOWN(lower_addr, PGSIZE);
-	upper_addr = ROUNDUP(upper_addr, PGSIZE);
+	upper_addr = ROUNDDOWN(upper_addr, PGSIZE);
 
 	cprintf("       vaddr                   paddr          kern/user\n");
 	while (lower_addr < upper_addr) {

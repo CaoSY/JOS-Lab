@@ -20,11 +20,11 @@ int mon_showmappings(int argc, char **argv, struct Trapframe *tf);
 #define CMD_HELP_HELP_STR       "SYNOPSIS: help {list | command name}\n\
     list: display all help information of all commands.\n\
     command name: display help information of given name\n"
-#define CMD_KERNINFO_HELP_STR   "Display information about the kernel"
-#define CMD_BACKTRACE_HELP_STR  "Display the current call stack"
+#define CMD_KERNINFO_HELP_STR   "Display information about the kernel\n"
+#define CMD_BACKTRACE_HELP_STR  "Display the current call stack\n"
 #define CMD_SHOWMAPPINGS_HELP_STR   "SYNOPSIS: showmappings LOWER_ADDR UPPER_ADDR\n\
-    Display pages mappings within the virtual address range provided.\n\
-    LOWER_ADDR/UPPER_ADDR will be rounded down/up to be aligned in 4KB(i.e. page size).\n\
+    Display pages mappings in [LOWER_ADDR, UPPER_ADDR).\n\
+    LOWER_ADDR/UPPER_ADDR will be rounded down to be aligned in 4KB(i.e. page size).\n\
     Addresses should be 32-bit unsigned integers.\n"
 
 #define CMD_ERROR(_cmd_name_)     "Wrong arguments! type 'help " _cmd_name_ " for usage.\n"
