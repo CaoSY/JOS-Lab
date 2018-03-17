@@ -25,11 +25,10 @@ struct Command {
 };
 
 static struct Command commands[] = {
-	{ "help", "Display this list of commands", mon_help },
-	{ "kerninfo", "Display information about the kernel", mon_kerninfo },
-	{ "backtrace", "Display the current call stack", mon_backtrace},
-	{ "showmappings", "Display pages mappings within \
-		the virtual address range provided", mon_showmappings},
+	{ "help", CMD_HELP_HELP_STR, mon_help },
+	{ "kerninfo", CMD_KERNINFO_HELP_STR, mon_kerninfo },
+	{ "backtrace", CMD_BACKTRACE_HELP_STR, mon_backtrace},
+	{ "showmappings", CMD_SHOWMAPPINGS_HELP_STR, mon_showmappings},
 };
 
 /***** Implementations of basic kernel monitor commands *****/
@@ -37,10 +36,29 @@ static struct Command commands[] = {
 int
 mon_help(int argc, char **argv, struct Trapframe *tf)
 {
-	int i;
+	if (argc != 2) {
+		cprintf(CMD_ERROR("help"));
+		return 0;
+	}
 
-	for (i = 0; i < ARRAY_SIZE(commands); i++)
-		cprintf("%s - %s\n", commands[i].name, commands[i].desc);
+	if (strcmp(argv[1], "list") == 0) {
+		for (int i = 0; i < ARRAY_SIZE(commands); i++)
+			cprintf("%s\n   -%s\n", commands[i].name, commands[i].desc);
+		return 0;
+	}
+
+
+	int cmd_found = false;
+	for (int i = 0; i < ARRAY_SIZE(commands); i++) {
+		if (strcmp(argv[1], commands[i].name) == 0) {
+			cprintf("%s\n   -%s\n", commands[i].name, commands[i].desc);
+			cmd_found = true;
+		}
+	}
+	
+	if (!cmd_found)
+		cprintf("command not found!\n");
+
 	return 0;
 }
 
@@ -111,9 +129,7 @@ int
 mon_showmappings(int argc, char **argv, struct Trapframe *tf)
 {
 	if (argc != 3) {
-		cprintf("Usage: showmappings LOWER_ADDR UPPER_ADDR\n"
-				"LOWER_ADDR/UPPER_ADDR will be rounded down/up to be aligned in 4KB(i.e. page size).\n"
-				"Addresses should be 32-bit unsigned integers.\n");
+		cprintf(CMD_ERROR("showmappings"));
 		return 0;
 	}
 
@@ -122,27 +138,30 @@ mon_showmappings(int argc, char **argv, struct Trapframe *tf)
 	lower_addr = ROUNDDOWN(lower_addr, PGSIZE);
 	upper_addr = ROUNDUP(upper_addr, PGSIZE);
 
-	pte_t *pt_entry;
+	cprintf("       vaddr                   paddr          kern/user\n");
 	while (lower_addr < upper_addr) {
-		pt_entry = pgdir_walk(kern_pgdir, (void *)lower_addr, false);
+		cprintf("%08x - %08x:    ", lower_addr, lower_addr + PGSIZE);
 		
-		cprintf("%8x - %8x: ", lower_addr, lower_addr + PGSIZE);
+		pte_t *pt_entry = pgdir_walk(kern_pgdir, (void *)lower_addr, false);
 		if (pt_entry == NULL || !(*pt_entry & PTE_P)) {
 			cprintf("not mapped\n");
 		} else {
-			cprintf("%8x ", PTE_ADDR(*pt_entry));
+			physaddr_t pte_paddr = PTE_ADDR(*pt_entry);
+			cprintf("%08x - %08x      ", pte_paddr, pte_paddr + PGSIZE);
 
-			if (*pt_entry & PTE_U)
-				cprintf ("user: ");
-			else
-				cprintf ("kernel: ");
+			char privilege[] = "R-/--";
 			
 			if (*pt_entry & PTE_W)
-				cprintf ("read/write");
-			else
-				cprintf ("read only");
+				privilege[1] = 'W';
 			
-			cprintf ("\n");
+			if (*pt_entry & PTE_U) {
+				privilege[3] = 'R';
+
+				if (*pt_entry & PTE_W)
+					privilege[4] = 'W';
+			}
+			
+			cprintf("%s\n", privilege);
 		}
 
 		lower_addr += PGSIZE;
