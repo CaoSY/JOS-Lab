@@ -463,7 +463,7 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 	pde_t *pt_entry = &pgdir[PDX(va)];	// pointer to page dir entry
 
 	// if the relevant page table page exist, return it
-	if ((uintptr_t)*pt_entry | PTE_P)
+	if ((uintptr_t)*pt_entry & PTE_P)
 		return pt_entry;
 	
 	// if the relevant page table doesn't exist and create == false
