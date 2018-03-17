@@ -460,7 +460,7 @@ pte_t *
 pgdir_walk(pde_t *pgdir, const void *va, int create)
 {
 	// Fill this function in
-	pde_t *pt_entry = pgdir[PDX(va)];	// pointer to page dir entry
+	pde_t *pt_entry = &pgdir[PDX(va)];	// pointer to page dir entry
 
 	// if the relevant page table page exist, return it
 	if ((uintptr_t)*pt_entry | PTE_P)
@@ -580,7 +580,7 @@ page_lookup(pde_t *pgdir, void *va, pte_t **pte_store)
 	if (pte_store)	// if pte_store is not zero
 		*pte_store = pt_entry;
 
-	return pa2page(pt_entry);
+	return pa2page(PTE_ADDR(*pt_entry));
 }
 
 //
