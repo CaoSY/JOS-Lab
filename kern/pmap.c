@@ -133,7 +133,7 @@ mem_init(void)
 	i386_detect_memory();
 
 	// Remove this line when you're ready to test this function.
-	panic("mem_init: This function is not finished\n");
+	//panic("mem_init: This function is not finished\n");
 
 	//////////////////////////////////////////////////////////////////////
 	// create initial page directory.
@@ -456,6 +456,9 @@ page_decref(struct PageInfo* pp)
 // Hint 3: look at inc/mmu.h for useful macros that mainipulate page
 // table and page directory entries.
 //
+// Hint 4: all pointers in C are virtual addresses but all addresses in
+// page dir and page table are physical address
+//
 pte_t *
 pgdir_walk(pde_t *pgdir, const void *va, int create)
 {
@@ -478,8 +481,10 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 	struct PageInfo *new_page_info = page_alloc(ALLOC_ZERO);
 	if (new_page_info == NULL)
 		return NULL;
-	
 	++(new_page_info->pp_ref);
+	
+	// pages of kernel and users may be allocated on one page table
+	// so it's convenient to give page table a user level privilige
 	*pd_entry = (pde_t)((uintptr_t)page2pa(new_page_info) | PTE_P | PTE_W | PTE_U);
 	pgtable = (pte_t *)page2kva(new_page_info);
 	return &pgtable[PTX(va)];
