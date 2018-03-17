@@ -389,14 +389,14 @@ page_alloc(int alloc_flags)
 	if (!page_free_list)	// if page_free_list == NULL
 		return NULL;
 	
-	struct PageInfo *page_tobe_free = page_free_list;
+	struct PageInfo *page_allocated = page_free_list;
 	page_free_list = page_free_list->pp_link;
-	page_tobe_free->pp_link = NULL;
+	page_allocated->pp_link = NULL;
 
 	if (alloc_flags & ALLOC_ZERO)
-		memset(page2kva(page_tobe_free), 0, PGSIZE);
+		memset(page2kva(page_allocated), 0, PGSIZE);
 	
-	return page_tobe_free;
+	return page_allocated;
 }
 
 //
