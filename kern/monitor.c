@@ -7,10 +7,12 @@
 #include <inc/assert.h>
 #include <inc/x86.h>
 #include <inc/color.h>
+#include <inc/types.h>
 
 #include <kern/console.h>
 #include <kern/monitor.h>
 #include <kern/kdebug.h>
+#include <kern/pmap.h>
 
 #define CMDBUF_SIZE	80	// enough for one VGA text line
 
@@ -26,6 +28,8 @@ static struct Command commands[] = {
 	{ "help", "Display this list of commands", mon_help },
 	{ "kerninfo", "Display information about the kernel", mon_kerninfo },
 	{ "backtrace", "Display the current call stack", mon_backtrace},
+	{ "showmappings", "Display pages mappings within \
+		the virtual address range provided", mon_showmappings},
 };
 
 /***** Implementations of basic kernel monitor commands *****/
@@ -103,6 +107,49 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
 	return 0;
 }
 
+int
+mon_showmappings(int argc, char **argv, struct Trapframe *tf)
+{
+	if (argc != 3) {
+		cprintf("Usage: showmappings LOWER_ADDR UPPER_ADDR\n"
+				"LOWER_ADDR/UPPER_ADDR will be rounded down/up to be aligned in 4KB(i.e. page size).\n"
+				"Addresses should be 32-bit unsigned integers.\n");
+		return 0;
+	}
+
+	uint32_t lower_addr = strtol(argv[1], NULL, 0);
+	uint32_t upper_addr = strtol(argv[2], NULL, 0);
+	lower_addr = ROUNDDOWN(lower_addr, PGSIZE);
+	upper_addr = ROUNDUP(upper_addr, PGSIZE);
+
+	pte_t *pt_entry;
+	while (lower_addr < upper_addr) {
+		pt_entry = pgdir_walk(kern_pgdir, (void *)lower_addr, false);
+		
+		cprintf("%8x - %8x: ", lower_addr, lower_addr + PGSIZE);
+		if (pt_entry == NULL || !(*pt_entry & PTE_P)) {
+			cprintf("not mapped\n");
+		} else {
+			cprintf("%8x ", PTE_ADDR(*pt_entry));
+
+			if (*pt_entry & PTE_U)
+				cprintf ("user: ");
+			else
+				cprintf ("kernel: ");
+			
+			if (*pt_entry & PTE_W)
+				cprintf ("read/write");
+			else
+				cprintf ("read only");
+			
+			cprintf ("\n");
+		}
+
+		lower_addr += PGSIZE;
+	}
+
+	return 0;
+}
 
 
 /***** Kernel monitor command interpreter *****/
