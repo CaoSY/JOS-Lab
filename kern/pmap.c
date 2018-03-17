@@ -205,6 +205,11 @@ mem_init(void)
 	// we just set up the mapping anyway.
 	// Permissions: kernel RW, user NONE
 	// Your code goes here:
+	// Actually 0xFFFFFFFF is 2^32-1. But you aren't able to represent 2^32
+	// in an integer on 32-bit system. So 0xFFFFFFFF-KERNBASE is one less
+	// than the size we want. Luckily, boot_map_region() will round up the
+	// for us and everything goes fine since 0xFFFFFFFF-KERNBASE is 
+	// representable on 32-bit system.
 	boot_map_region(kern_pgdir, KERNBASE, 0xFFFFFFFF-KERNBASE, (physaddr_t)0x0, PTE_W);
 
 	// Check that the initial page directory has been set up correctly.
