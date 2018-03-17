@@ -460,13 +460,13 @@ pte_t *
 pgdir_walk(pde_t *pgdir, const void *va, int create)
 {
 	// Fill this function in
-	pde_t *pd_entry = pgdir[PDX(va)];
+	pde_t *pd_entry = &pgdir[PDX(va)];
 	pte_t *pgtable = NULL;
 
 	// if the relevant page table page exists
 	if ((physaddr_t)*pd_entry & PTE_P) {
 		pgtable = (pte_t *)(KADDR(PTE_ADDR(*pd_entry)));
-		return pgtable[PTX(va)];
+		return &pgtable[PTX(va)];
 	}
 	
 	// if the relevant page table doesn't exist and create == false
@@ -482,7 +482,7 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 	++(new_page_info->pp_ref);
 	*pd_entry = (pde_t)((uintptr_t)page2pa(new_page_info) | PTE_P | PTE_W | PTE_U);
 	pgtable = (pte_t *)page2kva(new_page_info);
-	return pgtable[PTX(va)];
+	return &pgtable[PTX(va)];
 }
 
 //
