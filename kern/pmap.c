@@ -460,7 +460,25 @@ pte_t *
 pgdir_walk(pde_t *pgdir, const void *va, int create)
 {
 	// Fill this function in
-	return NULL;
+	pde_t *pt_entry = pgdir[PDX(va)];	// pointer to page dir entry
+
+	// if the relevant page table page exist, return it
+	if ((uintptr_t)*pt_entry | PTE_P)
+		return pt_entry;
+	
+	// if the relevant page table doesn't exist and create == false
+	if (create == false)
+		return NULL;
+	
+	// allocate a new page table, use ALLOC_ZERO to clear the page
+	// page_alloc guarantees NULL is returned on allocation failure
+	struct PageInfo *new_page_info = page_alloc(ALLOC_ZERO);
+	if (new_page_info == NULL)
+		return NULL;
+	
+	++(new_page_info->pp_ref);
+	*pt_entry = (pde_t)((uintptr_t)page2pa(new_page_info) | PTE_P | PTE_W | PTE_U);
+	return pt_entry;
 }
 
 //
@@ -477,7 +495,16 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 static void
 boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, physaddr_t pa, int perm)
 {
-	// Fill this function in
+	for (size_t alloc_size = 0; alloc_size < size; alloc_size += PGSIZE) {
+		pte_t *pt_entry = pgdir_walk(pgdir, (void *)va, true);
+		
+		if (pt_entry == NULL)
+			panic("Page allocation failed!");
+		
+		*pt_entry = pa | perm | PTE_P;
+		va += PGSIZE;
+		pa += PGSIZE;
+	}
 }
 
 //
@@ -498,6 +525,13 @@ boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, physaddr_t pa, int perm
 // frequently leads to subtle bugs; there's an elegant way to handle
 // everything in one code path.
 //
+// Corner-case answer: The hint actually remind us to consider such a condition
+// that the same pp is re-inserted at the same virtual address "va" and the "pp"
+// is only referred to by the "va" previously, namely, pp->pp_ref == 0. Under
+// such a condition, if we call page_remove() before we increment pp->ref,
+// page_remove() will free pp back to free_page_list so that our pte will point
+// to a free page. if we increment pp->pp_ref first, we can avoid this mistake.
+//
 // RETURNS:
 //   0 on success
 //   -E_NO_MEM, if page table couldn't be allocated
@@ -509,6 +543,16 @@ int
 page_insert(pde_t *pgdir, struct PageInfo *pp, void *va, int perm)
 {
 	// Fill this function in
+	pte_t *pt_entry = pgdir_walk(pgdir, va, true);
+	
+	if (pt_entry == NULL)
+		return -E_NO_MEM;
+
+	++(pp->pp_ref);
+	if (*pt_entry & PTE_P)
+		page_remove(pgdir, va);		// page_remove() will call tlb_invalidate()
+
+	*pt_entry = page2pa(pp) | perm | PTE_P;
 	return 0;
 }
 
@@ -527,7 +571,16 @@ struct PageInfo *
 page_lookup(pde_t *pgdir, void *va, pte_t **pte_store)
 {
 	// Fill this function in
-	return NULL;
+
+	pte_t *pt_entry = pgdir_walk(pgdir, va, false);
+
+	if (pt_entry == NULL)
+		return NULL;
+	
+	if (pte_store)	// if pte_store is not zero
+		*pte_store = pt_entry;
+
+	return pa2page(pt_entry);
 }
 
 //
@@ -549,6 +602,14 @@ void
 page_remove(pde_t *pgdir, void *va)
 {
 	// Fill this function in
+	pte_t *pt_entry;
+	struct PageInfo *mapped_page = page_lookup(pgdir, va, &pt_entry);
+	if (mapped_page == NULL)	// no physical page mapped, do nothing
+		return;
+	
+	page_decref(mapped_page);
+	*pt_entry = 0;
+	tlb_invalidate(pgdir, va);
 }
 
 //
