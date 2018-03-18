@@ -15,7 +15,7 @@ void monitor(struct Trapframe *tf);
 int mon_help(int argc, char **argv, struct Trapframe *tf);
 int mon_kerninfo(int argc, char **argv, struct Trapframe *tf);
 int mon_backtrace(int argc, char **argv, struct Trapframe *tf);
-int mon_showmappings(int argc, char **argv, struct Trapframe *tf);
+int mon_mappings(int argc, char **argv, struct Trapframe *tf);
 
 #define CMD_HELP_HELP_STR       "SYNOPSIS: help {list | command name}\n\
     list: display all help information of all commands.\n\

@@ -28,7 +28,7 @@ static struct Command commands[] = {
 	{ "help", CMD_HELP_HELP_STR, mon_help },
 	{ "kerninfo", CMD_KERNINFO_HELP_STR, mon_kerninfo },
 	{ "backtrace", CMD_BACKTRACE_HELP_STR, mon_backtrace},
-	{ "showmappings", CMD_SHOWMAPPINGS_HELP_STR, mon_showmappings},
+	{ "mappings", CMD_SHOWMAPPINGS_HELP_STR, mon_mappings},
 };
 
 /***** helper functions *****/
@@ -46,7 +46,7 @@ int
 mon_help(int argc, char **argv, struct Trapframe *tf)
 {
 	if (argc != 2) {
-		cprintf(CMD_ERROR("help"));
+		cmd_error("help");
 		return 0;
 	}
 
@@ -137,33 +137,23 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
 int
 show_mappings(uint32_t lower_addr, uint32_t upper_addr)
 {
-	// page alignment
-	lower_addr = ROUNDDOWN(lower_addr, PGSIZE);
-	upper_addr = ROUNDDOWN(upper_addr, PGSIZE);
-
-	cprintf("       vaddr                   paddr          kern/user\n");
+	cprintf("         vaddr                       paddr            privilege\n");
 	while (lower_addr < upper_addr) {
-		cprintf("%08x - %08x:    ", lower_addr, lower_addr + PGSIZE);
+		cprintf("%08p - %08p:    ", lower_addr, lower_addr + PGSIZE);
 		
 		pte_t *pt_entry = pgdir_walk(kern_pgdir, (void *)lower_addr, false);
 		if (pt_entry == NULL || !(*pt_entry & PTE_P)) {
 			cprintf("not mapped\n");
 		} else {
 			physaddr_t pte_paddr = PTE_ADDR(*pt_entry);
-			bool U = *pt_entry & PTE_U;
-			bool W = *pt_entry & PTE_W;
-
-			cprintf("%08x - %08x      ", pte_paddr, pte_paddr + PGSIZE);
-
 			char privilege[] = {
+				(*pt_entry & PTE_U) ? 'u' : '-',
 				'r',
-				W ? 'w' : '-',
-				'/',
-				U ? 'r' : '-',
-				(U && W) ? 'w' : '-'
+				(*pt_entry & PTE_W) ? 'w' : '-',
+				'\0'
 			};
-			
-			cprintf("%s\n", privilege);
+
+			cprintf("%08p - %08p      %s\n", pte_paddr, pte_paddr + PGSIZE, privilege);
 		}
 
 		lower_addr += PGSIZE;
@@ -177,28 +167,38 @@ mon_mappings(int argc, char **argv, struct Trapframe *tf)
 {
 	/*
 	 * SYNOPSIS:
-	 * 		mappings {show | set | change | clear} lower_address upper_address [permission]
-	 * 
-	 * 
+	 * 		mappings {show lower_address upper_address} | 
+	 * 				 {{set | change | clear} lower_address upper_address permission}
 	 */
 
-	if (argc < 2) {
+	if (argc < 4 || argc > 5) {
 		cmd_error("mappings");
 		return 0;
 	}
+	
+	char *operation = argv[1];
 
-	char *cmd = argv[1];
-	if (strcmp(cmd, "show") == 0) {
-		if (argc != 4) {
-			cmd_error("mappings");
+	char *addr_end;
+	uint32_t addr[2];
+	for (int i = 0; i < 2; ++i) {
+		addr[i] = strtol(argv[i+2], &addr_end, 0);
+		
+		if (*addr_end) {
+			cprintf("E: Wrong Number format");
 			return 0;
 		}
 
-		uint32_t lower_addr = strtol(argv[2], NULL, 0);
-		uint32_t upper_addr = strtol(argv[3], NULL, 0);
-
-		return show_mappings();
+		// page alignment
+		addr[i] = ROUNDDOWN(addr[i], PGSIZE);
 	}
+
+	if (argc == 4 && strcmp(operation, "show") == 0) {
+		return show_mappings(addr[0], addr[1]);
+	} else if (argc == 5) {
+
+	}
+	
+	cprintf("E: Invalid operation %s\n", operation);
 
 	return 0;
 }
