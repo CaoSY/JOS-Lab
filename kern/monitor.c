@@ -31,6 +31,15 @@ static struct Command commands[] = {
 	{ "showmappings", CMD_SHOWMAPPINGS_HELP_STR, mon_showmappings},
 };
 
+/***** helper functions *****/
+
+inline void
+cmd_error(char *cmd_name)
+{
+	cprintf("Wrong arguments! type 'help %s' for usage.\n", cmd_name);
+	return;
+}
+
 /***** Implementations of basic kernel monitor commands *****/
 
 int
@@ -126,15 +135,9 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
 }
 
 int
-mon_showmappings(int argc, char **argv, struct Trapframe *tf)
+show_mappings(uint32_t lower_addr, uint32_t upper_addr)
 {
-	if (argc != 3) {
-		cprintf(CMD_ERROR("showmappings"));
-		return 0;
-	}
-
-	uint32_t lower_addr = strtol(argv[1], NULL, 0);
-	uint32_t upper_addr = strtol(argv[2], NULL, 0);
+	// page alignment
 	lower_addr = ROUNDDOWN(lower_addr, PGSIZE);
 	upper_addr = ROUNDDOWN(upper_addr, PGSIZE);
 
@@ -147,24 +150,54 @@ mon_showmappings(int argc, char **argv, struct Trapframe *tf)
 			cprintf("not mapped\n");
 		} else {
 			physaddr_t pte_paddr = PTE_ADDR(*pt_entry);
+			bool U = *pt_entry & PTE_U;
+			bool W = *pt_entry & PTE_W;
+
 			cprintf("%08x - %08x      ", pte_paddr, pte_paddr + PGSIZE);
 
-			char privilege[] = "R-/--";
-			
-			if (*pt_entry & PTE_W)
-				privilege[1] = 'W';
-			
-			if (*pt_entry & PTE_U) {
-				privilege[3] = 'R';
-
-				if (*pt_entry & PTE_W)
-					privilege[4] = 'W';
-			}
+			char privilege[] = {
+				'r',
+				W ? 'w' : '-',
+				'/',
+				U ? 'r' : '-',
+				(U && W) ? 'w' : '-'
+			};
 			
 			cprintf("%s\n", privilege);
 		}
 
 		lower_addr += PGSIZE;
+	}
+
+	return 0;	
+}
+
+int
+mon_mappings(int argc, char **argv, struct Trapframe *tf)
+{
+	/*
+	 * SYNOPSIS:
+	 * 		mappings {show | set | change | clear} lower_address upper_address [permission]
+	 * 
+	 * 
+	 */
+
+	if (argc < 2) {
+		cmd_error("mappings");
+		return 0;
+	}
+
+	char *cmd = argv[1];
+	if (strcmp(cmd, "show") == 0) {
+		if (argc != 4) {
+			cmd_error("mappings");
+			return 0;
+		}
+
+		uint32_t lower_addr = strtol(argv[2], NULL, 0);
+		uint32_t upper_addr = strtol(argv[3], NULL, 0);
+
+		return show_mappings();
 	}
 
 	return 0;

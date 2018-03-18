@@ -27,6 +27,4 @@ int mon_showmappings(int argc, char **argv, struct Trapframe *tf);
     LOWER_ADDR/UPPER_ADDR will be rounded down to be aligned in 4KB(i.e. page size).\n\
     Addresses should be 32-bit unsigned integers.\n"
 
-#define CMD_ERROR(_cmd_name_)     "Wrong arguments! type 'help " _cmd_name_ " for usage.\n"
-
 #endif	// !JOS_KERN_MONITOR_H
