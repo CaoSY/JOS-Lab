@@ -13,6 +13,7 @@ extern char bootstacktop[], bootstack[];
 
 extern struct PageInfo *pages;
 extern size_t npages;
+#define npages_in_4GB	(1<<20)
 
 extern pde_t *kern_pgdir;
 

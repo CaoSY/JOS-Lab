@@ -17,14 +17,30 @@ int mon_kerninfo(int argc, char **argv, struct Trapframe *tf);
 int mon_backtrace(int argc, char **argv, struct Trapframe *tf);
 int mon_mappings(int argc, char **argv, struct Trapframe *tf);
 
-#define CMD_HELP_HELP_STR       "SYNOPSIS: help {list | command name}\n\
+
+#define CMD_HELP_HELP_STR       "\
+SYNOPSIS:\n\
+    help {list | command name}\n\
+DESCRIPTION:\n\
     list: display all help information of all commands.\n\
     command name: display help information of given name\n"
+
 #define CMD_KERNINFO_HELP_STR   "Display information about the kernel\n"
+
 #define CMD_BACKTRACE_HELP_STR  "Display the current call stack\n"
-#define CMD_SHOWMAPPINGS_HELP_STR   "SYNOPSIS: showmappings LOWER_ADDR UPPER_ADDR\n\
-    Display pages mappings in [LOWER_ADDR, UPPER_ADDR).\n\
-    LOWER_ADDR/UPPER_ADDR will be rounded down to be aligned in 4KB(i.e. page size).\n\
-    Addresses should be 32-bit unsigned integers.\n"
+
+#define CMD_MAPPINGS_HELP_STR   "\
+SYNOPSIS:\n\
+    mappings {show laddr uaddr} | {clear vaddr [size==1]}\n\
+             | {set perm vaddr [size==1]}\n\
+DESCRIPTION:\n\
+    show: display page mappings in [laddr, uaddr)\n\
+    clear: clear privilege of size(in page) pages from vaddr.\n\
+           The privilege is set to PTE_U == 0 and PTE_W == 0.\n\
+    set: set privilege of size(in page) pages from vaddr.\n\
+         The privilege 'perm' can be specified by a number or a\n\
+         two-character string containing 'u'(PTE_U), 'w'(PTE_W) or\n\
+         '-'(none)\n\
+    All addresses will be rounded down to page alignment.\n"
 
 #endif	// !JOS_KERN_MONITOR_H

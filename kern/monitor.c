@@ -28,38 +28,79 @@ static struct Command commands[] = {
 	{ "help", CMD_HELP_HELP_STR, mon_help },
 	{ "kerninfo", CMD_KERNINFO_HELP_STR, mon_kerninfo },
 	{ "backtrace", CMD_BACKTRACE_HELP_STR, mon_backtrace},
-	{ "mappings", CMD_SHOWMAPPINGS_HELP_STR, mon_mappings},
+	{ "mappings", CMD_MAPPINGS_HELP_STR, mon_mappings},
 };
 
 /***** helper functions *****/
 
-inline void
-cmd_error(char *cmd_name)
+#define CMD_ERR_ARG		0		// wrong arguments
+#define CMD_ERR_NUM		1		// invalid number format
+#define CMD_ERR_OPE		2		// invalid operation
+#define CMD_ERR_STR		3		// not specific error
+inline int
+cmd_error(int err_type, char *str)
 {
-	cprintf("Wrong arguments! type 'help %s' for usage.\n", cmd_name);
-	return;
+	switch(err_type) {
+		case CMD_ERR_ARG: 
+			cprintf("E: Wrong arguments! type 'help %s' for usage.\n", str);
+			break;
+		case CMD_ERR_NUM:
+			cprintf("E: Wrong Number format!\n");
+			break;
+		case CMD_ERR_OPE:
+			cprintf("E: Invalid operation %s\n", str);
+			break;
+		case CMD_ERR_STR:
+			cprintf("E: %s\n", str);
+			break;
+		default:
+			cprintf("E: Wrong error type!\n");
+			break;
+	}
+	
+	return 0;
 }
+
+#define parse_number(_num_str, _num_ptr)			\
+({													\
+	typeof(_num_str) __num_str = (_num_str);		\
+	typeof(_num_ptr) __num_ptr = (_num_ptr);	\
+	char *end_char;									\
+	*__num_ptr = strtol(__num_str, &end_char, 0);	\
+	*end_char != '\0';								\
+})
+
+#define MAX(_a, _b)						\
+({								\
+	typeof(_a) __a = (_a);					\
+	typeof(_b) __b = (_b);					\
+	__a >= __b ? __a : __b;					\
+})
 
 /***** Implementations of basic kernel monitor commands *****/
 
 int
 mon_help(int argc, char **argv, struct Trapframe *tf)
 {
-	if (argc != 2) {
-		cmd_error("help");
+	char *operation;
+	if ((operation = argv[1]) == 0) {
+		cprintf(CMD_HELP_HELP_STR);
 		return 0;
 	}
 
-	if (strcmp(argv[1], "list") == 0) {
+	if (argc > 2)
+		return cmd_error(CMD_ERR_ARG, "help");
+
+	if (strcmp(operation, "list") == 0) {
 		for (int i = 0; i < ARRAY_SIZE(commands); i++)
 			cprintf("%s\n   -%s\n", commands[i].name, commands[i].desc);
 		return 0;
 	}
 
 
-	int cmd_found = false;
+	bool cmd_found = false;
 	for (int i = 0; i < ARRAY_SIZE(commands); i++) {
-		if (strcmp(argv[1], commands[i].name) == 0) {
+		if (strcmp(operation, commands[i].name) == 0) {
 			cprintf("%s\n   -%s\n", commands[i].name, commands[i].desc);
 			cmd_found = true;
 		}
@@ -135,20 +176,27 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
 }
 
 int
-show_mappings(uint32_t lower_addr, uint32_t upper_addr)
+show_mappings(uintptr_t lower_addr, uintptr_t upper_addr)
 {
+	uintptr_t laddr = ROUNDDOWN(lower_addr, PGSIZE);
+	uintptr_t uaddr = ROUNDDOWN(upper_addr, PGSIZE);
+
+	if (laddr != lower_addr)
+		cprintf("lower address:%p -> %p\n", lower_addr, laddr);
+	if (uaddr != upper_addr)
+		cprintf("upper address:%p -> %p\n", upper_addr, uaddr);
+
 	cprintf("         vaddr                       paddr            privilege\n");
-	while (lower_addr < upper_addr) {
-		cprintf("%08p - %08p:    ", lower_addr, lower_addr + PGSIZE);
+	while (laddr < uaddr) {
+		cprintf("%08p - %08p:    ", laddr, laddr + PGSIZE);
 		
-		pte_t *pt_entry = pgdir_walk(kern_pgdir, (void *)lower_addr, false);
+		pte_t *pt_entry = pgdir_walk(kern_pgdir, (void *)laddr, false);
 		if (pt_entry == NULL || !(*pt_entry & PTE_P)) {
 			cprintf("not mapped\n");
 		} else {
 			physaddr_t pte_paddr = PTE_ADDR(*pt_entry);
 			char privilege[] = {
 				(*pt_entry & PTE_U) ? 'u' : '-',
-				'r',
 				(*pt_entry & PTE_W) ? 'w' : '-',
 				'\0'
 			};
@@ -156,10 +204,46 @@ show_mappings(uint32_t lower_addr, uint32_t upper_addr)
 			cprintf("%08p - %08p      %s\n", pte_paddr, pte_paddr + PGSIZE, privilege);
 		}
 
-		lower_addr += PGSIZE;
+		laddr += PGSIZE;
 	}
 
 	return 0;	
+}
+
+int
+set_mappings(uintptr_t virtual_addr, size_t size, int perm)
+{
+	if (PGNUM(virtual_addr) + size > npages_in_4GB)
+		return cmd_error(CMD_ERR_STR, "Addresses exceed 4G memory!");
+	
+	uintptr_t vaddr = ROUNDDOWN(virtual_addr, PGSIZE);
+	if (vaddr != virtual_addr)
+		cprintf("virtual address:%p -> %p\n", virtual_addr, vaddr);
+	
+	pte_t *pt_entry;
+	while (--size >= 0) {
+		pt_entry = pgdir_walk(kern_pgdir, (void *)vaddr, false);
+		if (*pt_entry & PTE_P) {
+			// turn off PTE_U and PTE_W
+			*pt_entry &= ~(PTE_U | PTE_W);
+			
+			// mask off other bits in perm, and turn on bits
+			// in *pt_entry based on perm
+			*pt_entry |= (perm & (PTE_U | PTE_W));
+		} else
+			cprintf("W: %d not mapped!\n", vaddr);
+
+		vaddr += PGSIZE;
+	}
+
+	return 0;
+}
+
+int
+clear_mappings(uintptr_t virtual_addr, size_t size)
+{
+	// turn off PTE_U and PTE_W
+	return set_mappings(virtual_addr, size, 0);
 }
 
 int
@@ -167,40 +251,96 @@ mon_mappings(int argc, char **argv, struct Trapframe *tf)
 {
 	/*
 	 * SYNOPSIS:
-	 * 		mappings {show lower_address upper_address} | 
-	 * 				 {{set | change | clear} lower_address upper_address permission}
+	 * 		mappings {show laddr uaddr} |
+	 * 				 {clear vaddr [size]} |
+	 * 				 {set perm vaddr [size]}
+	 * 		laddr: lower address
+	 * 		uaddr: upper address
+	 * 		vaddr: virtual address
+	 * 		paddr: physical address
+	 * 		size: memory size in pages
+	 * 		perm: page table entry permission
 	 */
 
-	if (argc < 4 || argc > 5) {
-		cmd_error("mappings");
+	char *operation;
+	if ((operation = argv[1]) == 0) {
+		cprintf(CMD_MAPPINGS_HELP_STR);
 		return 0;
 	}
-	
-	char *operation = argv[1];
 
-	char *addr_end;
-	uint32_t addr[2];
-	for (int i = 0; i < 2; ++i) {
-		addr[i] = strtol(argv[i+2], &addr_end, 0);
+	if (strcmp(operation, "show") == 0) {
+		// mappings {show laddr uaddr}
+
+		if (argc != 4)
+			return cmd_error(CMD_ERR_ARG, "mappings");
 		
-		if (*addr_end) {
-			cprintf("E: Wrong Number format");
-			return 0;
+		uintptr_t laddr, uaddr;
+		if (parse_number(argv[2], &laddr) ||
+			parse_number(argv[3], &uaddr))
+			return cmd_error(CMD_ERR_NUM,"");
+		
+		return show_mappings(laddr, uaddr);
+	}
+	
+	if (strcmp(operation, "clear") == 0) {
+		// mappings {clear vaddr [size]}
+		
+		if (argc < 3 || argc > 4)
+			return cmd_error(CMD_ERR_ARG, "mappings");
+		
+		uintptr_t vaddr;
+		if (parse_number(argv[2], &vaddr))
+			return cmd_error(CMD_ERR_NUM, NULL);
+		
+		size_t size;
+		if (argv[3]) {		// if size is provided explicitly
+			if (parse_number(argv[3], &size))
+				return cmd_error(CMD_ERR_NUM, NULL);
+		} else
+			size = 1;
+		
+		return clear_mappings(vaddr, size);
+	}
+	
+	if (strcmp(operation, "set") == 0) {
+		// mappings {set perm vaddr [size]}
+		if (argc < 4 || argc > 5)
+			return cmd_error(CMD_ERR_ARG, "mappings");
+		
+		int perm;
+		char *perm_str = argv[2];
+		if (parse_number(perm_str, &perm)) {
+			if (strlen(perm_str) != 2)
+				return cmd_error(CMD_ERR_STR, "Wrong privilege format!");
+			
+			perm = 0;
+			for (int i = 0; i < 2; ++i) {
+				if (perm_str[i] == 'u')
+					perm |= PTE_U;
+				else if (perm_str[i] == 'w')
+					perm |= PTE_W;
+				else if (perm_str[i] == '-')
+					continue;
+				else
+					return cmd_error(CMD_ERR_STR, "Wrong privilege format!");
+			}
 		}
 
-		// page alignment
-		addr[i] = ROUNDDOWN(addr[i], PGSIZE);
+		uintptr_t vaddr;
+		if (parse_number(argv[3], &vaddr))
+			return cmd_error(CMD_ERR_NUM, NULL);
+		
+		size_t size;
+		if (argv[4]) {		// if size is provided explicitly
+			if (parse_number(argv[4], &size))
+				return cmd_error(CMD_ERR_NUM, NULL);
+		} else
+			size = 1;
+
+		return set_mappings(vaddr, size, perm);
 	}
 
-	if (argc == 4 && strcmp(operation, "show") == 0) {
-		return show_mappings(addr[0], addr[1]);
-	} else if (argc == 5) {
-
-	}
-	
-	cprintf("E: Invalid operation %s\n", operation);
-
-	return 0;
+	return cmd_error(CMD_ERR_OPE, operation);
 }
 
 
