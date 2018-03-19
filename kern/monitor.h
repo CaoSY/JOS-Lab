@@ -43,4 +43,8 @@ DESCRIPTION:\n\
          '-'(none)\n\
     All addresses will be rounded down to page alignment.\n"
 
+#define CMD_DUMP_HELP_STR       "\
+SYNOPSIS:\n\
+    dump addr_type addr [size==1]\n"
+
 #endif	// !JOS_KERN_MONITOR_H

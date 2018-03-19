@@ -37,6 +37,7 @@ static struct Command commands[] = {
 #define CMD_ERR_NUM		1		// invalid number format
 #define CMD_ERR_OPE		2		// invalid operation
 #define CMD_ERR_STR		3		// not specific error
+
 inline int
 cmd_error(int err_type, char *str)
 {
@@ -61,6 +62,8 @@ cmd_error(int err_type, char *str)
 	return 0;
 }
 
+// using macro to mimic a template function to adapt
+// different types of _num_ptr
 #define parse_number(_num_str, _num_ptr)			\
 ({													\
 	typeof(_num_str) __num_str = (_num_str);		\
@@ -70,12 +73,6 @@ cmd_error(int err_type, char *str)
 	*end_char != '\0';								\
 })
 
-#define MAX(_a, _b)						\
-({								\
-	typeof(_a) __a = (_a);					\
-	typeof(_b) __b = (_b);					\
-	__a >= __b ? __a : __b;					\
-})
 
 /***** Implementations of basic kernel monitor commands *****/
 
@@ -343,6 +340,77 @@ mon_mappings(int argc, char **argv, struct Trapframe *tf)
 	return cmd_error(CMD_ERR_OPE, operation);
 }
 
+int
+dump_vmem(uintptr_t addr, size_t size)
+{
+	// dump memory using virtual address
+	// DWORD alignment
+	addr = ROUNDDOWN(addr, 4);
+	if (DOWRD_NUM(addr) + size > ndwords_in_4GB)
+		return cmd_error(CMD_ERR_STR, "Addresses exceed 4G memory!");
+	
+	#define cprint_content(_addr) ({						\
+		if (page_lookup(kern_pgdir, (void *)_addr, NULL))	\ 
+			cprintf("0x%8x\t", *((uint32_t *)_addr));		\
+		else												\
+			cprintf("not mapped \t");						\
+	})
+
+	while(size > 0) {
+		cprintf("%p\t", addr);
+		(size--) ? cprint_content(addr) : (cprintf("\n"), break); addr += DWORD_SIZE;
+		(size--) ? cprint_content(addr) : (cprintf("\n"), break); addr += DWORD_SIZE;
+		(size--) ? cprint_content(addr) : (cprintf("\n"), break); addr += DWORD_SIZE;
+		(size--) ? cprint_content(addr) : (cprintf("\n"), break); addr += DWORD_SIZE;
+		cprintf("\n");
+	}
+	return 0;
+}
+
+int
+dump_pmen(physaddr_t addr, size_t) {
+	cprintf("not implemented yet\n");
+	return 0;
+}
+
+int
+mon_dump(int argc, char **argv, struct Trapframe *tf) {
+	/*
+	 * dump addr_type addr [size==1]
+	 *     addr_type: address type, p | v
+	 *     addr: beginning address
+	 *     size: memory size in DWORD(32 bits)
+	 */
+
+	char *addr_type;
+	if ((addr_type = argv[1]) == 0) {
+		cprintf(CMD_DUMP_HELP_STR);
+		return 0;
+	}
+
+	if (argc < 3 || argc > 4)
+		return cmd_error(CMD_ERR_ARG, "dump");
+
+	if (strlen(addr_type) > 1 ||
+		(*addr_type != 'p' && *addr_type != 'v'))
+		return cmd_error(CMD_ERR_STR, "Wrong address type!");
+
+	uintptr_t addr ;
+	if (parse_number(argv[2], &addr))
+		return cmd_error(CMD_ERR_NUM, NULL);
+	
+	size_t size;
+	if (argc == 4) {
+		if (parse_number(argv[3], &size))
+			return cmd_error(CMD_ERR_NUM, NULL);
+	} else
+		size = 1;
+	
+	if (*addr_type == 'v')
+		return dump_vmem(addr, size);
+	else
+		return dump_pmem(addr, size);
+}
 
 /***** Kernel monitor command interpreter *****/
 
