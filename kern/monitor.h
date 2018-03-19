@@ -19,9 +19,9 @@ int mon_mappings(int argc, char **argv, struct Trapframe *tf);
 int mon_dump(int argc, char **argv, struct Trapframe *tf);
 
 #define CMD_HELP_HELP_STR       "\
-SYNOPSIS:\n\
+-SYNOPSIS:\n\
     help {list | command name}\n\
-DESCRIPTION:\n\
+-DESCRIPTION:\n\
     list: display all help information of all commands.\n\
     command name: display help information of given name\n"
 
@@ -30,10 +30,10 @@ DESCRIPTION:\n\
 #define CMD_BACKTRACE_HELP_STR  "Display the current call stack\n"
 
 #define CMD_MAPPINGS_HELP_STR   "\
-SYNOPSIS:\n\
+-SYNOPSIS:\n\
     mappings {show laddr uaddr} | {clear vaddr [size==1]}\n\
              | {set perm vaddr [size==1]}\n\
-DESCRIPTION:\n\
+-DESCRIPTION:\n\
     show: display page mappings in [laddr, uaddr)\n\
     clear: clear privilege of size(in page) pages from vaddr.\n\
            The privilege is set to PTE_U == 0 and PTE_W == 0.\n\
@@ -44,7 +44,11 @@ DESCRIPTION:\n\
     All addresses will be rounded down to page alignment.\n"
 
 #define CMD_DUMP_HELP_STR       "\
-SYNOPSIS:\n\
-    dump addr_type addr [size==1]\n"
+-SYNOPSIS:\n\
+    dump addr_type addr [size==1]\n\
+-DESCRIPTION:\n\
+    addr_type: '-v' for virtual address, '-p for physical address\n\
+    addr: beginning address\n\
+    size: memory size in dwords(4 bytes)\n"
 
 #endif	// !JOS_KERN_MONITOR_H

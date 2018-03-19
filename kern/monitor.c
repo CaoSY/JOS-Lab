@@ -29,7 +29,7 @@ static struct Command commands[] = {
 	{ "kerninfo", CMD_KERNINFO_HELP_STR, mon_kerninfo },
 	{ "backtrace", CMD_BACKTRACE_HELP_STR, mon_backtrace},
 	{ "mappings", CMD_MAPPINGS_HELP_STR, mon_mappings},
-	{ "dump", "implementing", mon_dump},
+	{ "dump", CMD_DUMP_HELP_STR, mon_dump},
 };
 
 /***** helper functions *****/
@@ -93,7 +93,7 @@ mon_help(int argc, char **argv, struct Trapframe *tf)
 
 	if (strcmp(operation, "list") == 0) {
 		for (int i = 0; i < ARRAY_SIZE(commands); i++)
-			cprintf("%s\n   -%s\n", commands[i].name, commands[i].desc);
+			cprintf("%s\n%s\n", commands[i].name, commands[i].desc);
 		return 0;
 	}
 
@@ -101,7 +101,7 @@ mon_help(int argc, char **argv, struct Trapframe *tf)
 	bool cmd_found = false;
 	for (int i = 0; i < ARRAY_SIZE(commands); i++) {
 		if (strcmp(operation, commands[i].name) == 0) {
-			cprintf("%s\n   -%s\n", commands[i].name, commands[i].desc);
+			cprintf("%s\n%s\n", commands[i].name, commands[i].desc);
 			cmd_found = true;
 		}
 	}
