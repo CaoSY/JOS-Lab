@@ -16,7 +16,7 @@ int mon_help(int argc, char **argv, struct Trapframe *tf);
 int mon_kerninfo(int argc, char **argv, struct Trapframe *tf);
 int mon_backtrace(int argc, char **argv, struct Trapframe *tf);
 int mon_mappings(int argc, char **argv, struct Trapframe *tf);
-
+int mon_dump(int argc, char **argv, struct Trapframe *tf);
 
 #define CMD_HELP_HELP_STR       "\
 SYNOPSIS:\n\

@@ -29,9 +29,12 @@ static struct Command commands[] = {
 	{ "kerninfo", CMD_KERNINFO_HELP_STR, mon_kerninfo },
 	{ "backtrace", CMD_BACKTRACE_HELP_STR, mon_backtrace},
 	{ "mappings", CMD_MAPPINGS_HELP_STR, mon_mappings},
+	{ "dump", "implementing", mon_dump},
 };
 
 /***** helper functions *****/
+#define ADDR_TYPE_V		0		// virtual address type
+#define ADDR_TYPE_P		1		// physical address type
 
 #define CMD_ERR_ARG		0		// wrong arguments
 #define CMD_ERR_NUM		1		// invalid number format
@@ -348,28 +351,66 @@ dump_vmem(uintptr_t addr, size_t size)
 	addr = ROUNDDOWN(addr, 4);
 	if (DOWRD_NUM(addr) + size > ndwords_in_4GB)
 		return cmd_error(CMD_ERR_STR, "Addresses exceed 4G memory!");
-	
-	#define cprint_content(_addr) ({						\
-		if (page_lookup(kern_pgdir, (void *)_addr, NULL))	\ 
-			cprintf("0x%8x\t", *((uint32_t *)_addr));		\
-		else												\
-			cprintf("not mapped \t");						\
-	})
 
+	
 	while(size > 0) {
-		cprintf("%p\t", addr);
-		(size--) ? cprint_content(addr) : (cprintf("\n"), break); addr += DWORD_SIZE;
-		(size--) ? cprint_content(addr) : (cprintf("\n"), break); addr += DWORD_SIZE;
-		(size--) ? cprint_content(addr) : (cprintf("\n"), break); addr += DWORD_SIZE;
-		(size--) ? cprint_content(addr) : (cprintf("\n"), break); addr += DWORD_SIZE;
+		cprintf("%p:  ", addr);
+		
+		// display four dwords each line
+		for (int i = 0; i < 4 && size > 0; ++i) {
+			// we don't want to cause a page fault if addr points to a
+			// page that has not been mapped. So we check whether the
+			// page pointed has been mapped.
+			// In fact, as long as consecutive addrs reside in the same
+			// page, we don't need to call page_lookup() repeatedly. We
+			// will improve it later.
+			if (page_lookup(kern_pgdir, (void *)addr, NULL))
+				cprintf("0x%08x  ", *((uint32_t *)addr));
+			else
+				cprintf("not mapped  ");
+			
+			--size;
+			addr += DWORD_SIZE;
+		}
+
 		cprintf("\n");
 	}
 	return 0;
 }
 
 int
-dump_pmen(physaddr_t addr, size_t) {
-	cprintf("not implemented yet\n");
+dump_pmem(physaddr_t addr, size_t size) {
+	
+	while(size > 0) {
+		cprintf("%p:  ", addr);
+		
+		// display four dwords each line
+		for (int i = 0; i < 4 && size > 0; ++i) {
+			if (PGNUM(addr) >= npages) {
+				// pa2page() will panic JOS if addr is a invalid physical
+				// address. We don't want a normal shell command that
+				// doesn't have any side effect to panic our JOS. So we
+				// check the legitimacy of addr in advance. The same check
+				// is executed in pg2page() as well as page2kva() but we
+				// don't want those condition check branch into a panic().
+				cprintf("\nExceed physical memory!");
+				size = 0; // break outer while loop, too.
+				break;
+			}
+
+			// A physical address will always be transformed into a linear
+			// address above KERNBASE, where we has mapped that linear
+			// address space in mem_init(). So we needn't worry *num_ptr
+			// will cause a page fault.
+			uint32_t *num_ptr = page2kva(pa2page(addr)) + PGOFF(addr);
+			cprintf("0x%08x  ", *num_ptr);
+
+			--size;
+			addr += DWORD_SIZE;
+		}
+
+		cprintf("\n");
+	}
 	return 0;
 }
 
@@ -377,13 +418,13 @@ int
 mon_dump(int argc, char **argv, struct Trapframe *tf) {
 	/*
 	 * dump addr_type addr [size==1]
-	 *     addr_type: address type, p | v
+	 *     addr_type: address type, -p | -v
 	 *     addr: beginning address
 	 *     size: memory size in DWORD(32 bits)
 	 */
 
-	char *addr_type;
-	if ((addr_type = argv[1]) == 0) {
+	char *addr_type_str;
+	if ((addr_type_str = argv[1]) == 0) {
 		cprintf(CMD_DUMP_HELP_STR);
 		return 0;
 	}
@@ -391,11 +432,8 @@ mon_dump(int argc, char **argv, struct Trapframe *tf) {
 	if (argc < 3 || argc > 4)
 		return cmd_error(CMD_ERR_ARG, "dump");
 
-	if (strlen(addr_type) > 1 ||
-		(*addr_type != 'p' && *addr_type != 'v'))
-		return cmd_error(CMD_ERR_STR, "Wrong address type!");
 
-	uintptr_t addr ;
+	uint32_t addr ;
 	if (parse_number(argv[2], &addr))
 		return cmd_error(CMD_ERR_NUM, NULL);
 	
@@ -406,10 +444,12 @@ mon_dump(int argc, char **argv, struct Trapframe *tf) {
 	} else
 		size = 1;
 	
-	if (*addr_type == 'v')
-		return dump_vmem(addr, size);
+	if (strcmp(addr_type_str, "-v") == 0)
+		return dump_vmem((uintptr_t)addr, size);
+	else if (strcmp(addr_type_str, "-p") == 0)
+		return dump_pmem((physaddr_t)addr, size);
 	else
-		return dump_pmem(addr, size);
+		return cmd_error(CMD_ERR_STR, "Wrong address type!");
 }
 
 /***** Kernel monitor command interpreter *****/
