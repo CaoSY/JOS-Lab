@@ -238,9 +238,7 @@ mem_init(void)
 
 	// Some more checks, only possible after kern_pgdir is installed.
 	check_page_installed_pgdir();
-
 	buddy_tree_init(page_free_list);
-
 	check_buddy_tree();
 	check_buddy_alloc();
 }
@@ -692,6 +690,7 @@ list_pop_front(struct PageInfo **list_ptr)
 	if (*list_ptr)
 		(*list_ptr)->pp_prev = NULL;
 	
+	head_ptr->pp_next = NULL;
 	return head_ptr;
 }
 
@@ -699,24 +698,37 @@ list_pop_front(struct PageInfo **list_ptr)
  * Remove *node_ptr from list_ptr.
  * This function doesn't check whether node_ptr really belongs
  * to list_ptr. The caller should guarantee the validation of
- * arguments. Both of them should not be NULL. It's the caller's
- * duty to assure node_ptr really belongs to list_ptr.
+ * arguments. It's the caller's duty to assure node_ptr really
+ * belongs to list_ptr.
  * 
+ * node_ptr->pp_prev and node_ptr->pp_next will be set to NULL.
+ * 
+ * if *list_ptr == NULL, node_ptr is return immediately.
  */
 struct PageInfo *
 list_remove(struct PageInfo **list_ptr, struct PageInfo *node_ptr)
 {
+	// if list is an empty list
+	if (*list_ptr == NULL)
+		return node_ptr;
+
 	// if node_ptr is the first of the linked list, just pop it
 	if (*list_ptr == node_ptr)
 		return list_pop_front(list_ptr);
 	
 	// Last condition check assures node_ptr is not the first node
 	// in the linked list. So it's safe to use node_ptr->pp_prev.
-	node_ptr->pp_prev->pp_next = node_ptr->pp_next;
+	if (node_ptr->pp_prev)
+		node_ptr->pp_prev->pp_next = node_ptr->pp_next;
 	
 	// if node_ptr is not the last node in the linked list.
-	if (node_ptr->pp_next != NULL)
+	if (node_ptr->pp_next)
 		node_ptr->pp_next->pp_prev = node_ptr->pp_prev;
+
+
+		
+	node_ptr->pp_prev = NULL;
+	node_ptr->pp_next = NULL;
 	
 	return node_ptr;
 }
@@ -733,6 +745,33 @@ list_length(struct PageInfo **list_ptr)
 	for (struct PageInfo *node_ptr = *list_ptr; node_ptr; node_ptr = node_ptr->pp_next)
 		++count;
 	return count;
+}
+
+
+/*
+ * get n order buddy
+ */
+struct PageInfo *
+get_buddy(struct PageInfo *pp, int order)
+{
+	// assure order provided resides in appropriate range
+	assert(order <= MAX_BUDDY_ORDER);
+	
+	size_t buddy_bit = (1 << order);
+	size_t index = page2index(pp);
+
+	// assure the caller demand a test on pp with appropriate order
+	assert((index &(buddy_bit - 1)) == 0);
+	
+	size_t buddy_index = index ^ buddy_bit;
+	// The tree constructed by the buddy system may even not be a 
+	// complete binary tree because our memory is not always 2^N
+	// bytes big. It‘s necessary to assure the physical memory
+	// represented by the buddy really exists.
+	if (buddy_index >= npages)
+		return NULL;
+	
+	return &pages[buddy_index];
 }
 
 /*
@@ -851,9 +890,12 @@ buddy_alloc_page(int alloc_flags, int order)
 void
 buddy_free_page(struct PageInfo *pp, int order)
 {
+	//cprintf("pp num: %d    order: %d\n", pp-pages, order);
 	while (order < MAX_BUDDY_ORDER) {
-		struct PageInfo *buddy;
-		if ((buddy = buddy_is_free(pp, order)) == NULL)
+		struct PageInfo *buddy = buddy_is_free(pp, order);
+		//cprintf("buddy == NULL: %d\n", buddy == NULL);
+		//cprintf("order %d list length: %d\n", order, list_length(&nOrder_free_pages[order]));
+		if (buddy == NULL)
 			break;
 		list_remove(&nOrder_free_pages[order], buddy);
 		pp = MIN(pp, buddy);
@@ -861,6 +903,11 @@ buddy_free_page(struct PageInfo *pp, int order)
 		pp->pp_count = (1<<order);
 	}
 
+	// avoid double free
+	struct PageInfo *tmp_buddy = get_buddy(pp, order);
+	if (tmp_buddy != NULL && tmp_buddy->pp_count > pp->pp_count)
+		return;
+	
 	list_push_front(&nOrder_free_pages[order], pp);
 }
 
@@ -1355,10 +1402,11 @@ check_buddy_alloc(void)
 		
 		free_page_count += counter * (1 << order);
 	}
-	
+	/*
 	cprintf("free page count: %d\n", free_page_count);
 	for (int i = 0; i <= MAX_BUDDY_ORDER; ++i)
 		cprintf("order: %d    count: %d\n", i, free_count_in_each_order[i]);
+	*/
 
 	// exhaust memory
 	size_t alloc_times = 0;
@@ -1366,6 +1414,19 @@ check_buddy_alloc(void)
 		++alloc_times;
 
 	assert((alloc_times == free_page_count));
+
+	// free memory allocated before
+	for (size_t i = 0; i < npages; ++i) {
+		if (pages[i].pp_count == 1)
+			buddy_free_page(&pages[i], 0);
+	}
+
+	// check whether buddy tree is restored after freeing pages
+	for (size_t order = 0; order <= MAX_BUDDY_ORDER; ++order) {
+		size_t counter = list_length(&nOrder_free_pages[order]);
+
+		assert((counter == free_count_in_each_order[order]));
+	}
 
 	cprintf("check_buddy_alloc&free() succeed!\n");
 }
