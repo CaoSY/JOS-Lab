@@ -109,7 +109,7 @@ pte_t *pgdir_walk(pde_t *pgdir, const void *va, int create);
 
 #define MAX_BUDDY_ORDER	10	// the biggest guaranteed memory is 2^10 pages, i.e. 4MB
 
-inline bool buddy_is_free(int index, int order);
+struct PageInfo * buddy_is_free(struct PageInfo *pp, int order);
 void buddy_tree_init(struct PageInfo *pp_free);
 struct PageInfo *buddy_alloc_page(int alloc_flags, int order);
 void buddy_free_page(struct PageInfo *pp, int order);

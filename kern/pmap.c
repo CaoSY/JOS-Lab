@@ -236,6 +236,8 @@ mem_init(void)
 
 	// Some more checks, only possible after kern_pgdir is installed.
 	check_page_installed_pgdir();
+
+	buddy_tree_init(page_free_list);
 }
 
 // --------------------------------------------------------------
@@ -312,7 +314,7 @@ page_init(void)
 	 * Figure 2:
 	 * 
 	 *       page N    +--------------------+
-	 *                 |      pp_link       | -----\
+	 *                 |      pp_next       | -----\
 	 *                 +--------------------+      |
 	 *                 |      pp_ref        |      |
 	 *                 +--------------------+      |
@@ -321,7 +323,7 @@ page_init(void)
 	 *                           |
 	 *                           v
 	 *       page N-1  +--------------------+
-	 *                 |      pp_link       | -----\
+	 *                 |      pp_next       | -----\
 	 *                 +--------------------+      |
 	 *                 |      pp_ref        |      |
 	 *                 +--------------------+      |
@@ -334,7 +336,7 @@ page_init(void)
 	 *                           |
 	 *                           v
 	 *       page 1    +--------------------+
-	 *                 |      pp_link       | -----\
+	 *                 |      pp_next       | -----\
 	 *                 +--------------------+      |
 	 *                 |      pp_ref        |      |
 	 *                 +--------------------+      |
@@ -343,7 +345,7 @@ page_init(void)
 	 *                           |
 	 *                           v
 	 *       page 0    +--------------------+
-	 *                 |    pp_link=NULL    |
+	 *                 |    pp_next=NULL    |
 	 *                 +--------------------+
 	 *                 |      pp_ref        |
 	 *                 +--------------------+
@@ -359,7 +361,7 @@ page_init(void)
 		// The rest of base memory, [PGSIZE, npages_basemem * PGSIZE)
 		// is free.
 		pages[i].pp_ref = 0;
-		pages[i].pp_link = page_free_list;
+		pages[i].pp_next = page_free_list;
 		page_free_list = &pages[i];
 	}
 
@@ -369,13 +371,13 @@ page_init(void)
 		// in physcial memory. So initialize their corresponding 
 		// page entries in one loop
 		pages[i].pp_ref = 1;
-		pages[i].pp_link = NULL;
+		pages[i].pp_next = NULL;
 	}
 	
 	for (; i < npages; ++i) {
 		// The rest of extended memory are not used
 		pages[i].pp_ref = 0;
-		pages[i].pp_link = page_free_list;
+		pages[i].pp_next = page_free_list;
 		page_free_list = &pages[i];
 	}
 }
@@ -386,7 +388,7 @@ page_init(void)
 // count of the page - the caller must do these if necessary (either explicitly
 // or via page_insert).
 //
-// Be sure to set the pp_link field of the allocated page to NULL so
+// Be sure to set the pp_next field of the allocated page to NULL so
 // page_free can check for double-free bugs.
 //
 // Returns NULL if out of free memory.
@@ -399,8 +401,8 @@ page_alloc(int alloc_flags)
 		return NULL;
 	
 	struct PageInfo *page_allocated = page_free_list;
-	page_free_list = page_free_list->pp_link;
-	page_allocated->pp_link = NULL;
+	page_free_list = page_free_list->pp_next;
+	page_allocated->pp_next = NULL;
 
 	if (alloc_flags & ALLOC_ZERO)
 		memset(page2kva(page_allocated), 0, PGSIZE);
@@ -417,9 +419,9 @@ page_free(struct PageInfo *pp)
 {
 	// Fill this function in
 	// Hint: You may want to panic if pp->pp_ref is nonzero or
-	// pp->pp_link is not NULL.
+	// pp->pp_next is not NULL.
 
-	if (pp->pp_link)		// pp->pp_link is not NULL, double free
+	if (pp->pp_next)		// pp->pp_next is not NULL, double free
 		panic("Double free page %u, pvaddr:%x, ppaddr:%x\n",\
 			(uint32_t)(pp-pages), page2kva(pp), page2pa(pp));
 	
@@ -427,7 +429,7 @@ page_free(struct PageInfo *pp)
 		panic("Free a page in use, pnum:%u, pvaddr:%x, ppaddr:%x\n",\
 			(uint32_t)(pp-pages), page2kva(pp), page2pa(pp));
 	
-	pp->pp_link = page_free_list;
+	pp->pp_next = page_free_list;
 	page_free_list = pp;
 	return;
 }
@@ -713,7 +715,22 @@ list_remove(struct PageInfo **list_ptr, struct PageInfo *node_ptr)
 }
 
 /*
+ * return the length of a linked list. An end of a linked list is
+ * represented by NULL. The caller should guarantee the security of
+ * the arugments.
+ */
+size_t
+list_length(struct PageInfo **list_ptr)
+{
+	size_t count = 0;
+	for (struct PageInfo *node_ptr = *list_ptr; node_ptr; node_ptr = node_ptr->pp_next)
+		++count;
+	return count;
+}
+
+/*
  * check whether a buddy page area is N-th order free
+ * NUll is returned if not.
  */
 struct PageInfo *
 buddy_is_free(struct PageInfo *pp, int order)
@@ -759,10 +776,10 @@ void buddy_tree_init(struct PageInfo *pp_free)
 		pp_free = nOrder_free_pages[order];
 
 		while (pp_free) {
-			if (buddy_pp = buddy_is_free(pp_free, order)) {
+			if ((buddy_pp = buddy_is_free(pp_free, order)) != NULL) {
 				// remove [pp_free, buddy_pp] from nOrder_free_pages[this order]
-				list_remove(nOrder_free_pages[order], pp_free);
-				list_remove(nOrder_free_pages[order], buddy_pp);
+				list_remove(&nOrder_free_pages[order], pp_free);
+				list_remove(&nOrder_free_pages[order], buddy_pp);
 
 				// sort [pp_free, buddy_pp]
 				struct PageInfo *lower_addr = MIN(buddy_pp, pp_free);
@@ -771,14 +788,13 @@ void buddy_tree_init(struct PageInfo *pp_free)
 				lower_addr->pp_count = ((lower_addr->pp_count) << 1);
 
 				// insert the new block into the linked list of next order
-				list_push_front(nOrder_free_pages[order+1], lower_addr);
+				list_push_front(&nOrder_free_pages[order+1], lower_addr);
 			} else
 				pp_free = pp_free->pp_next;
 		}
 	}
 }
 
-page_init()
 
 // --------------------------------------------------------------
 // Checking functions.
@@ -803,10 +819,10 @@ check_page_free_list(bool only_low_memory)
 		// list, since entry_pgdir does not map all pages.
 		struct PageInfo *pp1, *pp2;
 		struct PageInfo **tp[2] = { &pp1, &pp2 };
-		for (pp = page_free_list; pp; pp = pp->pp_link) {
+		for (pp = page_free_list; pp; pp = pp->pp_next) {
 			int pagetype = PDX(page2pa(pp)) >= pdx_limit;
 			*tp[pagetype] = pp;
-			tp[pagetype] = &pp->pp_link;
+			tp[pagetype] = &pp->pp_next;
 		}
 		*tp[1] = 0;
 		*tp[0] = pp2;
@@ -815,12 +831,12 @@ check_page_free_list(bool only_low_memory)
 
 	// if there's a page that shouldn't be on the free list,
 	// try to make sure it eventually causes trouble.
-	for (pp = page_free_list; pp; pp = pp->pp_link)
+	for (pp = page_free_list; pp; pp = pp->pp_next)
 		if (PDX(page2pa(pp)) < pdx_limit)
 			memset(page2kva(pp), 0x97, 128);
 
 	first_free_page = (char *) boot_alloc(0);
-	for (pp = page_free_list; pp; pp = pp->pp_link) {
+	for (pp = page_free_list; pp; pp = pp->pp_next) {
 		// check that we didn't corrupt the free list itself
 		assert(pp >= pages);
 		assert(pp < pages + npages);
@@ -864,7 +880,7 @@ check_page_alloc(void)
 		panic("'pages' is a null pointer!");
 
 	// check number of free pages
-	for (pp = page_free_list, nfree = 0; pp; pp = pp->pp_link)
+	for (pp = page_free_list, nfree = 0; pp; pp = pp->pp_next)
 		++nfree;
 
 	// should be able to allocate three pages
@@ -918,7 +934,7 @@ check_page_alloc(void)
 	page_free(pp2);
 
 	// number of free pages should be the same
-	for (pp = page_free_list; pp; pp = pp->pp_link)
+	for (pp = page_free_list; pp; pp = pp->pp_next)
 		--nfree;
 	assert(nfree == 0);
 
@@ -1098,7 +1114,7 @@ check_page(void)
 	// test re-inserting pp1 at PGSIZE
 	assert(page_insert(kern_pgdir, pp1, (void*) PGSIZE, 0) == 0);
 	assert(pp1->pp_ref);
-	assert(pp1->pp_link == NULL);
+	assert(pp1->pp_next == NULL);
 
 	// unmapping pp1 at PGSIZE should free it
 	page_remove(kern_pgdir, (void*) PGSIZE);
@@ -1189,4 +1205,18 @@ check_page_installed_pgdir(void)
 	page_free(pp0);
 
 	cprintf("check_page_installed_pgdir() succeeded!\n");
+}
+
+/*
+ *check whether the buddy tree is established correctly.
+ */
+static void
+check_buddy_system(void)
+{
+	// assure values of elements of PageInfo is consistent
+	// with each other.
+	for (size_t i = 0; i < npages; ++i) {
+		assert((pages[i].pp_ref == 0) == (pages[i].pp_count != 0));
+	}
+	struct PageInfo a;
 }
