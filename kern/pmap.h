@@ -90,4 +90,33 @@ page2kva(struct PageInfo *pp)
 
 pte_t *pgdir_walk(pde_t *pgdir, const void *va, int create);
 
+
+/*
+ * Some concept in buddy system
+ * The minimal memory unit is a page(4KB).
+ * 2^order pages is allocated each time.
+ * The N-th order buddy page is the buddy of a page which is the
+ * first page of 2^order contiguous pages. Thus the buddy's order
+ * of a page can not be arbitrarily large. For eaxmple, (110)_2 page
+ * has 2-th order buddy page at most.
+ * Another trick we should point out is that if bit-N(counting from
+ * left and N starts at zero) is the first non-zero bit of index.
+ * Then this page has N-th buddy page at most. And by toggling bit-N,
+ * we get the index of its buddy page.
+ * If a page is the first page of 2^N contiguous pages, we call
+ * the page is N-th order free.
+ */
+
+#define MAX_BUDDY_ORDER	10	// the biggest guaranteed memory is 2^10 pages, i.e. 4MB
+
+inline bool buddy_is_free(int index, int order);
+void buddy_tree_init(struct PageInfo *pp_free);
+struct PageInfo *buddy_alloc_page(int alloc_flags, int order);
+void buddy_free_page(struct PageInfo *pp, int order);
+
+/*
+ * This macro takes a PageInfo pointer and returns its index in the pages array.
+ */
+#define page2index(pp)	((pp) - pages)
+
 #endif /* !JOS_KERN_PMAP_H */

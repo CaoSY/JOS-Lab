@@ -19,6 +19,7 @@ pde_t *kern_pgdir;		// Kernel's initial page directory
 struct PageInfo *pages;		// Physical page state array
 static struct PageInfo *page_free_list;	// Free list of physical pages
 
+static struct PageInfo *nOrder_free_pages[MAX_BUDDY_ORDER+1];
 
 // --------------------------------------------------------------
 // Detect machine's physical memory setup.
@@ -641,6 +642,143 @@ tlb_invalidate(pde_t *pgdir, void *va)
 	invlpg(va);
 }
 
+// --------------------------------------------------------------
+// Buddy system functions
+// --------------------------------------------------------------
+
+/*
+ * Each doubly linked list is represented by a PageInfo **ptr.
+ * list_push_front(PageInfo **list_ptr, PageInfo *node_ptr) pushes
+ * *node_ptr into the heade the list.
+ */
+struct PageInfo *
+list_push_front(struct PageInfo **list_ptr, struct PageInfo *node_ptr)
+{
+	struct PageInfo *head_ptr = *list_ptr;
+	node_ptr->pp_next = head_ptr;
+	node_ptr->pp_prev = NULL;
+
+	if (head_ptr == NULL)
+		return node_ptr;
+
+	head_ptr->pp_prev = node_ptr;
+
+	return node_ptr;
+}
+
+/*
+ * list_pop_front(PageInfo **list_ptr) pops out the head of the linked
+ * list and sets *list_ptr to head_ptr->pp_next. NULL is returned if
+ * list is empty.
+ */
+struct PageInfo *
+list_pop_front(struct PageInfo **list_ptr)
+{
+	struct PageInfo *head_ptr = *list_ptr;
+	if (head_ptr == NULL)
+		return NULL;
+
+	*list_ptr = head_ptr->pp_next;
+	
+	if (*list_ptr)
+		(*list_ptr)->pp_prev = NULL;
+	
+	return head_ptr;
+}
+
+/*
+ * Remove *node_ptr from list_ptr.
+ * This function doesn't check whether node_ptr really belongs
+ * to list_ptr. The caller should guarantee the validation of
+ * arguments. Both of them should not be NULL. It's the caller's
+ * duty to assure node_ptr really belongs to list_ptr.
+ * 
+ */
+struct PageInfo *
+list_remove(struct PageInfo **list_ptr, struct PageInfo *node_ptr)
+{
+	// if node_ptr is the first of the linked list, just pop it
+	if (*list_ptr == node_ptr)
+		return list_pop_front(list_ptr);
+	
+	// Last condition check assures node_ptr is not the first node
+	// in the linked list. So it's safe to use node_ptr->pp_prev.
+	node_ptr->pp_prev->pp_next = node_ptr->pp_next;
+	
+	// if node_ptr is not the last node in the linked list.
+	if (node_ptr->pp_next != NULL)
+		node_ptr->pp_next->pp_prev = node_ptr->pp_prev;
+	
+	return node_ptr;
+}
+
+/*
+ * check whether a buddy page area is N-th order free
+ */
+struct PageInfo *
+buddy_is_free(struct PageInfo *pp, int order)
+{
+	// assure order provided resides in appropriate range
+	assert(order <= MAX_BUDDY_ORDER);
+	
+	size_t buddy_bit = (1 << order);
+	size_t index = page2index(pp);
+
+	// assure the caller demand a test on pp with appropriate order
+	assert((index &(buddy_bit - 1)) == 0);
+	
+	size_t buddy_index = index ^ buddy_bit;
+	// The tree constructed by the buddy system may even not be a 
+	// complete binary tree because our memory is not always 2^N
+	// bytes big. It‘s necessary to assure the physical memory
+	// represented by the buddy really exists.
+	if (buddy_index >= npages)
+		return NULL;
+	
+	return pages[buddy_index].pp_count == buddy_bit ? &pages[buddy_index] : NULL;
+}
+
+/*
+ * initialize nOrder_free_pages
+ * free page is always inserted to the header of a linked list
+ * pp_free should be the linked list provided by page_init()
+ */
+void buddy_tree_init(struct PageInfo *pp_free)
+{
+
+	// nOrder_free_pages == &nOrder_free_pages[0]
+	while (pp_free) {
+		pp_free->pp_count = 1;
+		*nOrder_free_pages = list_push_front(nOrder_free_pages, pp_free);
+		pp_free = pp_free->pp_next;
+	}
+	
+	for (int order = 0; nOrder_free_pages[order] && order < MAX_BUDDY_ORDER; ++order) {
+		int next_order = order + 1;
+		struct PageInfo *buddy_pp;
+		pp_free = nOrder_free_pages[order];
+
+		while (pp_free) {
+			if (buddy_pp = buddy_is_free(pp_free, order)) {
+				// remove [pp_free, buddy_pp] from nOrder_free_pages[this order]
+				list_remove(nOrder_free_pages[order], pp_free);
+				list_remove(nOrder_free_pages[order], buddy_pp);
+
+				// sort [pp_free, buddy_pp]
+				struct PageInfo *lower_addr = MIN(buddy_pp, pp_free);
+				
+				// increment the order of free size
+				lower_addr->pp_count = ((lower_addr->pp_count) << 1);
+
+				// insert the new block into the linked list of next order
+				list_push_front(nOrder_free_pages[order+1], lower_addr);
+			} else
+				pp_free = pp_free->pp_next;
+		}
+	}
+}
+
+page_init()
 
 // --------------------------------------------------------------
 // Checking functions.
@@ -706,6 +844,8 @@ check_page_free_list(bool only_low_memory)
 
 	cprintf("check_page_free_list() succeeded!\n");
 }
+
+// initialize buddy tree
 
 //
 // Check the physical page allocator (page_alloc(), page_free(),
