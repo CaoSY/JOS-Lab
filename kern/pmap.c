@@ -70,6 +70,8 @@ static void check_kern_pgdir(void);
 static physaddr_t check_va2pa(pde_t *pgdir, uintptr_t va);
 static void check_page(void);
 static void check_page_installed_pgdir(void);
+static void check_buddy_tree(void);
+static void check_buddy_alloc(void);
 
 // This simple physical memory allocator is used only while JOS is setting
 // up its virtual memory system.  page_alloc() is the real allocator.
@@ -238,6 +240,9 @@ mem_init(void)
 	check_page_installed_pgdir();
 
 	buddy_tree_init(page_free_list);
+
+	check_buddy_tree();
+	check_buddy_alloc();
 }
 
 // --------------------------------------------------------------
@@ -660,6 +665,8 @@ list_push_front(struct PageInfo **list_ptr, struct PageInfo *node_ptr)
 	node_ptr->pp_next = head_ptr;
 	node_ptr->pp_prev = NULL;
 
+	*list_ptr = node_ptr;
+
 	if (head_ptr == NULL)
 		return node_ptr;
 
@@ -762,14 +769,16 @@ buddy_is_free(struct PageInfo *pp, int order)
  */
 void buddy_tree_init(struct PageInfo *pp_free)
 {
+	struct PageInfo *tmp_ptr;
 
 	// nOrder_free_pages == &nOrder_free_pages[0]
 	while (pp_free) {
 		pp_free->pp_count = 1;
+		tmp_ptr = pp_free->pp_next;
 		*nOrder_free_pages = list_push_front(nOrder_free_pages, pp_free);
-		pp_free = pp_free->pp_next;
+		pp_free = tmp_ptr;
 	}
-	
+
 	for (int order = 0; nOrder_free_pages[order] && order < MAX_BUDDY_ORDER; ++order) {
 		int next_order = order + 1;
 		struct PageInfo *buddy_pp;
@@ -789,12 +798,71 @@ void buddy_tree_init(struct PageInfo *pp_free)
 
 				// insert the new block into the linked list of next order
 				list_push_front(&nOrder_free_pages[order+1], lower_addr);
+
+				pp_free = nOrder_free_pages[order];
 			} else
 				pp_free = pp_free->pp_next;
 		}
 	}
 }
 
+/*
+ * allocate order free page
+ * return NULL if allocation failed
+ */
+struct PageInfo *
+buddy_alloc_page(int alloc_flags, int order)
+{
+	struct PageInfo **best_fit_list = &nOrder_free_pages[order];
+	int best_fit_order = order;
+
+	// find best fit list
+	while (*best_fit_list == NULL && best_fit_order <= MAX_BUDDY_ORDER) {
+		++best_fit_order;
+		++best_fit_list;
+	}
+
+	// no contiguous memory big enough is available
+	if (best_fit_order > MAX_BUDDY_ORDER)
+		return NULL;
+	
+	// break best fit memory block into 2^order big
+	struct PageInfo *big_block = list_pop_front(best_fit_list);
+	for (; best_fit_order > order; --best_fit_order) {
+		struct PageInfo *lower_order_buddy = &pages[(big_block - pages) ^ (1 << (best_fit_order - 1))];
+		lower_order_buddy->pp_count = (1 << (best_fit_order - 1));
+		list_push_front(--best_fit_list, lower_order_buddy);
+	}
+
+	big_block->pp_count = (1 << order);
+	if (alloc_flags & ALLOC_ZERO)
+		memset(page2kva(big_block), 0, (big_block->pp_count) * PGSIZE);
+
+	return big_block;
+}
+
+/*
+ * free page back to buddy tree
+ * it's the caller's responsibility to assure
+ * pp != NULL, order <= MAX_BUDDY_ORDER and the
+ * contiguous memory to be freed beginning from
+ * pp is truly 2^order big.
+ */
+void
+buddy_free_page(struct PageInfo *pp, int order)
+{
+	while (order < MAX_BUDDY_ORDER) {
+		struct PageInfo *buddy;
+		if ((buddy = buddy_is_free(pp, order)) == NULL)
+			break;
+		list_remove(&nOrder_free_pages[order], buddy);
+		pp = MIN(pp, buddy);
+		++order;
+		pp->pp_count = (1<<order);
+	}
+
+	list_push_front(&nOrder_free_pages[order], pp);
+}
 
 // --------------------------------------------------------------
 // Checking functions.
@@ -861,7 +929,6 @@ check_page_free_list(bool only_low_memory)
 	cprintf("check_page_free_list() succeeded!\n");
 }
 
-// initialize buddy tree
 
 //
 // Check the physical page allocator (page_alloc(), page_free(),
@@ -1208,15 +1275,97 @@ check_page_installed_pgdir(void)
 }
 
 /*
- *check whether the buddy tree is established correctly.
+ * check whether the buddy tree is established correctly.
  */
 static void
-check_buddy_system(void)
+check_buddy_tree(void)
 {
+
+	size_t free_count = 0;	// number of free pages
+	size_t used_count = 0;	// number of used pages
+
 	// assure values of elements of PageInfo is consistent
-	// with each other.
+	// with each other and their own criteria.
 	for (size_t i = 0; i < npages; ++i) {
-		assert((pages[i].pp_ref == 0) == (pages[i].pp_count != 0));
+		(pages[i].pp_ref == 0 && pages[i].pp_count > 0) ? ++free_count : ++used_count;
+
+		// pages[i].pp_count should be either zero or the power of two.
+		// It should not be larger than 2^MAX_BUDDY_ORDER.
+		// We should keep in mind that pages[i].pp_count is an unsigend integer.
+		assert(((pages[i].pp_count <= (1 << MAX_BUDDY_ORDER)) &&
+			((pages[i].pp_count & (pages[i].pp_count - 1)) == 0)));
+
+		// pages[i].pp_ref == 0 means page i is free
+		// pages[i].pp_count > 0 means page is 2^pp_count
+		// the boolean value of these two equations should be always the same.
+		assert(((pages[i].pp_ref == 0) == (pages[i].pp_count > 0)));
 	}
-	struct PageInfo a;
+
+	// assure free_count and used_count sums up to npages
+	assert((free_count + used_count == npages));
+
+	// count free pages from buddy tree
+	// check each page's buddy page is not free except for those at MAX_BUDDY_ORDER
+	size_t buddy_free_count = 0;
+	for (int order = 0; order <= MAX_BUDDY_ORDER; ++order) {
+		size_t counter = 0;
+		
+		for (struct PageInfo *node_ptr = nOrder_free_pages[order]; node_ptr; node_ptr = node_ptr->pp_next) {
+			++counter;
+			
+			assert((order == MAX_BUDDY_ORDER || (buddy_is_free(node_ptr, order) == NULL)));
+		}
+		
+		buddy_free_count += counter * (1 << order);
+	}
+
+	assert(buddy_free_count == free_count);
+
+/*
+	#define BYTE_UNIT	(1)
+	#define KB_UNIT		(BYTE_UNIT << 10)
+	#define MB_UNIT		(KB_UNIT << 10)
+
+	int free_memory = free_count * PGSIZE;
+	cprintf("free memory: %dMB", free_memory/MB_UNIT);
+	free_memory = free_memory % MB_UNIT;
+	cprintf(" %dKB", free_memory/KB_UNIT);
+	free_memory = free_memory % KB_UNIT;
+	cprintf(" %dB\n", free_memory);
+*/
+
+	cprintf("check_buddy_tree() succeeded!\n");
+}
+
+/*
+ * check buddy_alloc, buddy_free
+ */
+static void
+check_buddy_alloc(void)
+{
+	size_t free_page_count = 0;
+	size_t free_count_in_each_order[MAX_BUDDY_ORDER+1];
+	memset(free_count_in_each_order, 0, sizeof(free_count_in_each_order));
+
+	// record free page number
+	for (size_t order = 0; order <= MAX_BUDDY_ORDER; ++order) {
+		size_t counter = list_length(&nOrder_free_pages[order]);
+		
+		free_count_in_each_order[order] = counter;
+		
+		free_page_count += counter * (1 << order);
+	}
+	
+	cprintf("free page count: %d\n", free_page_count);
+	for (int i = 0; i <= MAX_BUDDY_ORDER; ++i)
+		cprintf("order: %d    count: %d\n", i, free_count_in_each_order[i]);
+
+	// exhaust memory
+	size_t alloc_times = 0;
+	while (buddy_alloc_page(0, 0))
+		++alloc_times;
+
+	assert((alloc_times == free_page_count));
+
+	cprintf("check_buddy_alloc&free() succeed!\n");
 }
