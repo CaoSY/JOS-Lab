@@ -26,11 +26,32 @@
 // To construct a linear address la from PDX(la), PTX(la), and PGOFF(la),
 // use PGADDR(PDX(la), PTX(la), PGOFF(la)).
 
+/*
+ * In big page table,
+ * a linear address 'la' has a two-part structure as follows"
+ * +-------10-------+--------------------22----------------+
+ * | Page Directory |          Offset within Page          |
+ * |      Index     |                                      |
+ * +----------------+--------------------------------------+
+ * \--BIG_PDX(la)--/ \-------------BIG_PGOFF(la)-----------/
+ * \-BIG_PGNUM(la)-/
+ * 
+ * The BIG_PDX, BIG_PGOFF, and BIG_PGNUM macors decompose linear address as
+ * shown. To construct a linear address la from BIG_PDX(la), BIG_PGOFF(la),
+ * use BIG_PGADDR(BIG_PDX(la), BIG_PGOFF(la)).
+ */
+
 // page number field of address
 #define PGNUM(la)	(((uintptr_t) (la)) >> PTXSHIFT)
 
+// big page number field of address
+#define BIG_PGNUM(la) (((uintptr_t) (la)) >> BIG_PGSHIFT)
+
 // page directory index
 #define PDX(la)		((((uintptr_t) (la)) >> PDXSHIFT) & 0x3FF)
+
+// big page directory index
+#define BIG_PDX(la) ((((uintptr_t) (la)) >> BIG_PGSHIFT) & 0x3FF)
 
 // page table index
 #define PTX(la)		((((uintptr_t) (la)) >> PTXSHIFT) & 0x3FF)
@@ -38,13 +59,22 @@
 // offset in page
 #define PGOFF(la)	(((uintptr_t) (la)) & 0xFFF)
 
+// offset in big page
+#define BIG_PGOFF(la) (((uintptr_t) (la)) &0x3FFFFF)
+
 // construct linear address from indexes and offset
 #define PGADDR(d, t, o)	((void*) ((d) << PDXSHIFT | (t) << PTXSHIFT | (o)))
 
+// construct linear address for big page indexes and offset
+#define BIG_PGADDR(d, o) ((void *) ((d) << BIG_PGSHIFT | (o)))
+
 // Page directory and page table constants.
 #define NPDENTRIES	1024		// page directory entries per page directory
-#define NPTENTRIES	1024		// page table entries per page table
+#define NPTENTRIES	1024		// page table entries per page table, in big page
+                                // there is only page directory, no page table.
 
+#define BIG_PGSHIFT 22                  // log(BIG_PGSIZE)
+#define BIG_PGSIZE  (1 << BIG_PGSHIFT)  // bytes mapped by a page
 #define PGSIZE		4096		// bytes mapped by a page
 #define PGSHIFT		12		// log2(PGSIZE)
 
@@ -74,6 +104,9 @@
 
 // Address in page table or page directory entry
 #define PTE_ADDR(pte)	((physaddr_t) (pte) & ~0xFFF)
+
+// Address in page directory entry
+#define PDE_ADDR(pde)	((physaddr_t) (pde) & ~0x3FFFFF)
 
 // Control Register flags
 #define CR0_PE		0x00000001	// Protection Enable

@@ -9,7 +9,8 @@
 #include <inc/memlayout.h>
 #include <inc/assert.h>
 
-#define npages_in_4GB	(1<<(32-PGSHIFT))
+#define npages_in_4GB	(1 << (32 - BIG_PGSHIFT))
+//#define npages_in_4GB	(1<<(32-PGSHIFT))
 #define DWORD_SIZE		4		// four bytes per dword
 #define DOWRD_SHIFT		2		// log2(DWORD_SIZE)
 #define ndwords_in_4GB	(1<<(32-DOWRD_SHIFT))
@@ -45,7 +46,7 @@ _paddr(const char *file, int line, void *kva)
 static inline void*
 _kaddr(const char *file, int line, physaddr_t pa)
 {
-	if (PGNUM(pa) >= npages)
+	if (BIG_PGNUM(pa) >= npages)
 		_panic(file, line, "KADDR called with invalid pa %08lx", pa);
 	return (void *)(pa + KERNBASE);
 }
@@ -71,15 +72,15 @@ void	tlb_invalidate(pde_t *pgdir, void *va);
 static inline physaddr_t
 page2pa(struct PageInfo *pp)
 {
-	return (pp - pages) << PGSHIFT;
+	return (pp - pages) << BIG_PGSHIFT;
 }
 
 static inline struct PageInfo*
 pa2page(physaddr_t pa)
 {
-	if (PGNUM(pa) >= npages)
+	if (BIG_PGNUM(pa) >= npages)
 		panic("pa2page called with invalid pa");
-	return &pages[PGNUM(pa)];
+	return &pages[BIG_PGNUM(pa)];
 }
 
 static inline void*

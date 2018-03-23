@@ -50,8 +50,11 @@ i386_detect_memory(void)
 	else
 		totalmem = basemem;
 
-	npages = totalmem / (PGSIZE / 1024);
-	npages_basemem = basemem / (PGSIZE / 1024);
+	// in big page system, a page is 4MB, which can cover memory much
+	// more than basemem. So npages_basemem should be zero and can't
+	// be relied on.
+	npages = totalmem / (BIG_PGSIZE / 1024);
+	npages_basemem = basemem / (BIG_PGSIZE / 1024);
 
 	cprintf("Physical memory: %uK available, base = %uK, extended = %uK\n",
 		totalmem, basemem, totalmem - basemem);
@@ -137,6 +140,9 @@ mem_init(void)
 
 	//////////////////////////////////////////////////////////////////////
 	// create initial page directory.
+	// in boot_alloc, we still use small page alignment, since now free page
+	// list has not been established and big page has not been enabled yet.
+	// By doing so we can save memory and possibly gain better performance.
 	kern_pgdir = (pde_t *) boot_alloc(PGSIZE);
 	memset(kern_pgdir, 0, PGSIZE);
 
@@ -147,7 +153,7 @@ mem_init(void)
 	// following line.)
 
 	// Permissions: kernel R, user R
-	kern_pgdir[PDX(UVPT)] = PADDR(kern_pgdir) | PTE_U | PTE_P;
+	kern_pgdir[BIG_PDX(UVPT)] = PADDR(kern_pgdir) | PTE_U | PTE_P;
 
 	//////////////////////////////////////////////////////////////////////
 	// Allocate an array of npages 'struct PageInfo's and store it in 'pages'.
@@ -214,6 +220,9 @@ mem_init(void)
 
 	// Check that the initial page directory has been set up correctly.
 	check_kern_pgdir();
+
+	// enable big page
+	lcr4(rcr4() | CR4_PSE); 
 
 	// Switch from the minimal entry page directory to the full kern_pgdir
 	// page table we just created.	Our instruction pointer should be
@@ -349,6 +358,28 @@ page_init(void)
 	 * 
 	 */
 
+	// In big page system, it's much easier to initialize PageInfo array
+	// since one page will cover all base memory. Big pages where base
+	// memeory and kernel reside are used and reside contiguously.
+	page_free_list = NULL;
+
+	size_t kernel_end_page = ROUNDUP(((uintptr_t)(boot_alloc(0)) - KERNBASE), BIG_PGSIZE);
+
+	size_t i = 0;
+
+	for (; i < kernel_end_page; ++i) {
+		pages[i].pp_ref = 1;
+		pages[i].pp_link = NULL;
+	}
+
+	for (; i < npages; ++i) {
+		pages[i].pp_ref = 0;
+		pages[i].pp_link = page_free_list;
+		page_free_list = &pages[i];
+	}
+
+
+/*
 	page_free_list = NULL;
 
 	pages[0].pp_ref = 1;		// mark physical page 0 as in use
@@ -377,6 +408,7 @@ page_init(void)
 		pages[i].pp_link = page_free_list;
 		page_free_list = &pages[i];
 	}
+*/
 }
 
 //
@@ -467,11 +499,45 @@ page_decref(struct PageInfo* pp)
 // Hint 4: all pointers in C are virtual addresses but all addresses in
 // page dir and page table are physical address
 //
+
+/*
+ * In big page system,
+ * given 'pgdir', a pointer to a page directory, pgdir_walk returns
+ * a pointer to the page directory entry (PDE) for linear address 'va'.
+ * 
+ * The relevantt page directory entry might not exist yet.
+ * If this is true, and create == false, then pgdir_walk returns NULL.
+ * Otherwise, pgdir_walk return the corresponding page directory entry.
+ * 
+ */
+
+pde_t *
+pgdir_walk(pde_t *pgdir, const void *va, int create)
+{
+	// Fill this function in
+	pde_t *pd_entry = &pgdir[BIG_PDX(va)];
+
+	if ((physaddr_t)*pd_entry & PTE_P)
+		return pd_entry;
+
+	// if the relevant page directory entry doesn't exist
+	// and create == false
+	if (create == false)
+		return NULL;
+	
+	return pd_entry;
+}
+/*
 pte_t *
 pgdir_walk(pde_t *pgdir, const void *va, int create)
 {
 	// Fill this function in
-	pde_t *pd_entry = &pgdir[PDX(va)];
+	pde_t *pd_entry = &pgdir[BIG_PDX(va)];
+
+	if ((physaddr_t)*pd_entry & PTE_P) {
+
+	}
+
 	pte_t *pgtable = NULL;
 
 	// if the relevant page table page exists
@@ -497,6 +563,7 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 	pgtable = (pte_t *)page2kva(new_page_info);
 	return &pgtable[PTX(va)];
 }
+*/
 
 //
 // Map [va, va+size) of virtual address space to physical [pa, pa+size)
@@ -512,15 +579,20 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 static void
 boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, physaddr_t pa, int perm)
 {
-	for (size_t alloc_size = 0; alloc_size < size; alloc_size += PGSIZE) {
-		pte_t *pt_entry = pgdir_walk(pgdir, (void *)va, true);
-		
-		if (pt_entry == NULL)
+	uintptr_t round_va = ROUNDDOWN(va, BIG_PGSIZE);
+	uintptr_t round_va_end = ROUNDUP(va+size, BIG_PGSIZE);
+	uintptr_t round_pa = ROUNDDOWN(pa, BIG_PGSIZE);
+
+	while (round_va < round_va_end) {
+		pde_t *pd_entry = pgdir_walk(pgdir, (void *)round_va, true);
+
+		if (pd_entry == NULL)
 			panic("Page allocation failed!");
 		
-		*pt_entry = pa | perm | PTE_P;
-		va += PGSIZE;
-		pa += PGSIZE;
+		*pd_entry = round_pa | perm | PTE_P;
+
+		round_va += BIG_PGSIZE;
+		round_pa += BIG_PGSIZE;
 	}
 }
 
@@ -556,6 +628,25 @@ boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, physaddr_t pa, int perm
 // Hint: The TA solution is implemented using pgdir_walk, page_remove,
 // and page2pa.
 //
+
+int
+page_insert(pde_t *pgdir, struct PageInfo *pp, void *va, int perm)
+{
+	// Fill this function in
+	pde_t *pd_entry = pgdir_walk(pgdir, va, true);
+
+	if (pd_entry == NULL)
+		return -E_NO_MEM;
+
+	++(pp->pp_ref);
+	if (*pd_entry & PTE_P)
+		page_remove(pgdir, va);
+
+	*pd_entry = page2pa(pp) | perm | PTE_P;
+	
+	return 0;
+}
+/*
 int
 page_insert(pde_t *pgdir, struct PageInfo *pp, void *va, int perm)
 {
@@ -572,6 +663,7 @@ page_insert(pde_t *pgdir, struct PageInfo *pp, void *va, int perm)
 	*pt_entry = page2pa(pp) | perm | PTE_P;
 	return 0;
 }
+*/
 
 //
 // Return the page mapped at virtual address 'va'.
@@ -584,6 +676,22 @@ page_insert(pde_t *pgdir, struct PageInfo *pp, void *va, int perm)
 //
 // Hint: the TA solution uses pgdir_walk and pa2page.
 //
+
+struct PageInfo *
+page_lookup(pde_t *pgdir, void *va, pde_t **pde_store)
+{
+	pde_t *pd_entry = pgdir_walk(pgdir, va, false);
+
+	if (pd_entry == NULL)
+		return NULL;
+	
+	if (pde_store)
+		*pde_store = pd_entry;
+	
+	return pa2page(PDE_ADDR(*pd_entry));
+}
+
+/*
 struct PageInfo *
 page_lookup(pde_t *pgdir, void *va, pte_t **pte_store)
 {
@@ -599,6 +707,7 @@ page_lookup(pde_t *pgdir, void *va, pte_t **pte_store)
 
 	return pa2page(PTE_ADDR(*pt_entry));
 }
+*/
 
 //
 // Unmaps the physical page at virtual address 'va'.
@@ -615,6 +724,21 @@ page_lookup(pde_t *pgdir, void *va, pte_t **pte_store)
 // Hint: The TA solution is implemented using page_lookup,
 // 	tlb_invalidate, and page_decref.
 //
+
+void
+page_remove(pde_t *pgdir, void *va)
+{
+	pde_t *pd_entry;
+	struct PageInfo *mapped_page = page_lookup(pgdir, va, &pd_entry);
+	if (mapped_page == NULL)
+		return;
+	
+	page_decref(mapped_page);
+	*pd_entry = 0;
+	tlb_invalidate(pgdir, va);
+}
+
+/*
 void
 page_remove(pde_t *pgdir, void *va)
 {
@@ -628,6 +752,7 @@ page_remove(pde_t *pgdir, void *va)
 	*pt_entry = 0;
 	tlb_invalidate(pgdir, va);
 }
+*/
 
 //
 // Invalidate a TLB entry, but only if the page tables being
