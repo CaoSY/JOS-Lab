@@ -764,14 +764,12 @@ get_buddy(struct PageInfo *pp, int order)
 	assert((index &(buddy_bit - 1)) == 0);
 	
 	size_t buddy_index = index ^ buddy_bit;
+	
 	// The tree constructed by the buddy system may even not be a 
 	// complete binary tree because our memory is not always 2^N
 	// bytes big. It‘s necessary to assure the physical memory
 	// represented by the buddy really exists.
-	if (buddy_index >= npages)
-		return NULL;
-	
-	return &pages[buddy_index];
+	return (buddy_index < npages) ? (pages + buddy_index) : NULL;
 }
 
 /*
@@ -781,24 +779,9 @@ get_buddy(struct PageInfo *pp, int order)
 struct PageInfo *
 buddy_is_free(struct PageInfo *pp, int order)
 {
-	// assure order provided resides in appropriate range
-	assert(order <= MAX_BUDDY_ORDER);
+	struct PageInfo *buddy = get_buddy(pp, order);
 	
-	size_t buddy_bit = (1 << order);
-	size_t index = page2index(pp);
-
-	// assure the caller demand a test on pp with appropriate order
-	assert((index &(buddy_bit - 1)) == 0);
-	
-	size_t buddy_index = index ^ buddy_bit;
-	// The tree constructed by the buddy system may even not be a 
-	// complete binary tree because our memory is not always 2^N
-	// bytes big. It‘s necessary to assure the physical memory
-	// represented by the buddy really exists.
-	if (buddy_index >= npages)
-		return NULL;
-	
-	return pages[buddy_index].pp_count == buddy_bit ? &pages[buddy_index] : NULL;
+	return (buddy != NULL && buddy->pp_count == (1 << order)) ? buddy : NULL;
 }
 
 /*
