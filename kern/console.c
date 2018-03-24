@@ -5,7 +5,7 @@
 #include <inc/kbdreg.h>
 #include <inc/string.h>
 #include <inc/assert.h>
-
+#include <inc/color.h>
 #include <kern/console.h>
 
 static void cons_intr(int (*proc)(void));
@@ -48,7 +48,7 @@ delay(void)
 static bool serial_exists;
 
 static int
-serial_proc_data(void)
+serial_proc_data(void)			// read a byte from serial port COM1, return -1 on failure. 
 {
 	if (!(inb(COM1+COM_LSR) & COM_LSR_DATA))
 		return -1;
@@ -62,6 +62,11 @@ serial_intr(void)
 		cons_intr(serial_proc_data);
 }
 
+
+/*
+ * Output a byte to serial port COM1. The byte will be output anyway,
+ * though in some cases the operation may fail.
+ */
 static void
 serial_putc(int c)
 {
@@ -162,9 +167,10 @@ cga_init(void)
 static void
 cga_putc(int c)
 {
+	
 	// if no attribute given, then use black on white
 	if (!(c & ~0xFF))
-		c |= 0x0700;
+		SET_CHAR_COLOR(c, __textcolor);
 
 	switch (c & 0xff) {
 	case '\b':
@@ -191,7 +197,7 @@ cga_putc(int c)
 		break;
 	}
 
-	// What is the purpose of this?
+	// What is the purpose of this?		// scroll up one line automatically when the screen is full.
 	if (crt_pos >= CRT_SIZE) {
 		int i;
 
@@ -313,7 +319,7 @@ static uint8_t *charcode[4] = {
  * Return -1 if no data.
  */
 static int
-kbd_proc_data(void)
+kbd_proc_data(void)				// use compaq standard for KBSTATP 
 {
 	int c;
 	uint8_t stat, data;
@@ -385,9 +391,12 @@ kbd_init(void)
 #define CONSBUFSIZE 512
 
 static struct {
-	uint8_t buf[CONSBUFSIZE];
-	uint32_t rpos;
-	uint32_t wpos;
+	uint8_t buf[CONSBUFSIZE];		// console circular I/O buffer. That the buffer is circular means when rpos
+									// or wpos reaches the end of buffer it jump back to the beginning of buffer.
+									// This mechanism means this buffer can cache at most "CONSBUFSIZE" bytes.
+									// Otherwise previous contents unread would be lost.
+	uint32_t rpos;					// position in the buffer where next character to be read from locates.
+	uint32_t wpos;					// position in the buffer where next character to be written in to locates.
 } cons;
 
 // called by device interrupt routines to feed input characters

@@ -10,6 +10,12 @@
 #include <inc/assert.h>
 struct Env;
 
+#define npages_in_4GB	(1<<(32-PGSHIFT))
+#define DWORD_SIZE		4		// four bytes per dword
+#define DOWRD_SHIFT		2		// log2(DWORD_SIZE)
+#define ndwords_in_4GB	(1<<(32-DOWRD_SHIFT))
+#define DOWRD_NUM(la)	(((uintptr_t) (la)) >> DOWRD_SHIFT)
+
 extern char bootstacktop[], bootstack[];
 
 extern struct PageInfo *pages;

@@ -9,7 +9,7 @@
 #define ASM 1
 
 int
-strlen(const char *s)
+strlen(const char *s)					// return length of string s
 {
 	int n;
 
@@ -19,7 +19,7 @@ strlen(const char *s)
 }
 
 int
-strnlen(const char *s, size_t size)
+strnlen(const char *s, size_t size)		// return MIN(size, strlen(s))
 {
 	int n;
 
