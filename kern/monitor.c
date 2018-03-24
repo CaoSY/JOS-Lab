@@ -220,16 +220,17 @@ set_mappings(uintptr_t virtual_addr, size_t size, int perm)
 	if (vaddr != virtual_addr)
 		cprintf("virtual address:%p -> %p\n", virtual_addr, vaddr);
 	
-	pte_t *pt_entry;
-	while (--size >= 0) {
-		pt_entry = pgdir_walk(kern_pgdir, (void *)vaddr, false);
-		if (*pt_entry & PTE_P) {
+	while (size-- > 0) {
+		pte_t *pte_ptr = pgdir_walk(kern_pgdir, (void *)vaddr, false);
+		pte_t pt_entry = *pte_ptr;
+		if (pt_entry & PTE_P) {
 			// turn off PTE_U and PTE_W
-			*pt_entry &= ~(PTE_U | PTE_W);
+			pt_entry &= ~(PTE_U | PTE_W);
 			
 			// mask off other bits in perm, and turn on bits
 			// in *pt_entry based on perm
-			*pt_entry |= (perm & (PTE_U | PTE_W));
+			pt_entry |= (perm & (PTE_U | PTE_W));
+			*pte_ptr = pt_entry;
 		} else
 			cprintf("W: %d not mapped!\n", vaddr);
 
