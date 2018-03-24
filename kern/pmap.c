@@ -388,38 +388,6 @@ page_init(void)
 		pages[i].pp_link = page_free_list;
 		page_free_list = &pages[i];
 	}
-
-
-/*
-	page_free_list = NULL;
-
-	pages[0].pp_ref = 1;		// mark physical page 0 as in use
-	size_t i;
-	
-	for (i = 1; i < npages_basemem; ++i) {
-		// The rest of base memory, [PGSIZE, npages_basemem * PGSIZE)
-		// is free.
-		pages[i].pp_ref = 0;
-		pages[i].pp_link = page_free_list;
-		page_free_list = &pages[i];
-	}
-
-	size_t kernel_end_page = ((uint32_t)(boot_alloc(0)) - KERNBASE)/PGSIZE;
-	for (; i < kernel_end_page; ++i) {
-		// IO hole and kernel physical memory reside consecutively
-		// in physcial memory. So initialize their corresponding 
-		// page entries in one loop
-		pages[i].pp_ref = 1;
-		pages[i].pp_link = NULL;
-	}
-	
-	for (; i < npages; ++i) {
-		// The rest of extended memory are not used
-		pages[i].pp_ref = 0;
-		pages[i].pp_link = page_free_list;
-		page_free_list = &pages[i];
-	}
-*/
 }
 
 //
@@ -538,43 +506,6 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 	
 	return pd_entry;
 }
-/*
-pte_t *
-pgdir_walk(pde_t *pgdir, const void *va, int create)
-{
-	// Fill this function in
-	pde_t *pd_entry = &pgdir[BIG_PDX(va)];
-
-	if ((physaddr_t)*pd_entry & PTE_P) {
-
-	}
-
-	pte_t *pgtable = NULL;
-
-	// if the relevant page table page exists
-	if ((physaddr_t)*pd_entry & PTE_P) {
-		pgtable = (pte_t *)(KADDR(PTE_ADDR(*pd_entry)));
-		return &pgtable[PTX(va)];
-	}
-	
-	// if the relevant page table doesn't exist and create == false
-	if (create == false)
-		return NULL;
-	
-	// allocate a new page table, use ALLOC_ZERO to clear the page
-	// page_alloc guarantees NULL is returned on allocation failure
-	struct PageInfo *new_page_info = page_alloc(ALLOC_ZERO);
-	if (new_page_info == NULL)
-		return NULL;
-	++(new_page_info->pp_ref);
-	
-	// pages of kernel and users may be allocated on one page table
-	// so it's convenient to give page table a user level privilige
-	*pd_entry = (pde_t)((uintptr_t)page2pa(new_page_info) | PTE_P | PTE_W | PTE_U);
-	pgtable = (pte_t *)page2kva(new_page_info);
-	return &pgtable[PTX(va)];
-}
-*/
 
 //
 // Map [va, va+size) of virtual address space to physical [pa, pa+size)
@@ -656,24 +587,6 @@ page_insert(pde_t *pgdir, struct PageInfo *pp, void *va, int perm)
 	
 	return 0;
 }
-/*
-int
-page_insert(pde_t *pgdir, struct PageInfo *pp, void *va, int perm)
-{
-	// Fill this function in
-	pte_t *pt_entry = pgdir_walk(pgdir, va, true);
-	
-	if (pt_entry == NULL)
-		return -E_NO_MEM;
-
-	++(pp->pp_ref);
-	if (*pt_entry & PTE_P)
-		page_remove(pgdir, va);		// page_remove() will call tlb_invalidate()
-
-	*pt_entry = page2pa(pp) | perm | PTE_P;
-	return 0;
-}
-*/
 
 //
 // Return the page mapped at virtual address 'va'.
@@ -700,24 +613,6 @@ page_lookup(pde_t *pgdir, void *va, pde_t **pde_store)
 	
 	return pa2page(PDE_ADDR(*pd_entry));
 }
-
-/*
-struct PageInfo *
-page_lookup(pde_t *pgdir, void *va, pte_t **pte_store)
-{
-	// Fill this function in
-
-	pte_t *pt_entry = pgdir_walk(pgdir, va, false);
-
-	if (pt_entry == NULL)
-		return NULL;
-	
-	if (pte_store)	// if pte_store is not zero
-		*pte_store = pt_entry;
-
-	return pa2page(PTE_ADDR(*pt_entry));
-}
-*/
 
 //
 // Unmaps the physical page at virtual address 'va'.
@@ -747,22 +642,6 @@ page_remove(pde_t *pgdir, void *va)
 	*pd_entry = 0;
 	tlb_invalidate(pgdir, va);
 }
-
-/*
-void
-page_remove(pde_t *pgdir, void *va)
-{
-	// Fill this function in
-	pte_t *pt_entry;
-	struct PageInfo *mapped_page = page_lookup(pgdir, va, &pt_entry);
-	if (mapped_page == NULL)	// no physical page mapped, do nothing
-		return;
-	
-	page_decref(mapped_page);
-	*pt_entry = 0;
-	tlb_invalidate(pgdir, va);
-}
-*/
 
 //
 // Invalidate a TLB entry, but only if the page tables being
