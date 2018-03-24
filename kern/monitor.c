@@ -243,8 +243,8 @@ set_mappings(uintptr_t virtual_addr, size_t size, int perm)
 int
 clear_mappings(uintptr_t virtual_addr, size_t size)
 {
-	// turn off PTE_U and PTE_W
-	return set_mappings(virtual_addr, size, 0);
+	// turn off PTE_U
+	return set_mappings(virtual_addr, size, PTE_W);
 }
 
 int
