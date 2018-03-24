@@ -231,7 +231,8 @@ mem_init(void)
 	// to check our newly established map in check_kern_pgdir() way.
 	// check_kern_pgdir();
  
-
+	// enable big page
+	lcr4(rcr4() | CR4_PSE);
 	// Switch from the minimal entry page directory to the full kern_pgdir
 	// page table we just created.	Our instruction pointer should be
 	// somewhere between KERNBASE and KERNBASE+4MB right now, which is
@@ -240,9 +241,6 @@ mem_init(void)
 	// If the machine reboots at this point, you've probably set up your
 	// kern_pgdir wrong.
 	lcr3(PADDR(kern_pgdir));
-	cprintf("break point\n");
-	// enable big page
-	lcr4(rcr4() | CR4_PSE);
 
 	check_page_free_list(0);
 
@@ -254,7 +252,9 @@ mem_init(void)
 	lcr0(cr0);
 
 	// Some more checks, only possible after kern_pgdir is installed.
-	check_page_installed_pgdir();
+	// Some of tests in the following function use PGSIZE(4KB) concept,
+	// which is not suitable for big page system.
+	//check_page_installed_pgdir();
 }
 
 // --------------------------------------------------------------
@@ -591,16 +591,15 @@ static void
 boot_map_region(pde_t *pgdir, uintptr_t va, size_t size, physaddr_t pa, int perm)
 {
 	uintptr_t round_va = ROUNDDOWN(va, BIG_PGSIZE);
-	uintptr_t round_va_end = ROUNDUP(va+size, BIG_PGSIZE);
 	uintptr_t round_pa = ROUNDDOWN(pa, BIG_PGSIZE);
-
-	while (round_va < round_va_end) {
+	size_t round_size = ROUNDUP(size + va - round_va, BIG_PGSIZE);
+	for (size_t alloc_size = 0; alloc_size < round_size; alloc_size += BIG_PGSIZE) {
 		pde_t *pd_entry = pgdir_walk(pgdir, (void *)round_va, true);
 
 		if (pd_entry == NULL)
-			panic("Page allocation failed!");
+			panic("Page alloction failed");
 		
-		*pd_entry = round_pa | perm | PTE_P;
+		*pd_entry = round_pa | perm | PTE_PS | PTE_P;
 
 		round_va += BIG_PGSIZE;
 		round_pa += BIG_PGSIZE;
