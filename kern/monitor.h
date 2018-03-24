@@ -36,7 +36,7 @@ int mon_dump(int argc, char **argv, struct Trapframe *tf);
 -DESCRIPTION:\n\
     show: display page mappings in [laddr, uaddr)\n\
     clear: clear privilege of size(in page) pages from vaddr.\n\
-           The privilege is set to PTE_U == 0 and PTE_W == 0.\n\
+           The privilege is set to PTE_U == 0 and PTE_W == 1.\n\
     set: set privilege of size(in page) pages from vaddr.\n\
          The privilege 'perm' can be specified by a number or a\n\
          two-character string containing 'u'(PTE_U), 'w'(PTE_W) or\n\
