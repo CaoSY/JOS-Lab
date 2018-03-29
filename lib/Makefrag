@@ -8,7 +8,8 @@ LIB_SRCFILES :=		lib/console.c \
 			lib/printfmt.c \
 			lib/readline.c \
 			lib/string.c \
-			lib/syscall.c
+			lib/syscall.c \
+			lib/color.c \
 
 
 
