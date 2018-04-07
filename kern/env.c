@@ -116,6 +116,23 @@ env_init(void)
 {
 	// Set up envs array
 	// LAB 3: Your code here.
+	// In current JOS configuration, we actually don't need to
+	// set env_id = 0, env_status = ENV_FREE (0). Because we
+	// zeroed envs array when we allocated it. However, to reserve
+	// the freedome to change initialized values of env_id and
+	// ENV_FREE as well as to add new tests in mem_init() that
+	// would set nonzero values to envs array, we'd better to
+	// initialize env_id and env_status again here. By the way,
+	// this function will be invoked only once when booting
+	// computers and will never be invoked since then. So
+	// redundant code won't affect the runtime performance of JOS.
+	env_free_list = NULL;
+	for (int i = NENV - 1; i >= 0; --i) {
+		envs[i].env_link = env_free_list;
+		envs[i].env_id = 0;
+		envs[i].env_status = ENV_FREE;
+		env_free_list = &envs[i];
+	}
 
 	// Per-CPU part of the initialization
 	env_init_percpu();
@@ -179,7 +196,14 @@ env_setup_vm(struct Env *e)
 	//    - The functions in kern/pmap.h are handy.
 
 	// LAB 3: Your code here.
-
+	++(p->pp_ref);
+	e->env_pgdir = (pde_t *) page2kva(p);
+	
+	// We set ALLOC_ZERO flag when we page_alloc() a page directory.
+	// So VA below UTOP is empty already.
+	// can be improved
+	memcpy(e->env_pgdir+PDX(UTOP), kern_pgdir+PDX(UTOP), PGSIZE-PDX(UTOP)*sizeof(pde_t));
+	
 	// UVPT maps the env's own page table read-only.
 	// Permissions: kernel R, user R
 	e->env_pgdir[PDX(UVPT)] = PADDR(e->env_pgdir) | PTE_P | PTE_U;
@@ -267,6 +291,19 @@ region_alloc(struct Env *e, void *va, size_t len)
 	//   'va' and 'len' values that are not page-aligned.
 	//   You should round va down, and round (va + len) up.
 	//   (Watch out for corner-cases!)
+	void *start = (void *) ROUNDDOWN((uint32_t) va, PGSIZE);
+	void *end = (void *) ROUNDUP((uint32_t)(va + len), PGSIZE);
+	struct PageInfo *pp_ptr;
+	int err_code;
+	while (start < end) {
+		if ((pp_ptr = page_alloc(0)) == NULL)
+			panic("region alloc, allocation failed.");
+		
+		if ((err_code = page_insert(e->env_pgdir, pp_ptr, start, PTE_U | PTE_W)) != 0)
+			panic("region alloc: %e", err_code);
+		
+		start += PGSIZE;
+	}
 }
 
 //
@@ -323,11 +360,36 @@ load_icode(struct Env *e, uint8_t *binary)
 	//  What?  (See env_run() and env_pop_tf() below.)
 
 	// LAB 3: Your code here.
+	struct Elf *elfhdr = (struct Elf *) binary;
+
+	if (elfhdr->e_magic != ELF_MAGIC)
+		panic("the binary to be loaded is not a elf file.");
+	
+	lcr3(PADDR(e->env_pgdir));	// program should be mapped at user page directory.
+
+	struct Proghdr *ph = (struct Proghdr *) ((uint8_t *)elfhdr + elfhdr->e_phoff);
+	struct Proghdr *eph = (struct Proghdr *) (ph + elfhdr->e_phnum);
+
+	for (; ph < eph; ++ph) {
+		if (ph->p_type == ELF_PROG_LOAD) {
+			if (ph->p_filesz > ph->p_memsz)
+				panic("file size is great than memory size");
+			
+			region_alloc(e, (void *)(ph->p_va), ph->p_memsz);
+			memcpy((void *)(ph->p_va), binary + ph->p_offset, ph->p_memsz);
+			memset((void *)(ph->p_va) + ph->p_filesz, 0, ph->p_memsz - ph->p_filesz);
+		}
+	}
+
+	e->env_tf.tf_eip = elfhdr->e_entry;
 
 	// Now map one page for the program's initial stack
 	// at virtual address USTACKTOP - PGSIZE.
 
 	// LAB 3: Your code here.
+	region_alloc(e, (void *)(USTACKTOP - PGSIZE), PGSIZE);
+
+	lcr3(PADDR(kern_pgdir));  // load kern_pgdir back
 }
 
 //
@@ -341,6 +403,13 @@ void
 env_create(uint8_t *binary, enum EnvType type)
 {
 	// LAB 3: Your code here.
+	struct Env *e;
+	int err_code;
+	if ((err_code = env_alloc(&e, 0)) != 0)
+		panic("env_alloc: %e", err_code);
+	
+	load_icode(e, binary);
+	e->env_type = type;
 }
 
 //
@@ -458,6 +527,17 @@ env_run(struct Env *e)
 
 	// LAB 3: Your code here.
 
-	panic("env_run not yet implemented");
+	// curenv != NULL means this is a context switch
+	if (curenv != NULL && curenv->env_status == ENV_RUNNING)
+		curenv->env_status = ENV_RUNNABLE;
+
+	curenv = e;
+	curenv->env_status = ENV_RUNNING;
+	++(curenv->env_runs);
+	lcr3(PADDR(e->env_pgdir));
+
+	env_pop_tf(&(curenv->env_tf));
+
+	// panic("env_run not yet implemented");
 }
 
