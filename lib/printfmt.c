@@ -137,7 +137,7 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap)
 			goto process_precision;
 
 		case '.':
-			if (width < 0)
+			if (width < 0)		// cooperating with "process_precision" below, implementing [width][.precision] grammer. Taking case '1-9' and '.', '*' into consideration together. When never encounting numbers in a format specifier, the number is calculated and stored in precision, as shown in case '1-9' and case '*'. Then "process_precision" needs to know whether the number is really specifying pricision or it's actully specifying width. As [width][.precision] suggests, [width] comes before [.precision]. Thus if width > 0 when process_precision, the number specifies precison. If [width] doesn't exist in a format specifier, we need the help of '.' in [.precision]. In case of '.', we set width to zero to prevent "process_precision" from copy precision to width and resetting precsion. Meanwhile, setting width to zero is in effect not specifying [width], which won't mess up the login in other parts of function "vprintfmt".
 				width = 0;
 			goto reswitch;
 
@@ -175,15 +175,15 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap)
 		case 's':
 			if ((p = va_arg(ap, char *)) == NULL)
 				p = "(null)";
-			if (width > 0 && padc != '-')
+			if (width > 0 && padc != '-')		// '-' indicates left-justify.
 				for (width -= strnlen(p, precision); width > 0; width--)
 					putch(padc, putdat);
-			for (; (ch = *p++) != '\0' && (precision < 0 || --precision >= 0); width--)
-				if (altflag && (ch < ' ' || ch > '~'))
+			for (; (ch = *p++) != '\0' && (precision < 0 || --precision >= 0); width--)		// if the length of string to be output is larger than width, width is ignored.
+				if (altflag && (ch < ' ' || ch > '~'))		// Characters in (ch < ' ' || ch > '~') are invisible characters.
 					putch('?', putdat);
 				else
 					putch(ch, putdat);
-			for (; width > 0; width--)
+			for (; width > 0; width--)		// if (padc == '-'), width is possible to be larger than zero.
 				putch(' ', putdat);
 			break;
 
@@ -206,10 +206,10 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap)
 		// (unsigned) octal
 		case 'o':
 			// Replace this with your code.
-			putch('X', putdat);
-			putch('X', putdat);
-			putch('X', putdat);
-			break;
+			num = getuint(&ap, lflag); // putch('X', putdat);
+			base = 8; //putch('X', putdat);
+			goto number; //putch('X', putdat);
+			//break;
 
 		// pointer
 		case 'p':
@@ -236,7 +236,7 @@ vprintfmt(void (*putch)(int, void*), void *putdat, const char *fmt, va_list ap)
 		// unrecognized escape sequence - just print it literally
 		default:
 			putch('%', putdat);
-			for (fmt--; fmt[-1] != '%'; fmt--)
+			for (fmt--; fmt[-1] != '%'; fmt--)		// roll back to the character next to last '%'
 				/* do nothing */;
 			break;
 		}
@@ -264,7 +264,7 @@ sprintputch(int ch, struct sprintbuf *b)
 {
 	b->cnt++;
 	if (b->buf < b->ebuf)
-		*b->buf++ = ch;
+		*b->buf++ = ch;			// *((b->buf)++)
 }
 
 int
@@ -279,7 +279,7 @@ vsnprintf(char *buf, int n, const char *fmt, va_list ap)
 	vprintfmt((void*)sprintputch, &b, fmt, ap);
 
 	// null terminate the buffer
-	*b.buf = '\0';
+	*b.buf = '\0';			// cooperating with "struct sprintbuf b = {buf, buf+n-1, 0};", assuring buffer doesn't overflow and ends with '\0'. But this function doesn't assure '\0' occurs next to the end of the string printed.
 
 	return b.cnt;
 }

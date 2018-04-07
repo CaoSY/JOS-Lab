@@ -83,7 +83,8 @@
  */
 
 
-// All physical memory mapped at this address
+// All physical memory mapped at this address. This is why JOS can only
+// handle 256MB at most. 0xF0000000 ~ 0xFFFFFFFF only covers 256MB.
 #define	KERNBASE	0xF0000000
 
 // At IOPHYSMEM (640K) there is a 384K hole for I/O.  From the kernel,
