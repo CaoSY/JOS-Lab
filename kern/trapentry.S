@@ -91,7 +91,7 @@ idt_entries:
 	.long trap_alignment_check
 	.long trap_machine_check
 	.long trap_SIMD_float_point_error
-	.fill 29, 4, 0						# 29 null entries
+	.fill 28, 4, 0						# 29 null entries
 	.long trap_system_call
 .global idt_entries_end
 idt_entries_end:
