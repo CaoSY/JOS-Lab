@@ -234,6 +234,11 @@ page_fault_handler(struct Trapframe *tf)
 	// Handle kernel-mode page faults.
 
 	// LAB 3: Your code here.
+	// the low 2 bits in code stack register (CS) gives the
+	// privilege level of the trapframe. The low 2 bits of kernel
+	// mode is 0 while the low 2 bits of user mode is 3
+	if ((tf->tf_cs & 0x3) == 0)
+		panic("Page fault in kernel.");
 
 	// We've already handled kernel-mode exceptions, so if we get here,
 	// the page fault happened in user mode.
