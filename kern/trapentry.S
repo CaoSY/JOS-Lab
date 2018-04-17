@@ -111,3 +111,20 @@ _alltraps:
 	
 	pushl %esp
 	call trap
+
+/*
+ * entry code for system call using sysenter/sysexit
+ */
+.global _sysenter
+_sysenter:
+	pushl 4(%edi)
+	pushl (%edi)
+	pushl %ebx
+	pushl %ecx
+	pushl %edx
+	pushl %eax
+	call syscall
+	
+	movl %ebp, %ecx
+	movl %esi, %edx
+	sysexit

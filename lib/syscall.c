@@ -3,33 +3,34 @@
 #include <inc/syscall.h>
 #include <inc/lib.h>
 
-static inline int32_t
+/*
+ * new syscall using sysenter/sysexit
+ * 
+ * We use a label (_sysexit) in inline asm that C doesn't know.
+ * So we can't declare syscall() with 'inline'. Otherwise C
+ * preprocessor will copy those asm codes to multiple places then
+ * the compiler will complain that it found the same label
+ * declaration in multiple places.
+ */
+static int32_t
 syscall(int num, int check, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5)
 {
 	int32_t ret;
 
-	// Generic system call: pass system call number in AX,
-	// up to five parameters in DX, CX, BX, DI, SI.
-	// Interrupt kernel with T_SYSCALL.
-	//
-	// The "volatile" tells the assembler not to optimize
-	// this instruction away just because we don't use the
-	// return value.
-	//
-	// The last clause tells the assembler that this can
-	// potentially change the condition codes and arbitrary
-	// memory locations.
-
-	asm volatile("int %1\n"
-		     : "=a" (ret)
-		     : "i" (T_SYSCALL),
-		       "a" (num),
-		       "d" (a1),
-		       "c" (a2),
-		       "b" (a3),
-		       "D" (a4),
-		       "S" (a5)
-		     : "cc", "memory");
+	asm volatile(
+			"pushl %%ebp\n\t"
+			"movl $_sysexit, %%esi\n\t"
+			"movl %%esp, %%ebp\n\t"
+			"sysenter\n\t"
+			"_sysexit:\n\t"
+			"popl %%ebp"
+			: "=a" (ret)
+			: "a" (num),
+			  "d" (a1),
+			  "c" (a2),
+			  "b" (a3),
+			  "D" (&a4)		/* store pointer to a4 in edi to pass a4 and a5 */
+			: "cc", "memory", "esi");
 
 	if(check && ret > 0)
 		panic("syscall %d returned %d (> 0)", num, ret);

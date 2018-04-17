@@ -3,6 +3,7 @@
 #include <inc/stdio.h>
 #include <inc/string.h>
 #include <inc/assert.h>
+#include <inc/x86.h>
 
 #include <kern/monitor.h>
 #include <kern/console.h>
@@ -34,6 +35,13 @@ i386_init(void)
 	// Lab 3 user environment initialization functions
 	env_init();
 	trap_init();
+
+	// initialize Machine Specific Registers to support
+	// system call using sysenter/sysexit
+	extern char _sysenter[];
+	wrmsr(IA32_SYSENTER_CS, GD_KT, 0);
+	wrmsr(IA32_SYSENTER_ESP, KSTACKTOP, 0);
+	wrmsr(IA32_SYSENTER_EIP, _sysenter, 0);
 
 #if defined(TEST)
 	// Don't touch -- used by grading script!
