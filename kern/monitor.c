@@ -11,6 +11,7 @@
 #include <kern/monitor.h>
 #include <kern/kdebug.h>
 #include <kern/trap.h>
+#include <kern/env.h>
 
 #define CMDBUF_SIZE	80	// enough for one VGA text line
 
@@ -26,6 +27,8 @@ static struct Command commands[] = {
 	{ "help", CMD_HELP_HELP_STR, mon_help },
 	{ "kerninfo", CMD_KERNINFO_HELP_STR, mon_kerninfo },
 	{ "backtrace", CMD_BACKTRACE_HELP_STR, mon_backtrace},
+	{ "continue", CMD_CONTINUE_HELP_STR, mon_continue},
+	{ "stepi", CMD_STEPI_HELP_STR, mon_stepi},
 };
 
 
@@ -130,7 +133,53 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
 	return 0;
 }
 
+int
+mon_continue(int argc, char **argv, struct Trapframe *tf)
+{
+	if (!curenv) {
+		cprintf("No runnable enviroment available.\n");
+		return 0;
+	}
 
+	if (!tf) {
+		cprintf("No trapframe available.\n");
+		return 0;
+	}
+
+	if (tf->tf_trapno != T_BRKPT && tf->tf_trapno != T_DEBUG) {
+		cprintf("Kernel monitor is not invoked by a break point or debug interrupt.\n");
+		return 0;
+	}
+
+	tf->tf_eflags &= ~(FL_TF);
+
+	env_run(curenv);
+	return 0;
+}
+
+int
+mon_stepi(int argc, char **argv, struct Trapframe *tf)
+{
+	if (!curenv) {
+		cprintf("No runnable enviroment available.\n");
+		return 0;
+	}
+
+	if (!tf) {
+		cprintf("No trapframe available.\n");
+		return 0;
+	}
+
+	if (tf->tf_trapno != T_BRKPT && tf->tf_trapno != T_DEBUG) {
+		cprintf("Kernel monitor is not invoked by a break point or debug interrupt.\n");
+		return 0;
+	}
+
+	tf->tf_eflags |= FL_TF;
+
+	env_run(curenv);
+	return 0;
+}
 
 /***** Kernel monitor command interpreter *****/
 

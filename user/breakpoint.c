@@ -6,5 +6,7 @@ void
 umain(int argc, char **argv)
 {
 	asm volatile("int $3");
+	asm volatile("nop");
+	asm volatile("int $3");
 }
 
