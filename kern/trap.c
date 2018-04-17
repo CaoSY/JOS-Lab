@@ -79,7 +79,7 @@ trap_init(void)
 				break;
 		}
 	}
-	cprintf("entry number: %d\n", entry_num);
+
 	// Per-CPU setup 
 	trap_init_percpu();
 }
