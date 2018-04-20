@@ -72,6 +72,20 @@ trap_init(void)
 	extern struct Segdesc gdt[];
 
 	// LAB 3: Your code here.
+	extern uint32_t idt_entries[];
+	extern uint32_t idt_entries_end[];
+	int entry_num = idt_entries_end - idt_entries;
+	for (int i = 0; i < entry_num; ++i) {
+		switch (i) {
+			case T_BRKPT :
+			case T_SYSCALL :
+				SETGATE(idt[i], 0, GD_KT, idt_entries[i], 3);
+				break;
+			default :
+				SETGATE(idt[i], 0, GD_KT, idt_entries[i], 0);
+				break;
+		}
+	}
 
 	// Per-CPU setup 
 	trap_init_percpu();
@@ -190,6 +204,21 @@ trap_dispatch(struct Trapframe *tf)
 	// interrupt using lapic_eoi() before calling the scheduler!
 	// LAB 4: Your code here.
 
+	switch(tf->tf_trapno) {
+		case T_BRKPT: monitor(tf);
+					  return;
+		case T_PGFLT: page_fault_handler(tf);
+					  return;
+		case T_SYSCALL: tf->tf_regs.reg_eax = syscall(
+									tf->tf_regs.reg_eax,
+									tf->tf_regs.reg_edx,
+									tf->tf_regs.reg_ecx,
+									tf->tf_regs.reg_ebx,
+									tf->tf_regs.reg_edi,
+									tf->tf_regs.reg_esi);
+					  return;
+	}
+
 	// Unexpected trap: The user process or the kernel has a bug.
 	print_trapframe(tf);
 	if (tf->tf_cs == GD_KT)
@@ -271,6 +300,11 @@ page_fault_handler(struct Trapframe *tf)
 	// Handle kernel-mode page faults.
 
 	// LAB 3: Your code here.
+	// the low 2 bits in code stack register (CS) gives the
+	// privilege level of the trapframe. The low 2 bits of kernel
+	// mode is 0 while the low 2 bits of user mode is 3
+	if ((tf->tf_cs & 0x3) == 0)
+		panic("Page fault in kernel.");
 
 	// We've already handled kernel-mode exceptions, so if we get here,
 	// the page fault happened in user mode.
