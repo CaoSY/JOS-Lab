@@ -718,14 +718,14 @@ mmio_map_region(physaddr_t pa, size_t size)
 	// panic("mmio_map_region not implemented");
 
 	size = ROUNDUP(size, PGSIZE);
-	void *ret = (void *)base;
+	uintptr_t ret = base;
 	base += size;
 
 	if (base > MMIOLIM)
 		panic("Reservation overflows MMIOLIM.\n");
 
-	boot_map_region(kern_pgdir, base, size, pa, PTE_PCD | PTE_PWT | PTE_W);
-	return ret;
+	boot_map_region(kern_pgdir, ret, size, pa, PTE_PCD | PTE_PWT | PTE_W);
+	return (void *)ret;
 }
 
 static uintptr_t user_mem_check_addr;
