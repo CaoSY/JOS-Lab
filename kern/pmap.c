@@ -350,7 +350,7 @@ page_init(void)
 	 *                            |    VGA Display     |
 	 *       0x000A0000(640KB) -> +--------------------+
 	 *                            |                    |
-	 *                            |     Low Memory     |
+	 *                            |     Low Memory     | <----- page at MPENTRY_PADDR is used
 	 *                            |                    |
 	 *       0x00001000(4KB) ---> |  ~~~~~~~~~~~~~~~~~ |
 	 *                            |   page 0 is used   |
@@ -399,33 +399,25 @@ page_init(void)
 	 * 
 	 */
 
+
 	page_free_list = NULL;
 
 	pages[0].pp_ref = 1;		// mark physical page 0 as in use
-	size_t i;
-	
-	for (i = 1; i < npages_basemem; ++i) {
-		// The rest of base memory, [PGSIZE, npages_basemem * PGSIZE)
-		// is free.
-		pages[i].pp_ref = 0;
-		pages[i].pp_link = page_free_list;
-		page_free_list = &pages[i];
-	}
+	pages[0].pp_link = NULL;
 
-	size_t kernel_end_page = ((uint32_t)(boot_alloc(0)) - KERNBASE)/PGSIZE;
-	for (; i < kernel_end_page; ++i) {
-		// IO hole and kernel physical memory reside consecutively
-		// in physcial memory. So initialize their corresponding 
-		// page entries in one loop
-		pages[i].pp_ref = 1;
-		pages[i].pp_link = NULL;
-	}
-	
-	for (; i < npages; ++i) {
-		// The rest of extended memory are not used
-		pages[i].pp_ref = 0;
-		pages[i].pp_link = page_free_list;
-		page_free_list = &pages[i];
+	// pege in [left_i, right_i) are used.
+	size_t left_i = PGNUM(IOPHYSMEM);
+	size_t right_i = ((uint32_t)(boot_alloc(0)) - KERNBASE)/PGSIZE;
+
+	for (size_t i = 1; i < npages; ++i) {
+		if ((i < left_i || i > right_i) && i != PGNUM(MPENTRY_PADDR)) {
+			pages[i].pp_ref = 0;
+			pages[i].pp_link = page_free_list;
+			page_free_list = &pages[i];
+		} else {
+			pages[i].pp_ref = 1;
+			pages[i].pp_link = NULL;
+		}
 	}
 }
 
@@ -723,7 +715,17 @@ mmio_map_region(physaddr_t pa, size_t size)
 	// Hint: The staff solution uses boot_map_region.
 	//
 	// Your code here:
-	panic("mmio_map_region not implemented");
+	// panic("mmio_map_region not implemented");
+
+	size = ROUNDUP(size, PGSIZE);
+	void *ret = (void *)base;
+	base += size;
+
+	if (base > MMIOLIM)
+		panic("Reservation overflows MMIOLIM.\n");
+
+	boot_map_region(kern_pgdir, base, size, pa, PTE_PCD | PTE_PWT | PTE_W);
+	return ret;
 }
 
 static uintptr_t user_mem_check_addr;
