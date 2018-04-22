@@ -67,7 +67,13 @@
 	TRAPHANDLER(trap_alignment_check, T_ALIGN)						# 17	alignment check
 	TRAPHANDLER_NOEC(trap_machine_check, T_MCHK)					# 18	machine check
 	TRAPHANDLER_NOEC(trap_SIMD_float_point_error, T_SIMDERR)		# 19	SIMD floating point error
+	TRAPHANDLER_NOEC(trap_timer, IRQ_OFFSET+IRQ_TIMER)				# 32	timer interrupt
+	TRAPHANDLER_NOEC(trap_keyboard, IRQ_OFFSET+IRQ_KBD)				# 33	keyboard interrupt
+	TRAPHANDLER_NOEC(trap_serial_port, IRQ_OFFSET+IRQ_SERIAL)		# 36	serial port interrupt
+	TRAPHANDLER_NOEC(trap_spurious, IRQ_OFFSET+IRQ_SPURIOUS)		# 39	spurious interrupt
+	TRAPHANDLER_NOEC(trap_ide, IRQ_OFFSET+IRQ_IDE)					# 46	ide interrupt
 	TRAPHANDLER_NOEC(trap_system_call, T_SYSCALL)					# 48	system call
+	TRAPHANDLER_NOEC(trap_error, IRQ_OFFSET+IRQ_ERROR)				# 51	error interrupt
 
 .data
 .globl idt_entries, idt_entries_end
@@ -92,8 +98,38 @@ idt_entries:
 	.long trap_alignment_check					# 17	alignment check
 	.long trap_machine_check					# 18	machine check
 	.long trap_SIMD_float_point_error			# 19	SIMD floating point error
-	.fill 28, 4, 0								# 		28 null entries
+	.long 0										# 20	null entry
+	.long 0										# 21	null entry
+	.long 0										# 22	null entry
+	.long 0										# 23	null entry
+	.long 0										# 24	null entry
+	.long 0										# 25	null entry
+	.long 0										# 26	null entry
+	.long 0										# 27	null entry
+	.long 0										# 28	null entry
+	.long 0										# 29	null entry
+	.long 0										# 30	null entry
+	.long 0										# 31	null entry
+	.long trap_timer							# 32	timer interrupt
+	.long trap_keyboard							# 33	keyboard interrupt
+	.long 0										# 34	null entry
+	.long 0										# 35	null entry
+	.long trap_serial_port						# 36	serial port interrupt
+	.long 0										# 37	null entry
+	.long 0										# 38	null entry
+	.long trap_spurious							# 39	squrious interrupt
+	.long 0										# 40	null entry
+	.long 0										# 41	null entry
+	.long 0										# 42	null entry
+	.long 0										# 43	null entry
+	.long 0										# 44	null entry
+	.long 0										# 45	null entry
+	.long trap_ide								# 46	ide interrupt
+	.long 0										# 47	null entry
 	.long trap_system_call						# 48	system call
+	.long 0										# 49	null entry
+	.long 0										# 50
+	.long trap_error							# 51	error interrupt
 idt_entries_end:
 
 /*

@@ -215,6 +215,9 @@ trap_dispatch(struct Trapframe *tf)
 					  return;
 		case T_PGFLT: page_fault_handler(tf);
 					  return;
+		case IRQ_OFFSET + IRQ_TIMER: lapic_eoi();
+									 sched_yield();
+									 return;
 		case T_SYSCALL: tf->tf_regs.reg_eax = syscall(
 									tf->tf_regs.reg_eax,
 									tf->tf_regs.reg_edx,
