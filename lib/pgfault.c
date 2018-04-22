@@ -30,10 +30,8 @@ set_pgfault_handler(void (*handler)(struct UTrapframe *utf))
 		// First time through!
 		// LAB 4: Your code here.
 		// panic("set_pgfault_handler not implemented");
-		envid_t curenv_id = sys_getenvid();
-
-		if ((r = sys_page_alloc(curenv_id, (void *)(UXSTACKTOP - PGSIZE), PTE_U | PTE_W | PTE_P)) < 0
-			|| (r = sys_env_set_pgfault_upcall(curenv_id, _pgfault_upcall)) < 0)
+		if ((r = sys_page_alloc(0, (void *)(UXSTACKTOP - PGSIZE), PTE_U | PTE_W | PTE_P)) < 0
+			|| (r = sys_env_set_pgfault_upcall(0, _pgfault_upcall)) < 0)
 			panic("set_pgfault_handler: %e\n", r);
 	}
 

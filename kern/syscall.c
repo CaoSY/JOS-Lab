@@ -243,7 +243,7 @@ sys_page_map(envid_t srcenvid, void *srcva,
 		(pp = page_lookup(srcenv->env_pgdir, srcva, &pte_ptr)) == NULL ||
 		perm & ~PTE_SYSCALL || ~perm & (PTE_U | PTE_P) ||
 		((perm & PTE_W) && !((*pte_ptr) & PTE_W)))
-	return -E_INVAL;
+		return -E_INVAL;
 
 	if (page_insert(dstenv->env_pgdir, pp, dstva, perm) < 0)
 		return -E_NO_MEM;
