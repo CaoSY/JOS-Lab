@@ -240,8 +240,8 @@ sys_page_map(envid_t srcenvid, void *srcva,
 	struct PageInfo *pp;
 	if ((uintptr_t)srcva >= UTOP || (uintptr_t)srcva % PGSIZE ||
 		(uintptr_t)dstva >= UTOP || (uintptr_t)dstva % PGSIZE ||
-		(pp = page_lookup(srcenv->env_pgdir, srcva, &pte_ptr)) == NULL ||
 		perm & ~PTE_SYSCALL || ~perm & (PTE_U | PTE_P) ||
+		(pp = page_lookup(srcenv->env_pgdir, srcva, &pte_ptr)) == NULL ||
 		((perm & PTE_W) && !((*pte_ptr) & PTE_W)))
 		return -E_INVAL;
 
@@ -319,7 +319,46 @@ static int
 sys_ipc_try_send(envid_t envid, uint32_t value, void *srcva, unsigned perm)
 {
 	// LAB 4: Your code here.
-	panic("sys_ipc_try_send not implemented");
+	// panic("sys_ipc_try_send not implemented");
+	struct Env *dst_env;
+	if (envid2env(envid, &dst_env, false) < 0)
+		return -E_BAD_ENV;
+	
+	if (dst_env->env_ipc_recving == false)
+		return -E_IPC_NOT_RECV;
+	
+	if ((uintptr_t)srcva < UTOP) {
+		// many requirements are asserted in sys_page_map.
+		// we can rely on sys_page_map to do it.
+
+		pte_t *pte_ptr;
+		struct PageInfo *pp;
+		// (uintptr_t)srcva < UTOP is asserted in outer if.
+		// (uintptr_t)dst_env->env_ipc_dstva % PGSIZE == 0 is asserted in sys_ipc_recv
+		// no need to check them
+		// (uintptr_t)dst_env->env_ipt_dstva < UTOP must be asserted to check whether
+		// the reciever really wants to recieve a page
+		if ((uintptr_t)dst_env->env_ipc_dstva >= UTOP || (uintptr_t)srcva % PGSIZE ||
+			perm & ~PTE_SYSCALL || ~perm & (PTE_U | PTE_P) ||
+			(pp = page_lookup(curenv->env_pgdir, srcva, &pte_ptr)) == NULL ||
+			((perm & PTE_W) && !((*pte_ptr) & PTE_W)))
+			return -E_INVAL;
+
+		if (page_insert(dst_env->env_pgdir, pp, dst_env->env_ipc_dstva, perm) < 0)
+			return -E_NO_MEM;
+		
+		dst_env->env_ipc_perm = perm;
+	} else {
+		dst_env->env_ipc_perm = 0;
+	}
+
+	dst_env->env_ipc_recving = false;
+	dst_env->env_ipc_from = curenv->env_id;
+	dst_env->env_ipc_value = value;
+	dst_env->env_status = ENV_RUNNABLE;
+	dst_env->env_tf.tf_regs.reg_eax = 0;
+
+    return 0;
 }
 
 // Block until a value is ready.  Record that you want to receive
@@ -337,7 +376,17 @@ static int
 sys_ipc_recv(void *dstva)
 {
 	// LAB 4: Your code here.
-	panic("sys_ipc_recv not implemented");
+	// panic("sys_ipc_recv not implemented");
+
+	if ((uintptr_t)dstva < UTOP && (uintptr_t)dstva % PGSIZE)
+		return -E_INVAL;
+
+	curenv->env_ipc_recving = true;
+	curenv->env_ipc_dstva = dstva;
+	curenv->env_status = ENV_NOT_RUNNABLE;
+
+	sched_yield();
+
 	return 0;
 }
 
@@ -363,7 +412,8 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 		case SYS_env_set_status:	return sys_env_set_status((envid_t)a1, (int)a2);
 		case SYS_env_set_pgfault_upcall: return sys_env_set_pgfault_upcall((envid_t)a1, (void *)a2);
 		case SYS_yield: sys_yield(); return 0;
-		
+		case SYS_ipc_try_send: return sys_ipc_try_send((envid_t)a1, (uint32_t)a2, (void *)a3, (unsigned int)a4);
+		case SYS_ipc_recv: return sys_ipc_recv((void *)a1);
 		default:
 			return -E_INVAL;
 	}
