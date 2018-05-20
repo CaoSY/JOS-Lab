@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>LAB4-Report</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      <style> 
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+ 
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview   ">
+      <div class="code-chunk" data-id="global" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><div class="code-chunk" data-id="code-chunk-id-1" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><p><span style="display:inline-block;width:50%;text-align:left">Created: May 7 2018 12:31:00</span><span style="display:inline-block;width:50%;text-align:right">Last Updated: May 21 2018 00:12:30</span></p>
+<h1 style="font-style:italic; font-family:Times; font-size:4em"><center>Lab 4 Report</center></h1>
+<div style="font-style:italic; font-family:Times; font-size:1.2em"><center>Shuyang Cao</center><center>May 21 2018</center></div>
+</div></div><div class="code-chunk" data-id="code-chunk-id-2" data-cmd="toc"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><ul>
+<li><a href="#multiprocessor-support-and-cooperative-multitasking">Multiprocessor Support and Cooperative Multitasking</a>
+<ul>
+<li><a href="#multiprocessor-support">Multiprocessor Support</a></li>
+<li><a href="#application-processor-bootstrap">Application Processor Bootstrap</a></li>
+<li><a href="#exercise-1-2">Exercise 1 &amp; 2</a></li>
+<li><a href="#answer-to-q1">Answer to Q1</a></li>
+<li><a href="#per-cpu-state-and-initialization">Per-CPU State and Initialization</a></li>
+<li><a href="#exercise-3-4">Exercise 3 &amp; 4</a></li>
+<li><a href="#locking">Locking</a></li>
+<li><a href="#exercise-5">Exercise 5</a></li>
+<li><a href="#answer-to-q2">Answer to Q2</a></li>
+<li><a href="#round-robin-scheduling-exercise-6">Round-Robin Scheduling &amp; Exercise 6</a></li>
+<li><a href="#answer-to-q3-q4">Answer to Q3 &amp; Q4</a></li>
+<li><a href="#system-calls-for-environment-creation">System Calls for Environment Creation</a></li>
+<li><a href="#exercise-7">Exercise 7</a></li>
+</ul>
+</li>
+<li><a href="#copy-on-write-fork">Copy-on-Write Fork</a>
+<ul>
+<li><a href="#user-space-page-handler">User Space Page Handler</a></li>
+<li><a href="#multiple-page-fault-return-from-user-space-kernel-handler">Multiple Page Fault &amp; Return From User Space Kernel Handler</a></li>
+<li><a href="#exercise-8-9-10-11">Exercise 8 &amp; 9 &amp; 10 &amp; 11</a></li>
+<li><a href="#implementing-copy-on-write-fork">Implementing Copy-on-Write Fork</a></li>
+<li><a href="#exercise-12">Exercise 12</a></li>
+</ul>
+</li>
+<li><a href="#preemptive-multitasking-and-inter-process-communication-ipc">Preemptive Multitasking and Inter-Process communication (IPC)</a>
+<ul>
+<li><a href="#clock-interrupts-and-preemption">Clock Interrupts and Preemption</a></li>
+<li><a href="#exercise-13-14">Exercise 13 &amp; 14</a></li>
+<li><a href="#inter-process-communication-ipc">Inter-Process communication (IPC)</a></li>
+<li><a href="#exercise-15">Exercise 15</a></li>
+</ul>
+</li>
+<li><a href="#challenge">Challenge</a></li>
+<li><a href="#grade">Grade</a></li>
+</ul>
+<h2 class="mume-header" id="multiprocessor-support-and-cooperative-multitasking">Multiprocessor Support and Cooperative Multitasking</h2>
+
+<h3 class="mume-header" id="multiprocessor-support">Multiprocessor Support</h3>
+
+<p>JOS supports “symmetric multiprocessing”(<a href="https://en.wikipedia.org/wiki/Symmetric_multiprocessing">SMP</a>), a multiprocessor model in which all CPUs have equivalent access to system resources such as memory and I/O buses. While all CPUs are functionally identical in SMP, during the boot proces they can be classified into two types: the bootstrap processor (<a href="https://patents.google.com/patent/US6108781">BSP</a>) is responsible for initializing the system and for booting the operating system; and the application processors (APs) are activated by the BSP only after the operating system is up and running. Which processor is the BSP is determined by the hardware and the BIOS.</p>
+<p>In an SMP system, each CPU has an accompanying local APIC (<a href="https://en.wikipedia.org/wiki/Advanced_Programmable_Interrupt_Controller">LAPIC</a>) uint. The LAPIC units are responsible for delivering interrupts through the system. The LAPIC also provides its connected CPU with a unique identifier. A processor accesses its LAPIC using memory-mapped I/O (MMIO). In MMIO, a portion of physical memory is hardwired to the registers of some I/O devices, so the same load/store instructions typically used to access memory can be used to access device registers. You also need to remember to set the mode of corresponding memory as <code>Write-through</code> in your page table.</p>
+<h3 class="mume-header" id="application-processor-bootstrap">Application Processor Bootstrap</h3>
+
+<p>Before booting up APs, the BSP should first collect information about the multiprocessor system, such as the total number of CPUs, their APIC IDs, and the MMIO address of the LAPIC unit. APs start in real mode, much like how the bootloader started in <code>boot\boot.S</code>. BSP copies the AP entry code to a memory location that is addressable in the real mode. Unlike with the bootloader, BSP has some control over where the AP will start executing code. In JOS we copy the entry code to <code>0x7000</code>, but any unused, page-aligned physical address below 640KB would work. BSP acitvates APs one after another, by sending <code>STARTUP IPIs</code> to the LAPIC unit of the corresponding AP, along with an initial CS:IP address at which the AP should start running its entry code. BSP waits for the AP to signal a <code>CPU_STARTED</code> flag in cpu_status field of its struct CpuInfo before going on to wake up the next one.</p>
+<h3 class="mume-header" id="exercise-1-2">Exercise 1 &amp; 2</h3>
+
+<blockquote>
+<ol>
+<li>Implement <code>mmio_map_region</code> in <code>kern/pmap.c</code>. To see how this is used, look at the beginning of <code>lapic_init</code> in <code>kern/lapic.c</code>. You’ll have to do the next exercise, too, before the tests for mmio_map_region will run.</li>
+<li>Read <code>boot_aps()</code> and <code>mp_main()</code> in <code>kern/init.c</code>, and the assembly code in <code>kern/mpentry.S</code>. Make sure you understand the control flow transfer during the bootstrap of APs. Then modify your implementation of <code>page_init()</code> in kern/pmap.c to avoid adding the page at <code>MPENTRY_PADDR</code> to the free list, so that we can safely copy and run AP bootstrap code at that physical address. Your code should pass the updated <code>check_page_free_list()</code> test (but might fail the updated <code>check_kern_pgdir()</code> test, which we will fix soon).</li>
+</ol>
+</blockquote>
+<p><code>mmio_map_region</code> is only a wrapper of <code>boot_map_region</code>. It uses a static variable to store the last address it allocated, which should be updated each time it is invoked. What we need to add in <code>page_init()</code> is another condition check to avoid adding the page at <code>MPENTRY_PADDR</code> to the free list.</p>
+<p>The codes for Exercise 1 &amp; 2 is list below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/pmap.c b/kern/pmap.c
+index e4f7cce..db0fad9 100644
+<span class="token deleted">--- a/kern/pmap.c</span>
+<span class="token inserted">+++ b/kern/pmap.c</span>
+@@ -350,7 +350,7 @@ page_init(void)
+ 	 *                            |    VGA Display     |
+ 	 *       0x000A0000(640KB) -> +--------------------+
+ 	 *                            |                    |
+<span class="token deleted">-	 *                            |     Low Memory     |</span>
+<span class="token inserted">+	 *                            |     Low Memory     | &lt;----- page at MPENTRY_PADDR is used</span>
+ 	 *                            |                    |
+ 	 *       0x00001000(4KB) ---> |  ~~~~~~~~~~~~~~~~~ |
+ 	 *                            |   page 0 is used   |
+@@ -399,33 +399,25 @@ page_init(void)
+ 	 * 
+ 	 */
+ 
+<span class="token inserted">+</span>
+ 	page_free_list = NULL;
+ 
+ 	pages[0].pp_ref = 1;		// mark physical page 0 as in use
+<span class="token deleted">-	size_t i;</span>
+<span class="token deleted">-	</span>
+<span class="token deleted">-	for (i = 1; i &lt; npages_basemem; ++i) {</span>
+<span class="token deleted">-		// The rest of base memory, [PGSIZE, npages_basemem * PGSIZE)</span>
+<span class="token deleted">-		// is free.</span>
+<span class="token deleted">-		pages[i].pp_ref = 0;</span>
+<span class="token deleted">-		pages[i].pp_link = page_free_list;</span>
+<span class="token deleted">-		page_free_list = &amp;pages[i];</span>
+<span class="token deleted">-	}</span>
+<span class="token deleted">-</span>
+<span class="token deleted">-	size_t kernel_end_page = ((uint32_t)(boot_alloc(0)) - KERNBASE)/PGSIZE;</span>
+<span class="token deleted">-	for (; i &lt; kernel_end_page; ++i) {</span>
+<span class="token deleted">-		// IO hole and kernel physical memory reside consecutively</span>
+<span class="token deleted">-		// in physcial memory. So initialize their corresponding </span>
+<span class="token deleted">-		// page entries in one loop</span>
+<span class="token deleted">-		pages[i].pp_ref = 1;</span>
+<span class="token deleted">-		pages[i].pp_link = NULL;</span>
+<span class="token deleted">-	}</span>
+<span class="token deleted">-	</span>
+<span class="token deleted">-	for (; i &lt; npages; ++i) {</span>
+<span class="token deleted">-		// The rest of extended memory are not used</span>
+<span class="token deleted">-		pages[i].pp_ref = 0;</span>
+<span class="token deleted">-		pages[i].pp_link = page_free_list;</span>
+<span class="token deleted">-		page_free_list = &amp;pages[i];</span>
+<span class="token inserted">+	pages[0].pp_link = NULL;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	// pege in [left_i, right_i) are used.</span>
+<span class="token inserted">+	size_t left_i = PGNUM(IOPHYSMEM);</span>
+<span class="token inserted">+	size_t right_i = ((uint32_t)(boot_alloc(0)) - KERNBASE)/PGSIZE;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	for (size_t i = 1; i &lt; npages; ++i) {</span>
+<span class="token inserted">+		if ((i &lt; left_i || i > right_i) &amp;&amp; i != PGNUM(MPENTRY_PADDR)) {</span>
+<span class="token inserted">+			pages[i].pp_ref = 0;</span>
+<span class="token inserted">+			pages[i].pp_link = page_free_list;</span>
+<span class="token inserted">+			page_free_list = &amp;pages[i];</span>
+<span class="token inserted">+		} else {</span>
+<span class="token inserted">+			pages[i].pp_ref = 1;</span>
+<span class="token inserted">+			pages[i].pp_link = NULL;</span>
+<span class="token inserted">+		}</span>
+ 	}
+ }
+ 
+@@ -723,7 +715,17 @@ mmio_map_region(physaddr_t pa, size_t size)
+ 	// Hint: The staff solution uses boot_map_region.
+ 	//
+ 	// Your code here:
+<span class="token deleted">-	panic("mmio_map_region not implemented");</span>
+<span class="token inserted">+	// panic("mmio_map_region not implemented");</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	size = ROUNDUP(size, PGSIZE);</span>
+<span class="token inserted">+	uintptr_t ret = base;</span>
+<span class="token inserted">+	base += size;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (base > MMIOLIM)</span>
+<span class="token inserted">+		panic("Reservation overflows MMIOLIM.\n");</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	boot_map_region(kern_pgdir, ret, size, pa, PTE_PCD | PTE_PWT | PTE_W);</span>
+<span class="token inserted">+	return (void *)ret;</span>
+ }
+ 
+ static uintptr_t user_mem_check_addr;
+</pre><h3 class="mume-header" id="answer-to-q1">Answer to Q1</h3>
+
+<blockquote>
+<ol>
+<li>Compare <code>kern/mpentry.S</code> side by side with <code>boot/boot.S</code>. Bearing in mind that <code>kern/mpentry.S</code> is compiled and linked to run above <code>KERNBASE</code> just like everything else in the kernel, what is the purpose of macro <code>MPBOOTPHYS</code>? Why is it necessary in <code>kern/mpentry.S</code> but not in <code>boot/boot.S</code>? In other words, what could go wrong if it were omitted in <code>kern/mpentry.S</code>?</li>
+</ol>
+</blockquote>
+<p><code>MPBOOTPHYS</code> is used to calculate absolute addresses of symbols in <code>kern/mpentry.S</code>. <code>boot/boot.S</code> is linked at <code>0x7C00</code> so it doesn’t need it. But <code>kern/mpentry.S</code> is compiled as a part of kernel and doesn’t begin where it is linked thus it would load <code>gdt</code> from a very high address before the page table is set up, resulting in APs boot failure.</p>
+<h3 class="mume-header" id="per-cpu-state-and-initialization">Per-CPU State and Initialization</h3>
+
+<p>When writing a multiprocessor OS, it is important to distinguish between per-CPU state that is private to each processor, and global state that the whole system shares. In JOs, we should be aware of the following per-CPU states.</p>
+<ul>
+<li>Per-CPU kernel stack<br>
+Because multiple CPUs can trap into the kernel simultaneously, we need a separate kernel stack for each processor to prevent them from interfering with each other’s execution.</li>
+<li>Per-CPU TSS and TSS descriptor<br>
+A per-CPU task state segment (TSS) is also needed in order to specify where each CPU’s kernel stack lives. The TSS for CPU i is stored in cpus[i].cpu_ts, and the corresponding TSS descriptor is defined in the GDT entry gdt[(GD_TSS0 &gt;&gt; 3) + i].</li>
+<li>Per-CPU current environment pointer<br>
+Since each CPU can run different user process simultaneously, we redefined the symbol <code>curenv</code> to refer to <code>cpus[cpunum()].cpu_env</code> (or <code>thiscpu-&gt;cpu_env</code>), which points to the environment currently executing on the current CPU (the CPU on which the code is running).</li>
+<li>Per-CPU system registers<br>
+All registers, including system registers, are private to a CPU. Therefore, instructions that initialize these registers, such as <code>lcr3()</code>, <code>ltr()</code>, <code>lgdt()</code>, <code>lidt()</code>, etc., must be executed once on each CPU. Functions <code>env_init_percpu()</code> and <code>trap_init_percpu()</code> are defined for this purpose.</li>
+</ul>
+<h3 class="mume-header" id="exercise-3-4">Exercise 3 &amp; 4</h3>
+
+<blockquote>
+<ol start="3">
+<li>Modify <code>mem_init_mp()</code> (in <code>kern/pmap.c</code>) to map per-CPU stacks starting at <code>KSTACKTOP</code>, as shown in <code>inc/memlayout.h</code>. The size of each stack is <code>KSTKSIZE</code> bytes plus <code>KSTKGAP</code> bytes of unmapped guard pages. Your code should pass the new check in <code>check_kern_pgdir()</code>.</li>
+<li>The code in <code>trap_init_percpu()</code> (<code>kern/trap.c</code>) initializes the TSS and TSS descriptor for the BSP. It worked in Lab 3, but is incorrect when running on other CPUs. Change the code so that it can work on all CPUs. (Note: your new code should not use the global ts variable any more.)</li>
+</ol>
+</blockquote>
+<p><code>mem_init_mp()</code> is another wrapper of <code>boot_map_region</code>. The memory layout of all kernel stacks manifested in <code>inc/memlayout.h</code>. We only need a loop to setup those page table entries. In <code>trap_init_percpu()</code>, our main work is to replace the former global <code>ts</code> variable with <code>thiscpu-&gt;cpu_ts</code>. The hint there also requires us to assign a correct value to <code>ts_iomb</code> to prevent unauthorized environments from doing IO. In JOS, we don’t use IO map. By referring to <strong><em>Chapter 8.3.2 of INTEL 80386 PROGRAMMER’S REFERENCE MANUAL 1986</em></strong>, we assign <code>sizeof(struct Taskstate)</code> to <code>ts_iomb</code> to disable IO map.</p>
+<p>The codes for these two exercises are shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/pmap.c b/kern/pmap.c
+index db0fad9..047f266 100644
+<span class="token deleted">--- a/kern/pmap.c</span>
+<span class="token inserted">+++ b/kern/pmap.c</span>
+@@ -281,6 +281,10 @@ mem_init_mp(void)
+ 	//
+ 	// LAB 4: Your code here:
+ 
+<span class="token inserted">+	for (size_t i = 0; i &lt; NCPU; ++i) {</span>
+<span class="token inserted">+		uintptr_t kstacktop_i = KSTACKTOP - i * (KSTKSIZE + KSTKGAP);</span>
+<span class="token inserted">+		boot_map_region(kern_pgdir, kstacktop_i-KSTKSIZE, KSTKSIZE,</span>
+			PADDR((void *)(percpu_kstacks[i])), PTE_W | PTE_P);
+<span class="token inserted">+	}</span>
+ }
+ 
+ // --------------------------------------------------------------
+diff --git a/kern/trap.c b/kern/trap.c
+index 732603d..e9ae70c 100644
+<span class="token deleted">--- a/kern/trap.c</span>
+<span class="token inserted">+++ b/kern/trap.c</span>
+@@ -122,18 +122,24 @@ trap_init_percpu(void)
+ 
+ 	// Setup a TSS so that we get the right stack
+ 	// when we trap to the kernel.
+<span class="token deleted">-	ts.ts_esp0 = KSTACKTOP;</span>
+<span class="token deleted">-	ts.ts_ss0 = GD_KD;</span>
+<span class="token deleted">-	ts.ts_iomb = sizeof(struct Taskstate);</span>
+<span class="token inserted">+	thiscpu->cpu_ts.ts_esp0 = KSTACKTOP - cpunum() * (KSTKSIZE + KSTKGAP);</span>
+<span class="token inserted">+	thiscpu->cpu_ts.ts_ss0 = GD_KD;</span>
+<span class="token inserted">+	// We'll set the limit of TSS0 segment to be sizeof(struct Taskstate)-1.</span>
+<span class="token inserted">+	// So we set ts_iomb to be sizeof(struct Taskstate). It's larger than the</span>
+<span class="token inserted">+	// limit of TSS0 segment so that I/O permission bit map is disabled and only</span>
+<span class="token inserted">+	// all I/O instructions in the 80386 program cause exceptions when CPL > IOPL.</span>
+<span class="token inserted">+	// Refer to Chapter 8.3.2 of INTEL 80386 PROGRAMMER'S REFERENCE MANUAL 1986</span>
+<span class="token inserted">+	// for more details</span>
+<span class="token inserted">+	thiscpu->cpu_ts.ts_iomb = sizeof(struct Taskstate);</span>
+ 
+ 	// Initialize the TSS slot of the gdt.
+<span class="token deleted">-	gdt[GD_TSS0 >> 3] = SEG16(STS_T32A, (uint32_t) (&amp;ts),</span>
+<span class="token deleted">-					sizeof(struct Taskstate) - 1, 0);</span>
+<span class="token deleted">-	gdt[GD_TSS0 >> 3].sd_s = 0;</span>
+<span class="token inserted">+	gdt[(GD_TSS0 >> 3) + cpunum()] = SEG16(STS_T32A, (uint32_t)&amp;(thiscpu->cpu_ts),</span>
+<span class="token inserted">+									sizeof(struct Taskstate) - 1, 0);</span>
+<span class="token inserted">+	gdt[(GD_TSS0 >> 3) + cpunum()].sd_s = 0;</span>
+ 
+ 	// Load the TSS selector (like other segment selectors, the
+ 	// bottom three bits are special; we leave them 0)
+<span class="token deleted">-	ltr(GD_TSS0);</span>
+<span class="token inserted">+	ltr(GD_TSS0 + (cpunum() &lt;&lt; 3));</span>
+ 
+ 	// Load the IDT
+ 	lidt(&amp;idt_pd);
+</pre><h3 class="mume-header" id="locking">Locking</h3>
+
+<p>Some resources in kernel need exclusive access. While multiple CPUs may run kernel code simultaneously, we need lock to guarantee those resource are access to exclusively. In JOS, we use the simplest way for this goal. We add a big lock on the whole kernel. Only one AP is able to run kernel code at one time.</p>
+<h3 class="mume-header" id="exercise-5">Exercise 5</h3>
+
+<blockquote>
+<ol start="5">
+<li>Apply the big kernel lock as described above, by calling lock_kernel() and unlock_kernel() at the proper locations.</li>
+</ol>
+</blockquote>
+<p>In JOS, a CPU enters the kernel during initialization or after trap and exits the kernel after scheduling. We only need to do locking as the first step after entering JOS kernel and do releasing the lock as the last step before exiting JOS kernel. Since there is only one CPU executing code before BSP boot APs, we don’t need to lock the kernel during initialization until we begin to boot APs. And booting APs is the last step of JOS boot-up initialization.</p>
+<p>The code for this exercise is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/env.c b/kern/env.c
+index d26e999..c543bf7 100644
+<span class="token deleted">--- a/kern/env.c</span>
+<span class="token inserted">+++ b/kern/env.c</span>
+@@ -561,7 +561,7 @@ env_run(struct Env *e)
+ 	curenv->env_status = ENV_RUNNING;
+ 	++(curenv->env_runs);
+ 	lcr3(PADDR(e->env_pgdir));
+<span class="token deleted">-</span>
+<span class="token inserted">+	unlock_kernel();</span>
+ 	env_pop_tf(&amp;(curenv->env_tf));
+ 
+ 	// panic(<span class="token string">"env_run not yet implemented"</span>);
+diff --git a/kern/init.c b/kern/init.c
+index 61da49e..4e8f727 100644
+<span class="token deleted">--- a/kern/init.c</span>
+<span class="token inserted">+++ b/kern/init.c</span>
+@@ -50,6 +50,7 @@ i386_init(void)
+ 
+ 	// Acquire the big kernel lock before waking up APs
+ 	// Your code here:
+<span class="token inserted">+	lock_kernel();</span>
+ 
+ 	// Starting non-boot CPUs
+ 	boot_aps();
+
+@@ -116,9 +119,12 @@ mp_main(void)
+ 	// only one CPU can enter the scheduler at a time!
+ 	//
+ 	// Your code here:
+<span class="token inserted">+	lock_kernel();</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	sched_yield();</span>
+ 
+ 	// Remove this after you finish Exercise 6
+<span class="token deleted">-	for (;;);</span>
+<span class="token inserted">+	// for (;;);</span>
+ }
+ 
+ /*
+
+diff --git a/kern/trap.c b/kern/trap.c
+index e9ae70c..7d96fb8 100644
+<span class="token deleted">--- a/kern/trap.c</span>
+<span class="token inserted">+++ b/kern/trap.c</span>
+@@ -261,6 +261,7 @@ trap(struct Trapframe *tf)
+ 		// Acquire the big kernel lock before doing any
+ 		// serious kernel work.
+ 		// LAB 4: Your code here.
+<span class="token inserted">+		lock_kernel();</span>
+ 		assert(curenv);
+ 
+ 		// Garbage collect if current enviroment is a zombie
+</pre><h3 class="mume-header" id="answer-to-q2">Answer to Q2</h3>
+
+<blockquote>
+<p>It seems that using the big kernel lock guarantees that only one CPU can run the kernel code at a time. Why do we still need separate kernel stacks for each CPU? Describe a scenario in which using a shared kernel stack will go wrong, even with the protection of the big kernel lock.</p>
+</blockquote>
+<ol>
+<li>CPUs will automatically push registers on kernel stack before entering kernel and invoking trap handler. So if different CPUs share a stack and there is a CPU running JOS kernel, another CPU will corrupt the kernel stack by pushing things on the stack before it is blocked by the kernel lock.</li>
+<li>JOS kernel is an external kernel. In some cases the kernel stack is used even when CPU is not running in kernel mode. For example, a part of work of page fault handler is done by user programs. If CPUs share the kernel stack, the stack of the page fault handler of user program will be easily corrupted.</li>
+</ol>
+<h3 class="mume-header" id="round-robin-scheduling-exercise-6">Round-Robin Scheduling &amp; Exercise 6</h3>
+
+<p>JOS implements a simple scheduling algorithm, round-robin scheduling. It schedules processes in a FIFO style. To finish exercise 6, we must finish <code>sched_yield()</code> and the system call for it.</p>
+<blockquote>
+<ol start="6">
+<li>Implement round-robin scheduling in <code>sched_yield()</code> as described above. Don’t forget to modify <code>syscall()</code> to dispatch <code>sys_yield()</code>.<br>
+Make sure to invoke <code>sched_yield()</code> in <code>mp_main</code>.<br>
+Modify <code>kern/init.c</code> to create three (or more!) environments that all run the program <code>user/yield.c</code>.</li>
+</ol>
+</blockquote>
+<p>There are two hints for <code>sched_yield()</code>. The first is that a CPU may be idle before so cur_env points to nothing. The other is that the loop search may failed to find another process to run. So remember to continue to run current process. In addition, because of hint 1, the current process may not exist.</p>
+<p>The code for is exercise 6 is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/init.c b/kern/init.c
+index 61da49e..4e8f727 100644
+<span class="token deleted">--- a/kern/init.c</span>
+<span class="token inserted">+++ b/kern/init.c</span>
+@@ -50,6 +50,7 @@ i386_init(void)
+ 
+ 	// Acquire the big kernel lock before waking up APs
+ 	// Your code here:
+<span class="token inserted">+	lock_kernel();</span>
+ 
+ 	// Starting non-boot CPUs
+ 	boot_aps();
+@@ -59,7 +60,9 @@ i386_init(void)
+ 	ENV_CREATE(TEST, ENV_TYPE_USER);
+ #else
+ 	// Touch all you want.
+<span class="token deleted">-	ENV_CREATE(user_primes, ENV_TYPE_USER);</span>
+<span class="token inserted">+	ENV_CREATE(user_yield, ENV_TYPE_USER);</span>
+<span class="token inserted">+	ENV_CREATE(user_yield, ENV_TYPE_USER);</span>
+<span class="token inserted">+	ENV_CREATE(user_yield, ENV_TYPE_USER);</span>
+ #endif // TEST*
+ 
+ 	// Schedule and run the first user environment!
+@@ -116,9 +119,12 @@ mp_main(void)
+ 	// only one CPU can enter the scheduler at a time!
+ 	//
+ 	// Your code here:
+<span class="token inserted">+	lock_kernel();</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	sched_yield();</span>
+ 
+ 	// Remove this after you finish Exercise 6
+<span class="token deleted">-	for (;;);</span>
+<span class="token inserted">+	// for (;;);</span>
+ }
+ 
+ /*
+diff --git a/kern/sched.c b/kern/sched.c
+index f595bb1..32cbb47 100644
+<span class="token deleted">--- a/kern/sched.c</span>
+<span class="token inserted">+++ b/kern/sched.c</span>
+@@ -29,6 +29,18 @@ sched_yield(void)
+ 	// below to halt the cpu.
+ 
+ 	// LAB 4: Your code here.
+<span class="token inserted">+	size_t curenv_index = (curenv == NULL) ? 0 : ENVX(curenv->env_id);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	for (size_t i = 0; i &lt; NENV; ++i) {</span>
+<span class="token inserted">+		size_t index = (curenv_index + i) % NENV;</span>
+<span class="token inserted">+		if (envs[index].env_status == ENV_RUNNABLE) {</span>
+<span class="token inserted">+			env_run(&amp;envs[index]);</span>
+<span class="token inserted">+		}</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (curenv != NULL &amp;&amp; curenv->env_status == ENV_RUNNING) {</span>
+<span class="token inserted">+		env_run(curenv);</span>
+<span class="token inserted">+	}</span>
+ 
+ 	// sched_halt never returns
+ 	sched_halt();
+diff --git a/kern/syscall.c b/kern/syscall.c
+index d1a6536..7e15c57 100644
+<span class="token deleted">--- a/kern/syscall.c</span>
+<span class="token inserted">+++ b/kern/syscall.c</span>
+@@ -279,6 +279,7 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4,
+ 		case SYS_cgetc: return (int32_t)sys_cgetc();
+ 		case SYS_getenvid: return (int32_t)sys_getenvid();
+ 		case SYS_env_destroy: return (int32_t)sys_env_destroy((envid_t)a1);
+<span class="token inserted">+		case SYS_yield: sys_yield(); return 0;</span>
+ 		default:
+ 			return -E_INVAL;
+ 	}
+</pre><h3 class="mume-header" id="answer-to-q3-q4">Answer to Q3 &amp; Q4</h3>
+
+<blockquote>
+<ol start="3">
+<li>In your implementation of <code>env_run()</code> you should have called <code>lcr3()</code>. Before and after the call to <code>lcr3()</code>, your code makes references (at least it should) to the variable e, the argument to <code>env_run</code>. Upon loading the %cr3 register, the addressing context used by the MMU is instantly changed. But a virtual address (namely e) has meaning relative to a given address context–the address context specifies the physical address to which the virtual address maps. Why can the pointer e be dereferenced both before and after the addressing switch?</li>
+</ol>
+</blockquote>
+<p><code>e</code> points to a place in kernel memory space. Each user program has a complete copy of kernel page table, i.e., the content of kernel page table is a part of user program page table.</p>
+<blockquote>
+<ol start="4">
+<li>Whenever the kernel switches from one environment to another, it must ensure the old environment’s registers are saved so they can be restored properly later. Why? Where does this happen?</li>
+</ol>
+</blockquote>
+<ol>
+<li>
+<p>Process switching shoulbe be transparent to user program. So we need to save and restore registers while scheduling so that user program resumes at where it’s paused and it won’t feel it.</p>
+</li>
+<li>
+<p>Scheduling is implemented using trap mechanism. It is a routine for trap mechanism to save registers when user program is trapped and restore registers when returning to user space.</p>
+</li>
+</ol>
+<h3 class="mume-header" id="system-calls-for-environment-creation">System Calls for Environment Creation</h3>
+
+<p>In this part we add a new function to JOS kernel, the ability to create new process. We also need to add new system calls to provide the interfaces for user program. JOS doesn’t offer a “create-new-process” system call for this function. Instead, JOS offer a bunch of system calls for creating a new process and let user programs control the flow of creating new processes. In other words, we implemet a Unix-like <code>fork()</code> entirely in user space.</p>
+<p>System calls needed are listed below.</p>
+<ul>
+<li><em>sys_exofork</em><br>
+This system call creates a new environment with an almost blank slate: nothing is mapped in the user portion of its address space, and it is not runnable. The new environment will have the same register state as the parent environment at the time of the <code>sys_exofork</code> call. In the parent, <code>sys_exofork</code> will return the <code>envid_t</code> of the newly created environment (or a negative error code if the environment allocation failed). In the child, however, it will return 0. (Since the child starts out marked as not runnable, <code>sys_exofork</code> will not actually return in the child until the parent has explicitly allowed this by marking the child runnable).</li>
+<li><em>sys_env_set_status</em><br>
+Sets the status of a specified environment to ENV_RUNNABLE or ENV_NOT_RUNNABLE. This system call is typically used to mark a new environment ready to run, once its address space and register state has been fully initialized.</li>
+<li><em>sys_page_alloc</em>:<br>
+Allocates a page of physical memory and maps it at a given virtual address in a given environment’s address space.</li>
+<li><em>sys_page_map</em><br>
+Copy a page mappings from one environment’s address space to another, leaving a memory sharing arrangement in place so that the new and the old mappings both refer to the same page of physical memory.</li>
+<li><em>sys_page_unmap</em><br>
+Unmap a page mapped at a given virtual address in a given environment.</li>
+</ul>
+<p>For all of the system calls above that accept environment IDs, the JOS kernel supports the convention that a value of 0 means “the current environment.” This convention is implemented by <code>envid2env()</code> in <code>kern/env.c</code>.</p>
+<h3 class="mume-header" id="exercise-7">Exercise 7</h3>
+
+<blockquote>
+<ol start="7">
+<li>Implement the system calls described above in <code>kern/syscall.c</code> and make sure <code>syscall()</code> calls them. You will need to use various functions in <code>kern/pmap.c</code> and <code>kern/env.c</code>, particularly <code>envid2env()</code>. For now, whenever you call <code>envid2env()</code>, pass 1 in the checkperm parameter. Be sure you check for any invalid system call arguments, returning <code>-E_INVAL</code> in that case. Test your JOS kernel with <code>user/dumbfork</code> and make sure it works before proceeding.</li>
+</ol>
+</blockquote>
+<p>The work for this exercise is a little bit tedious. As long as you fulfill all requirements in hints, it’s easy to finish this exercise.</p>
+<p>The code for exercise 7 is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/init.c b/kern/init.c
+index 4e8f727..5b5b50a 100644
+<span class="token deleted">--- a/kern/init.c</span>
+<span class="token inserted">+++ b/kern/init.c</span>
+@@ -60,9 +60,7 @@ i386_init(void)
+ 	ENV_CREATE(TEST, ENV_TYPE_USER);
+ #else
+ 	// Touch all you want.
+<span class="token deleted">-	ENV_CREATE(user_yield, ENV_TYPE_USER);</span>
+<span class="token deleted">-	ENV_CREATE(user_yield, ENV_TYPE_USER);</span>
+<span class="token deleted">-	ENV_CREATE(user_yield, ENV_TYPE_USER);</span>
+<span class="token inserted">+	ENV_CREATE(user_dumbfork, ENV_TYPE_USER);</span>
+ #endif // TEST*
+ 
+ 	// Schedule and run the first user environment!
+diff --git a/kern/syscall.c b/kern/syscall.c
+index 7e15c57..222a58a 100644
+<span class="token deleted">--- a/kern/syscall.c</span>
+<span class="token inserted">+++ b/kern/syscall.c</span>
+@@ -85,7 +85,18 @@ sys_exofork(void)
+ 	// will appear to return 0.
+ 
+ 	// LAB 4: Your code here.
+<span class="token deleted">-	panic("sys_exofork not implemented");</span>
+<span class="token inserted">+	// panic("sys_exofork not implemented");</span>
+<span class="token inserted">+	struct Env *child_env;</span>
+<span class="token inserted">+	int err_code = env_alloc(&amp;child_env, curenv->env_id);</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	if (err_code &lt; 0)</span>
+<span class="token inserted">+		return err_code;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	child_env->env_status = ENV_NOT_RUNNABLE;</span>
+<span class="token inserted">+	child_env->env_tf = curenv->env_tf;</span>
+<span class="token inserted">+	child_env->env_tf.tf_regs.reg_eax = 0;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	return child_env->env_id;</span>
+ }
+ 
+ // Set envid's env_status to status, which must be ENV_RUNNABLE
+@@ -105,7 +116,20 @@ sys_env_set_status(envid_t envid, int status)
+ 	// envid's status.
+ 
+ 	// LAB 4: Your code here.
+<span class="token deleted">-	panic("sys_env_set_status not implemented");</span>
+<span class="token inserted">+	// panic("sys_env_set_status not implemented");</span>
+<span class="token inserted">+	if (status != ENV_RUNNABLE &amp;&amp; status != ENV_NOT_RUNNABLE) {</span>
+<span class="token inserted">+		return -E_INVAL;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	struct Env *e;</span>
+<span class="token inserted">+	if (envid2env(envid, &amp;e, true) &lt; 0) {</span>
+<span class="token inserted">+		return -E_BAD_ENV;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	e->env_status = status;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	return 0;</span>
+ }
+ 
+ // Set the page fault upcall for <span class="token string">'envid'</span> by modifying the corresponding struct
+@@ -150,7 +174,26 @@ sys_page_alloc(envid_t envid, void *va, int perm)
+ 	//   allocated!
+ 
+ 	// LAB 4: Your code here.
+<span class="token deleted">-	panic("sys_page_alloc not implemented");</span>
+<span class="token inserted">+	// panic("sys_page_alloc not implemented");</span>
+<span class="token inserted">+	struct Env *e;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	if (envid2env(envid, &amp;e, true) &lt; 0)</span>
+<span class="token inserted">+		return -E_BAD_ENV;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	if ((uintptr_t)va >= UTOP || (uintptr_t)va % PGSIZE ||</span>
+<span class="token inserted">+		perm &amp; ~PTE_SYSCALL || ~perm &amp; (PTE_U | PTE_P))</span>
+<span class="token inserted">+		return -E_INVAL;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	struct PageInfo *pp = page_alloc(ALLOC_ZERO);</span>
+<span class="token inserted">+	if (pp == NULL)</span>
+<span class="token inserted">+		return -E_NO_MEM;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	if (page_insert(e->env_pgdir, pp, va, perm) &lt; 0) {</span>
+<span class="token inserted">+		page_free(pp);</span>
+<span class="token inserted">+		return -E_NO_MEM;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	return 0;</span>
+ }
+ 
+ // Map the page of memory at <span class="token string">'srcva'</span> in srcenvid's address space
+@@ -181,7 +224,24 @@ sys_page_map(envid_t srcenvid, void *srcva,
+ 	//   check the current permissions on the page.
+ 
+ 	// LAB 4: Your code here.
+<span class="token deleted">-	panic("sys_page_map not implemented");</span>
+<span class="token inserted">+	// panic("sys_page_map not implemented");</span>
+<span class="token inserted">+	struct Env *srcenv, *dstenv;</span>
+<span class="token inserted">+	if (envid2env(srcenvid, &amp;srcenv, true) &lt; 0 || envid2env(dstenvid, &amp;dstenv, true) &lt; 0)</span>
+<span class="token inserted">+		return -E_BAD_ENV;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	pte_t *pte_ptr;</span>
+<span class="token inserted">+	struct PageInfo *pp;</span>
+<span class="token inserted">+	if ((uintptr_t)srcva >= UTOP || (uintptr_t)srcva % PGSIZE ||</span>
+<span class="token inserted">+		(uintptr_t)dstva >= UTOP || (uintptr_t)dstva % PGSIZE ||</span>
+<span class="token inserted">+		(pp = page_lookup(srcenv->env_pgdir, srcva, &amp;pte_ptr)) == NULL ||</span>
+<span class="token inserted">+		perm &amp; ~PTE_SYSCALL || ~perm &amp; (PTE_U | PTE_P) ||</span>
+<span class="token inserted">+		((perm &amp; PTE_W) &amp;&amp; !((*pte_ptr) &amp; PTE_W)))</span>
+<span class="token inserted">+	return -E_INVAL;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (page_insert(dstenv->env_pgdir, pp, dstva, perm) &lt; 0)</span>
+<span class="token inserted">+		return -E_NO_MEM;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	return 0;</span>
+ }
+ 
+ // Unmap the page of memory at <span class="token string">'va'</span> in the address space of <span class="token string">'envid'</span>.
+@@ -197,7 +257,17 @@ sys_page_unmap(envid_t envid, void *va)
+ 	// Hint: This function is a wrapper around page_remove().
+ 
+ 	// LAB 4: Your code here.
+<span class="token deleted">-	panic("sys_page_unmap not implemented");</span>
+<span class="token inserted">+	// panic("sys_page_unmap not implemented");</span>
+<span class="token inserted">+	struct Env *e;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (envid2env(envid, &amp;e, true) &lt; 0)</span>
+<span class="token inserted">+		return -E_BAD_ENV;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	if ((uintptr_t)va >= UTOP || (uintptr_t)va % PGSIZE)</span>
+<span class="token inserted">+		return -E_INVAL;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	page_remove(e->env_pgdir, va);</span>
+<span class="token inserted">+	return 0;</span>
+ }
+ 
+ // Try to send <span class="token string">'value'</span> to the target env <span class="token string">'envid'</span>.
+@@ -275,11 +345,17 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4,
+ 	// panic(<span class="token string">"syscall not implemented"</span>);
+ 
+ 	switch (syscallno) {
+<span class="token deleted">-		case SYS_cputs: sys_cputs((const char *)a1, a2); return 0;</span>
+<span class="token inserted">+		case SYS_cputs:	sys_cputs((const char *)a1, a2); return 0;</span>
+ 		case SYS_cgetc: return (int32_t)sys_cgetc();
+<span class="token deleted">-		case SYS_getenvid: return (int32_t)sys_getenvid();</span>
+<span class="token deleted">-		case SYS_env_destroy: return (int32_t)sys_env_destroy((envid_t)a1);</span>
+<span class="token inserted">+		case SYS_getenvid:	return (int32_t)sys_getenvid();</span>
+<span class="token inserted">+		case SYS_env_destroy:	return (int32_t)sys_env_destroy((envid_t)a1);</span>
+<span class="token inserted">+		case SYS_page_alloc:	return sys_page_alloc((envid_t)a1, (void *)a2, (int)a3);</span>
+<span class="token inserted">+		case SYS_page_map:	return sys_page_map((envid_t)a1, (void *)a2, (envid_t)a3, (void *)a4, (int)a5);</span>
+<span class="token inserted">+		case SYS_page_unmap:	return sys_page_unmap((envid_t)a1, (void *)a2);</span>
+<span class="token inserted">+		case SYS_exofork:	return sys_exofork();</span>
+<span class="token inserted">+		case SYS_env_set_status:	return sys_env_set_status((envid_t)a1, (int)a2);</span>
+ 		case SYS_yield: sys_yield(); return 0;
+<span class="token inserted">+		</span>
+ 		default:
+ 			return -E_INVAL;
+ 	}
+</pre><h2 class="mume-header" id="copy-on-write-fork">Copy-on-Write Fork</h2>
+
+<p><code>dumbfork</code> copy page contents from parents to children, which is not a good behaviour in most cases. In this part we will implement a “proper” Unix-like <code>fork()</code> with copy-on-write, as a user space library routine. Implementing <code>fork()</code> and copy-on-write support in user space has the benefit that the kernel remains much simpler and thus more likely to be correct. It also lets individual user-mode programs define their own semantics for <code>fork()</code>. A program that wants a slightly different implementation (for example, the expensive always-copy version like <code>dumbfork()</code>, or one in which the parent and child actually share memory afterward) can easily provide its own.</p>
+<h3 class="mume-header" id="user-space-page-handler">User Space Page Handler</h3>
+
+<p>A user-level copy-on-write <code>fork()</code> needs to know about page faults on write-protected pages. Copy-on-write is only one of many possible uses for user-level page fault handling. It’s common to set up an address space so that page faults indicate when some action needs to take place. A typical Unix kernel must keep track of what action to take when a page fault occurs in each region of a process’s space. There is a lot of information for the kernel to keep track of. Instead of taking the traditional Unix approach, JOS decide what to do about each page fault in user space, where bugs are less damaging. This design has the added benefit of allowing programs great flexibility in defining their memory regions.</p>
+<p>In order to handle its own page faults, a user environment will need to register a page fault handler entrypoint with the JOS kernel. The user environment registers its page fault entrypoint via the new <code>sys_env_set_pgfault_upcall</code> system call. We have added a new member to the <code>Env structure</code>, <code>env_pgfault_upcall</code>, to record this information.</p>
+<p>During normal execution, a user environment in JOS will run on the normal user stack: its <code>ESP</code> register starts out pointing at <code>USTACKTOP</code>, and the stack data it pushes resides on the page between <code>USTACKTOP-PGSIZE</code> and <code>USTACKTOP-1</code> inclusive. When a page fault occurs in user mode, however, the kernel will restart the user environment running a designated user-level page fault handler on a different stack, namely the user exception stack. In essence, we will make the JOS kernel implement automatic “stack switching” on behalf of the user environment, in much the same way that the x86 processor already implements stack switching on behalf of JOS when transferring from user mode to kernel mode!</p>
+<p>The JOS user exception stack is also one page in size, and its top is defined to be at virtual address <code>UXSTACKTOP</code>, so the valid bytes of the user exception stack are from <code>UXSTACKTOP-PGSIZE</code> through <code>UXSTACKTOP-1</code> inclusive. While running on this exception stack, the user-level page fault handler can use JOS’s regular system calls to map new pages or adjust mappings so as to fix whatever problem originally caused the page fault. Then the user-level page fault handler returns, via an assembly language stub, to the faulting code on the original stack. Each user environment that wants to support user-level page fault handling will need to allocate memory for its own exception stack.</p>
+<p>We now change the page fault handling code in <code>kern/trap.c</code> to handle page faults from user mode as follows. We will call the state of the user environment at the time of the fault the trap-time state. If there is no page fault handler registered, the JOS kernel destroys the user environment with a message as before. Otherwise, the kernel sets up a trap frame on the exception stack that looks like a <code>struct UTrapframe</code> from <code>inc/trap.h</code>.</p>
+<h3 class="mume-header" id="multiple-page-fault-return-from-user-space-kernel-handler">Multiple Page Fault &amp; Return From User Space Kernel Handler</h3>
+
+<p>Since we handle page faults in user space, we lose the advantage of <code>iret</code> where CPU change stack for us automatically. Before we jump back to the normal routine of a user program, we must restore all registers before we jump back, i.e., we must implement the function of <code>iret</code> ourselves in user space.</p>
+<p>To explain this procedure, we use <em>old stack</em> to refer to the stack used before current page fautl. So <em>old stack</em> may be a user stack or the exception stack when multiple page faults happen. At the end of our procedure, we use <code>ret</code> to return to the former routine. <code>ret</code> will pop out an integer to <code>eip</code> to jump back. Therefore, in fact, our task is to add a new integer on <em>old stack</em> and let <code>esp</code> point to the integer right before we call <code>ret</code>.</p>
+<p>If there is only one page fault, <em>old stack</em> is the user stack. Since nothing exists below <code>utf_esp</code>, there is nothing to worry when we push an integer to <em>old stack</em>. The tricky part is how to handle them in the same manner when multiple page faults happen.</p>
+<p>Because old values of registers are stored in UTrapFrame and we need registers to put return address on <em>old stack</em> and change the value of <code>utf_esp</code>, JOS kernel need to reserve 4 black bytes on exception stack when multiple page faults happen. After we finish setting up return address and <code>utf_esp</code>, we don’t use registers any more and pop from values from exception stack to registers. Finally we call <code>ret</code>.</p>
+<img src="data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAASIAAAEYCAIAAAB3PWwqAAAMEklEQVR42u3d32uVdRzAcWHIiDF2I0O8GEMYY4wRYyAiYwwJxvAiRASvdxGIyJCxrgb2H5SUQVhiIWhSWplzXgQGS8RuLCspk5wtvTBFWa2WWn3wgcPDOTtnZz/Odp7j63UxnvOcx2fnbN/3vs/57uDW/QdU2DpfApAZ1FBm/wIrSmYgM5AZIDOQGcgMkBnIDJAZyAxkBsgMZAYyA2QGMgNkBjIDmQEyA5mBzACZgcwAmYHMQGaAzEBmIDNAZvB8Z7bumYMHD6Z3xs11Ke51b4burdLM/ACjZsgMKi5vlpMZPE+vzXxlobKZLX+SBZkBMoOVU6VLIFBLqnRBH2RW8cwsgSCzimdmQR+ZyQxW9epMZlBxMoNsZmYJBCqeGSAzWNWrM5nBArwLBJ7XzCyBILOKZ2ZBH5nJDFb16kxma/xjstjXarH/b9lXX33V399fiUfC8smsRjJbZicyy15mlkDyfPjhh52dnevXr29vbz99+nSxwf3WW281PxMbxcb9d99919vbG6d64YUXYvqamprKnSf9f3f+8ssvcW8cE0f29PTEXJc7w3vvvbdp06b6+vqhoaF//vkn75Hcu3evra1tw4YNP//8s29cVWdG2vj4eF4GX3zxRWFm77///roChWeLXNMHbNmyZd7MIq30nsg7F/y8/89ucnN2djYarquryz1CZJYNMavECH7llVdi6oiPsd3X11eYWXd3d2wPDw/Hdnwsllk0EPuTSaycq76YlGJ/zF3Jza1bt8bNzz777IcffoiNzZs3p//5yy+/HB+PHDniu5aBJRDSYojH2P37779jOz7GdlzLFbaR9PPbb7/FdlRULJu40ov9cfC2bdvi23///v1imcWF4ujoaFJv7q64hpz3tOkpLn2Fyb/eBZK5zOIlU7HMksMePnxYOrOYEqOuHTt2xOurOGD79u3FXubFzbGxsWTWysvsyZMn82YWl6DpyZaqzswSSFqM2uSiMQZ3ctGYW3lPB5BczsVkFdt79+5dcOnv3r17cUBkk/fi6o8//oibjY2NcTOqnpiYKPwsn3zyybfffhsbTU1N6X8e5xwcHDShZSMzS8Npp0+fzlui+PLLLwsz++ijj8pZAkk6yYlLx2R/S0tLsmfPnj1xs7W1NXdMQ0NDbp7MWwLZv39/3iP5+uuv0z8IkFlmxODu6uqKmaejo+Pzzz8vtm5x5MiRmF42btz4xhtvFMssXrzt2rUrWakfGBj49ddfczHHP4ydSXgxHSW/QojZ6aeffopTjYyMJEe+/fbbzc3NyYJ+MvXlPZK4EDWhZWAJRGYgM8h+ZpZAoOKZATKDVb06kxkswLtA4HnNzBIIMqt4Zhb0kZnMYFWvzmQGFSczyGZmlkCg4pkBMoNVvTqTGSzAu0Dgec3MEggyq3hmFvSRmcxgVa/OZAYVJzPIZmaWQGA1ZjOoJVWa2X9QK5L/s3lmZmZ2dnZubq7wLxDIDFYgs6mpqbt3796/fz9ii9JkBiuf2bVr127cuDE9PR2lxZwmM1j5zCYnJ69evRqlxZwWE5rMYOUzGx8fj9JiTourx+Rv68gMVjizEydOTExMXLlyJSa03F9IlRnIDGQms/JdunSpv7+/SkZDsa98ibuQWTa+B1XyfGUms+yVc/ny5ebm5m3btiU7jx8/3tbWtn79+q6urrNnz6aPzCkc0OmbhadN9pw6daq9vT3O3NPT88033xQ+nlu3bsWEmfwh3Dgm5s/cXYcPH25+JjbyPnWxu8p/duH777/v7e2N/fHZ4zHcvn279H6ZyWxxmSV27twZe86dO5dXVDLWl5BZ+rSF752LigofT+xMHxNNJvs/+OCDwjMseFf5zy50dnam92/ZsqX0fpnJbHGZHThwIJlJ4mNfX1/sOX/+fGxfvHgxtnfv3j3v9diCmaVPm+zZsWPH48ePz5w5E9v19fUlHtjNmzfTx3R3d8fN4eHh2I6P6c9V4q5FPbu6urq4WThZFdsvM5ktLrP0GIqRnffzvrGxcWmZpU+b7Jmenl7wFVRML6Ojo0k8uWOSsX7nzp3YjtOWedeint3Q0FDcjLPF5eVrr7324MGD0vtlJrOlryXEi5C8gRgjbMGu5ubmCsd3iU9ULLPkxdXY2Nj169fTxyR5PHr0qLClEnct6tnFNBsVxXy7adOm2L99+/bS+2Ums6Vnlrw6itcwxQ7+66+//vzzz9yQjQuwp0+f7tu3b0Uyi7kl9scF3oULF9LHbN26NbZjYontvXv3lnnXop5dzu+//x7HxLMrc7/MZLbozE6ePJn3835gYCC5q6WlJdmzZ8+euNnb21t67WEJmbW2tuZO1dDQkJumPv7442Kfq8Rdi3p2Sa45uZXJYvtlJrNl/QLq6NGjHR0dcTXV1NQU01Tu1ciZM2c2btwYP86ToRbXdTE5xGGbN2/OLfctM7N4YdbZ2RmfYnBwML7NcczIyEhy17vvvhuPJx7AoUOH8v55sbsW9ezi1d2uXbuS3yVEe7mXkcX2y0xmIDOQmcyQmcxAZiAzmYHMQGYyQ2Yyg1rLDGqJ2QxcNILMZAYyA5nJDJnJDGQGMpMZMpMZyAxkJjOQGchMZshMZiAzkJnMQGYgM5CZzEBmIDOZITOZgcwy+0Uv9tcAi/33Yyv7qSt0cmQmM5nJTGbl7bl8+XJzc3Py53Nv3brV39+f/F3Znp6eS5cupY88fPhwHNnU1BQbJU675PMfOnQoTt7a2nr9+vXh4eE4pqWlZXJyMnfC48ePt7W1xf6urq6zZ8/KTGaZySyxc+fO2BNDP72zvb292JR16tSpMjNbwvmjovR2csy5c+fyDstVKjOZVXtmBw4cSOaZ9F03b96Mu+rr69NH7t+/P7bjY2xHMMUKXPL5Y7JK9odjx479+OOPsRFzV3JMX19f3Dx//nxsX7x4MbZ3794tM5mtcWa5AVo6s9u3b6d3xhQxOjra3d2dPj7ZvnPnTmxPT0/Hdlz4lZlZ+ed/+vTpvNvJMdFk3idqbGyUmcxWTwz6eIKPHz9Obs7MzMTNhoaGxc5v8aIr9oyNjcWro8IMYmexzMqMv/T5S2/HT428zOrq6mQms9Xz4osvxhPct2/f3NxczAPDw8Nx86WXXlpsZjE/xJ64wLtw4ULhcB8aGoqTx0VgbCdLGovNrPT5S28nr+viFZplRpmtjddff73w4i1vRJaTWWtra+6fx2QYHx89ejTvleGnn366hMxKn790ZidPnsx7DAMDAzKT2ap65513urq61j/T3t7+5ptvLmGZJF44dXZ2xhkGBwfjmxf3joyM5I48evRoc3Pzhg0bjh07Vv6CfvnnL51ZiAfQ0dER14pNTU0xdT948EBmMqvlJRZkJjOZyUxmWVP/jK+DzGSGzGQGMgOZyQxkBjKTGTKTGcgMZCYzZCYzkBnITGYgM5CZzJCZzEBmIDOZITOZgcxAZjKDrGQGtaQaMwsPHz6cmpq6du3a5OTk+Pj4CcisyCzGcIzkGM8xqmNsV0tmMzMzd+/ejfSvXr0aj28CMisyizEcIznGc4zqGNvVktns7GzMrdPT0/HI4mfAFcisyCzGcIzkGM8xqmNsV0tmc3NzEX08pqg/5tkbkFmRWYzhGMkxnmNUx9iuiswOHjz45MmTeDTRfTysuJa9D5n16quvxhiOkRzjOUZ1jO1qWWn8F5AZyAxkJjNY8yUQX1lqxvLHc6UW9KFmLP/qTGYgM5AZyGxtMrMEQi2p0iUQC/ogM5AZyExmsPaZWQKhlngXCFSc35uBzEBmMoOsZmYJhFriXSCQATIDmYHMZAZrk5klEGqJd4FAxfm9GcgMZCYzyGpmlkCoJd4FAhkgM5AZyExmsDaZWQKhlngXCFSc35uBzEBmMoOsZmYJhFriXSCQATIDmYHMZAZrk5klEGqJd4FAxfm9GcgMZCYzyGpmlkCoJd4FAhkgM5AZyExmsDaZWQKhlngXCFSc35uBzEBmMoOsZmYJhFriXSCQATIDmYHMZAZrk1neS8a4uS7Fve7N9L3VkhkgM5AZyAyQGcgMZOaLAjIDmQEyA5mBzACZgcxAZjIDmYHMAJmBzEBmgMxAZiAzmYHMQGaAzEBmIDNAZiAzkJnMYJUyAypEZiAzyL7/AVjDzNfDbKw8AAAAAElFTkSuQmCC"><h3 class="mume-header" id="exercise-8-9-10-11">Exercise 8 &amp; 9 &amp; 10 &amp; 11</h3>
+
+<blockquote>
+<ol start="8">
+<li>
+<p>Implement the <code>sys_env_set_pgfault_upcall</code> system call. Be sure to enable permission checking when looking up the environment ID of the target environment, since this is a “dangerous” system call.</p>
+</li>
+<li>
+<p>Implement the code in <code>page_fault_handler</code> in <code>kern/trap.c</code> required to dispatch page faults to the user-mode handler. Be sure to take appropriate precautions when writing into the exception stack.</p>
+</li>
+<li>
+<p>Implement the <code>_pgfault_upcall</code> routine in <code>lib/pfentry.S</code>. The interesting part is returning to the original point in the user code that caused the page fault. You’ll return directly there, without going back through the kernel. The hard part is simultaneously switching stacks and re-loading the <code>EIP</code>.</p>
+</li>
+<li>
+<p>Finish <code>set_pgfault_handler()</code> in <code>lib/pgfault.c</code>.</p>
+</li>
+</ol>
+</blockquote>
+<p>The process is destroyed if it runs out of exception stack.</p>
+<p>The codes for these exericse are shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/syscall.c b/kern/syscall.c
+index 222a58a..fa0260b 100644
+<span class="token deleted">--- a/kern/syscall.c</span>
+<span class="token inserted">+++ b/kern/syscall.c</span>
+@@ -144,7 +144,14 @@ static int
+ sys_env_set_pgfault_upcall(envid_t envid, void *func)
+ {
+ 	// LAB 4: Your code here.
+<span class="token deleted">-	panic("sys_env_set_pgfault_upcall not implemented");</span>
+<span class="token inserted">+	// panic("sys_env_set_pgfault_upcall not implemented");</span>
+<span class="token inserted">+	struct Env *e;</span>
+<span class="token inserted">+	if (envid2env(envid, &amp;e, true) &lt; 0)</span>
+<span class="token inserted">+		return -E_BAD_ENV;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	e->env_pgfault_upcall = func;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	return 0;</span>
+ }
+ 
+ // Allocate a page of memory and map it at <span class="token string">'va'</span> with permission
+@@ -354,6 +361,7 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4,
+ 		case SYS_page_unmap:	return sys_page_unmap((envid_t)a1, (void *)a2);
+ 		case SYS_exofork:	return sys_exofork();
+ 		case SYS_env_set_status:	return sys_env_set_status((envid_t)a1, (int)a2);
+<span class="token inserted">+		case SYS_env_set_pgfault_upcall: return sys_env_set_pgfault_upcall((envid_t)a1, (void *)a2);</span>
+ 		case SYS_yield: sys_yield(); return 0;
+ 		
+ 		default:
+diff --git a/kern/trap.c b/kern/trap.c
+index 7d96fb8..40d04c5 100644
+<span class="token deleted">--- a/kern/trap.c</span>
+<span class="token inserted">+++ b/kern/trap.c</span>
+@@ -346,6 +346,25 @@ page_fault_handler(struct Trapframe *tf)
+ 	//   (the <span class="token string">'tf'</span> variable points at <span class="token string">'curenv->env_tf'</span>).
+ 
+ 	// LAB 4: Your code here.
+<span class="token inserted">+	if (curenv->env_pgfault_upcall != NULL) {</span>
+<span class="token inserted">+		uintptr_t u_esp = (tf->tf_esp >= (UXSTACKTOP - PGSIZE) &amp;&amp; tf->tf_esp &lt;= UXSTACKTOP) ? </span>
+<span class="token inserted">+			tf->tf_esp - sizeof(uint32_t) - sizeof(struct UTrapframe) : UXSTACKTOP - sizeof(struct UTrapframe);</span>
+<span class="token inserted">+		user_mem_assert(curenv, (void *)u_esp, sizeof(struct UTrapframe), PTE_U | PTE_W | PTE_P);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		struct UTrapframe *utf = (struct UTrapframe *)u_esp;</span>
+<span class="token inserted">+		utf->utf_fault_va = fault_va;</span>
+<span class="token inserted">+		utf->utf_err = tf->tf_err;</span>
+<span class="token inserted">+		utf->utf_regs = tf->tf_regs;</span>
+<span class="token inserted">+		utf->utf_eip = tf->tf_eip;</span>
+<span class="token inserted">+		utf->utf_eflags = tf->tf_eflags;</span>
+<span class="token inserted">+		utf->utf_esp = tf->tf_esp;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		// tf is the same as &amp;(curenv->env_tf)</span>
+<span class="token inserted">+		tf->tf_esp = u_esp;</span>
+<span class="token inserted">+		tf->tf_eip = (uintptr_t)(curenv->env_pgfault_upcall);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		env_run(curenv);</span>
+<span class="token inserted">+	}</span>
+ 
+ 	// Destroy the environment that caused the fault.
+ 	cprintf(<span class="token string">"[%08x] user fault va %08x ip %08x\n"</span>,
+diff --git a/lib/pfentry.S b/lib/pfentry.S
+index f40aeeb..53d8df3 100644
+<span class="token deleted">--- a/lib/pfentry.S</span>
+<span class="token inserted">+++ b/lib/pfentry.S</span>
+@@ -65,18 +65,31 @@ _pgfault_upcall:
+ 	// ways as registers become unavailable as scratch space.
+ 	//
+ 	// LAB 4: Your code here.
+<span class="token inserted">+	// the size of UTrapframe is 13*4=52 bytes</span>
+<span class="token inserted">+	movl 48(%esp), %eax		# move utf_esp to %eax</span>
+<span class="token inserted">+	subl $4, %eax			# %eax points to trap-time stack now, reserve 4 bytes for eip</span>
+<span class="token inserted">+	movl %eax, 48(%esp)		# store trap-time stack pointer to utf_esp so that we can</span>
+<span class="token inserted">+					# pop it to later when we want to set %esp but no register can be used.</span>
+<span class="token inserted">+	movl 40(%esp), %ebx		# move utf_eip to %ebx</span>
+<span class="token inserted">+	movl %ebx, (%eax)		# move utf_eip to trap-time stack</span>
+ 
+ 	// Restore the trap-time registers.  After you do this, you
+ 	// can no longer modify any general-purpose registers.
+ 	// LAB 4: Your code here.
+<span class="token inserted">+	addl $8, %esp</span>
+<span class="token inserted">+	popal</span>
+ 
+ 	// Restore eflags from the stack.  After you do this, you can
+ 	// no longer use arithmetic operations or anything else that
+ 	// modifies eflags.
+ 	// LAB 4: Your code here.
+<span class="token inserted">+	addl $4, %esp</span>
+<span class="token inserted">+	popfl</span>
+ 
+ 	// Switch back to the adjusted trap-time stack.
+ 	// LAB 4: Your code here.
+<span class="token inserted">+	popl %esp</span>
+ 
+ 	// Return to re-execute the instruction that faulted.
+ 	// LAB 4: Your code here.
+<span class="token inserted">+	ret</span>
+diff --git a/lib/pgfault.c b/lib/pgfault.c
+index a975518..fb68949 100644
+<span class="token deleted">--- a/lib/pgfault.c</span>
+<span class="token inserted">+++ b/lib/pgfault.c</span>
+@@ -29,7 +29,12 @@ set_pgfault_handler(void (*handler)(struct UTrapframe *utf))
+ 	if (_pgfault_handler == 0) {
+ 		// First time through!
+ 		// LAB 4: Your code here.
+<span class="token deleted">-		panic("set_pgfault_handler not implemented");</span>
+<span class="token inserted">+		// panic("set_pgfault_handler not implemented");</span>
+<span class="token inserted">+		envid_t curenv_id = sys_getenvid();</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		if ((r = sys_page_alloc(curenv_id, (void *)(UXSTACKTOP - PGSIZE), PTE_U | PTE_W | PTE_P)) &lt; 0</span>
+<span class="token inserted">+			|| (r = sys_env_set_pgfault_upcall(curenv_id, _pgfault_upcall)) &lt; 0)</span>
+<span class="token inserted">+			panic("set_pgfault_handler: %e\n", r);</span>
+ 	}
+ 
+ 	// Save handler pointer for assembly to call.
+</pre><h3 class="mume-header" id="implementing-copy-on-write-fork">Implementing Copy-on-Write Fork</h3>
+
+<p>We now have the ability to implement copy-on-write fork. This task can be divided into two parts. Part one is to set copy-on-write bit in page table entries when forking a new process. Part two is to handle the page faults casued by writing to a copy-on-write page. Normally to handle a copy-on-write page fault includes allocating a new page, marking it as writable and copy the content to it from the copy-on-write page.</p>
+<h3 class="mume-header" id="exercise-12">Exercise 12</h3>
+
+<blockquote>
+<ol start="12">
+<li>Implement fork, duppage and pgfault in lib/fork.c.</li>
+</ol>
+</blockquote>
+<p>The code for exericse 12 is shown below. Remember to clear the access bit and dirty bit in page table entries. Although it’s antilogical, it’s OK to do so since JOS never user these two bits to provide <em>swap</em> function.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/syscall.c b/kern/syscall.c
+index fa0260b..d9aaab1 100644
+<span class="token deleted">--- a/kern/syscall.c</span>
+<span class="token inserted">+++ b/kern/syscall.c</span>
+@@ -243,7 +243,7 @@ sys_page_map(envid_t srcenvid, void *srcva,
+ 		(pp = page_lookup(srcenv->env_pgdir, srcva, &amp;pte_ptr)) == NULL ||
+ 		perm &amp; ~PTE_SYSCALL || ~perm &amp; (PTE_U | PTE_P) ||
+ 		((perm &amp; PTE_W) &amp;&amp; !((*pte_ptr) &amp; PTE_W)))
+<span class="token deleted">-	return -E_INVAL;</span>
+<span class="token inserted">+		return -E_INVAL;</span>
+ 
+ 	if (page_insert(dstenv->env_pgdir, pp, dstva, perm) &lt; 0)
+ 		return -E_NO_MEM;
+diff --git a/lib/fork.c b/lib/fork.c
+index 61264da..2e54f5f 100644
+<span class="token deleted">--- a/lib/fork.c</span>
+<span class="token inserted">+++ b/lib/fork.c</span>
+@@ -25,6 +25,8 @@ pgfault(struct UTrapframe *utf)
+ 	//   (see &lt;inc/memlayout.h>).
+ 
+ 	// LAB 4: Your code here.
+<span class="token inserted">+	if (!(err &amp; FEC_WR &amp;&amp; uvpt[PGNUM(addr)] &amp; PTE_COW))</span>
+<span class="token inserted">+		panic("pgfault failed.\n");</span>
+ 
+ 	// Allocate a new page, map it at a temporary location (PFTEMP),
+ 	// copy the data from the old page to the new page, then move the new
+@@ -33,8 +35,18 @@ pgfault(struct UTrapframe *utf)
+ 	//   You should make three system calls.
+ 
+ 	// LAB 4: Your code here.
+<span class="token inserted">+	if ((r = sys_page_alloc(0,(void *)PFTEMP, PTE_U | PTE_W | PTE_P)) &lt; 0)</span>
+<span class="token inserted">+		panic("Failed to allocate a new page: %e\n", r);</span>
+ 
+<span class="token deleted">-	panic("pgfault not implemented");</span>
+<span class="token inserted">+	memcpy((void *)PFTEMP, ROUNDDOWN(addr, PGSIZE), PGSIZE);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = sys_page_map(0, (void *)PFTEMP, 0, ROUNDDOWN(addr, PGSIZE), PTE_U | PTE_W | PTE_P)) &lt; 0)</span>
+<span class="token inserted">+		panic("Failed to map new page: %e\n", r);</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	if ((r = sys_page_unmap(0, (void *)PFTEMP)) &lt; 0)</span>
+<span class="token inserted">+		panic("Faile to unmap PFTEMP: %e\n", r);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	// panic("pgfault not implemented");</span>
+ }
+ 
+ //
+@@ -54,7 +66,24 @@ duppage(envid_t envid, unsigned pn)
+ 	int r;
+ 
+ 	// LAB 4: Your code here.
+<span class="token deleted">-	panic("duppage not implemented");</span>
+<span class="token inserted">+	// panic("duppage not implemented");</span>
+<span class="token inserted">+	void *addr = (void *)(pn*PGSIZE);</span>
+<span class="token inserted">+	int perm = PGOFF(uvpt[pn]) &amp; PTE_SYSCALL;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (perm &amp; (PTE_W | PTE_COW)) {</span>
+<span class="token inserted">+		perm |= PTE_COW;</span>
+<span class="token inserted">+		perm &amp;= ~PTE_W;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		if ((r = sys_page_map(0, addr, envid, addr, perm)) &lt; 0)</span>
+<span class="token inserted">+			panic("Failed to duppage on child enviroment: %e\n", r);</span>
+<span class="token inserted">+		</span>
+<span class="token inserted">+		if ((r = sys_page_map(0, addr, 0, addr, perm)) &lt; 0)</span>
+<span class="token inserted">+			panic("Failed to duppage on self enviroment: %e\n", r);</span>
+<span class="token inserted">+	} else {</span>
+<span class="token inserted">+		if ((r = sys_page_map(0, addr, envid, addr, perm)) &lt; 0)</span>
+<span class="token inserted">+			panic("Failed to duppage on child enviroment: %e\n", r);</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+	</span>
+ 	return 0;
+ }
+ 
+@@ -77,8 +106,45 @@ duppage(envid_t envid, unsigned pn)
+ envid_t
+ fork(void)
+ {
+<span class="token inserted">+	int r;</span>
+ 	// LAB 4: Your code here.
+<span class="token deleted">-	panic("fork not implemented");</span>
+<span class="token inserted">+	// panic("fork not implemented");</span>
+<span class="token inserted">+	set_pgfault_handler(pgfault);</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	// envid is different in parent and child process</span>
+<span class="token inserted">+	envid_t envid = sys_exofork();</span>
+<span class="token inserted">+	if (envid == 0)	{	// if the process is the child process</span>
+<span class="token inserted">+		thisenv = &amp;envs[ENVX(sys_getenvid())];</span>
+<span class="token inserted">+		return 0;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	// copy address map</span>
+<span class="token inserted">+	for (size_t i = 0; i &lt; NPDENTRIES; ++i) {</span>
+<span class="token inserted">+		if (uvpd[i] &amp; PTE_P) {</span>
+<span class="token inserted">+			for (size_t j = 0; j &lt; NPTENTRIES; ++j) {</span>
+<span class="token inserted">+				size_t pn = i * NPTENTRIES + j;</span>
+<span class="token inserted">+				</span>
+<span class="token inserted">+				if (pn == PGNUM(USTACKTOP))</span>
+<span class="token inserted">+					goto COPY_END;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+				if (uvpt[pn] &amp; PTE_P)</span>
+<span class="token inserted">+					duppage(envid, pn);</span>
+<span class="token inserted">+			}</span>
+<span class="token inserted">+		}</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+COPY_END:</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = sys_page_alloc(envid, (void *)(UXSTACKTOP-PGSIZE), PTE_U | PTE_W | PTE_P)) &lt; 0)</span>
+<span class="token inserted">+		panic("Failed to allocate page for child's exception stack: %e", r);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	extern void _pgfault_upcall(void);</span>
+<span class="token inserted">+	if ((r = sys_env_set_pgfault_upcall(envid, _pgfault_upcall)) &lt; 0)</span>
+<span class="token inserted">+		panic("Failed to set page fault hanlder for child: %e\n", r);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = sys_env_set_status(envid, ENV_RUNNABLE)) &lt; 0)</span>
+<span class="token inserted">+		panic("Failed to set child's status as ENV_RUNNABLE", r);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	return envid;</span>
+ }
+ 
+ // Challenge!
+diff --git a/lib/pgfault.c b/lib/pgfault.c
+index fb68949..8d78846 100644
+<span class="token deleted">--- a/lib/pgfault.c</span>
+<span class="token inserted">+++ b/lib/pgfault.c</span>
+@@ -30,10 +30,8 @@ set_pgfault_handler(void (*handler)(struct UTrapframe *utf))
+ 		// First time through!
+ 		// LAB 4: Your code here.
+ 		// panic(<span class="token string">"set_pgfault_handler not implemented"</span>);
+<span class="token deleted">-		envid_t curenv_id = sys_getenvid();</span>
+<span class="token deleted">-</span>
+<span class="token deleted">-		if ((r = sys_page_alloc(curenv_id, (void *)(UXSTACKTOP - PGSIZE), PTE_U | PTE_W | PTE_P)) &lt; 0</span>
+<span class="token deleted">-			|| (r = sys_env_set_pgfault_upcall(curenv_id, _pgfault_upcall)) &lt; 0)</span>
+<span class="token inserted">+		if ((r = sys_page_alloc(0, (void *)(UXSTACKTOP - PGSIZE), PTE_U | PTE_W | PTE_P)) &lt; 0</span>
+<span class="token inserted">+			|| (r = sys_env_set_pgfault_upcall(0, _pgfault_upcall)) &lt; 0)</span>
+ 			panic(<span class="token string">"set_pgfault_handler: %e\n"</span>, r);
+ 	}
+ 
+</pre><h2 class="mume-header" id="preemptive-multitasking-and-inter-process-communication-ipc">Preemptive Multitasking and Inter-Process communication (IPC)</h2>
+
+<h3 class="mume-header" id="clock-interrupts-and-preemption">Clock Interrupts and Preemption</h3>
+
+<p>In this part we implement preemptive round-robin scheduling. To do this, we must extend the JOS to allow the kernel to support external hardware interrupts from the clock hardware. External interrupts are referred to as IRQs. There are 16 possible IRQs in JOS, numbered 0 throug 15, mapped in IDT starting from <code>IRQ_OFFSET</code>. To simplify JOS, external device interrupts are always disabled when in the kernel and enabled when in user space. External interrupts are controlled by the <code>FL_IF</code> flag bit of the <code>%eflags</code> register (see <code>inc/mmu.h</code>). While the bit can be modified in several ways, because of our simplification, we will handle it solely through the process of saving and restoring %eflags register as we enter and leave user mode. Interrupts are masked with the very first instruction of the bootloader until we enter user space first time.</p>
+<p>To implement preemptive round-robin scheduling, we need to handle clock interrupts. We program the hardware to generate clock interrupts periodically, which will for control back to the kernel where we can re-schedule processes. We should utilize <code>lapic_init</code> and <code>pic_init</code> (from <code>i386_init</code> in <code>init.c</code>) to help us program the hardware.</p>
+<h3 class="mume-header" id="exercise-13-14">Exercise 13 &amp; 14</h3>
+
+<blockquote>
+<ol start="13">
+<li>
+<p>Exercise 13. Modify <code>kern/trapentry.S</code> and <code>kern/trap.c</code> to initialize the appropriate entries in the IDT and provide handlers for IRQs 0 through 15. Then modify the code in <code>env_alloc()</code> in <code>kern/env.c</code> to ensure that user environments are always run with interrupts enabled.<br>
+Also uncomment the <code>sti</code> instruction in <code>sched_halt()</code> so that idle CPUs unmask interrupts.</p>
+</li>
+<li>
+<p>Modify the kernel’s <code>trap_dispatch()</code> function so that it calls <code>sched_yield()</code> to find and run a different environment whenever a clock interrupt takes place.</p>
+</li>
+</ol>
+</blockquote>
+<p>Remember to invoke <code>lapic_eoi()</code> before your call <code>sched_yield</code> when you disptach timer interrupt. Otherwire, the hardware won’t generate another timer interrupt again.</p>
+<p>The codes for exercise 13 &amp; 14 are shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/env.c b/kern/env.c
+index c543bf7..af7a67f 100644
+<span class="token deleted">--- a/kern/env.c</span>
+<span class="token inserted">+++ b/kern/env.c</span>
+@@ -271,6 +271,7 @@ env_alloc(struct Env **newenv_store, envid_t parent_id)
+ 
+ 	// Enable interrupts while in user mode.
+ 	// LAB 4: Your code here.
+<span class="token inserted">+	e->env_tf.tf_eflags |= FL_IF;</span>
+ 
+ 	// Clear the page fault handler until user installs one.
+ 	e->env_pgfault_upcall = 0;
+diff --git a/kern/init.c b/kern/init.c
+index 5b5b50a..be3c446 100644
+<span class="token deleted">--- a/kern/init.c</span>
+<span class="token inserted">+++ b/kern/init.c</span>
+@@ -60,7 +60,9 @@ i386_init(void)
+ 	ENV_CREATE(TEST, ENV_TYPE_USER);
+ #else
+ 	// Touch all you want.
+<span class="token deleted">-	ENV_CREATE(user_dumbfork, ENV_TYPE_USER);</span>
+<span class="token inserted">+	ENV_CREATE(user_spin, ENV_TYPE_USER);</span>
+<span class="token inserted">+	ENV_CREATE(user_spin, ENV_TYPE_USER);</span>
+<span class="token inserted">+	ENV_CREATE(user_spin, ENV_TYPE_USER);</span>
+ #endif // TEST*
+ 
+ 	// Schedule and run the first user environment!
+diff --git a/kern/sched.c b/kern/sched.c
+index 32cbb47..505bbac 100644
+<span class="token deleted">--- a/kern/sched.c</span>
+<span class="token inserted">+++ b/kern/sched.c</span>
+@@ -87,7 +87,7 @@ sched_halt(void)
+ 		<span class="token string">"pushl $0\n"</span>
+ 		<span class="token string">"pushl $0\n"</span>
+ 		// Uncomment the following line after completing exercise 13
+<span class="token deleted">-		//"sti\n"</span>
+<span class="token inserted">+		"sti\n"</span>
+ 		<span class="token string">"1:\n"</span>
+ 		<span class="token string">"hlt\n"</span>
+ 		<span class="token string">"jmp 1b\n"</span>
+diff --git a/kern/trap.c b/kern/trap.c
+index 40d04c5..e14fee5 100644
+<span class="token deleted">--- a/kern/trap.c</span>
+<span class="token inserted">+++ b/kern/trap.c</span>
+@@ -215,6 +215,9 @@ trap_dispatch(struct Trapframe *tf)
+ 					  return;
+ 		case T_PGFLT: page_fault_handler(tf);
+ 					  return;
+<span class="token inserted">+		case IRQ_OFFSET + IRQ_TIMER: lapic_eoi();</span>
+<span class="token inserted">+									 sched_yield();</span>
+<span class="token inserted">+									 return;</span>
+ 		case T_SYSCALL: tf->tf_regs.reg_eax = syscall(
+ 									tf->tf_regs.reg_eax,
+ 									tf->tf_regs.reg_edx,
+diff --git a/kern/trapentry.S b/kern/trapentry.S
+index aa4ed86..5576132 100644
+<span class="token deleted">--- a/kern/trapentry.S</span>
+<span class="token inserted">+++ b/kern/trapentry.S</span>
+<span class="token coord">@@ -67,7 +67,13 @@</span>
+ 	TRAPHANDLER(trap_alignment_check, T_ALIGN)						# 17	alignment check
+ 	TRAPHANDLER_NOEC(trap_machine_check, T_MCHK)					# 18	machine check
+ 	TRAPHANDLER_NOEC(trap_SIMD_float_point_error, T_SIMDERR)		# 19	SIMD floating point error
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_timer, IRQ_OFFSET+IRQ_TIMER)				# 32	timer interrupt</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_keyboard, IRQ_OFFSET+IRQ_KBD)				# 33	keyboard interrupt</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_serial_port, IRQ_OFFSET+IRQ_SERIAL)		# 36	serial port interrupt</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_spurious, IRQ_OFFSET+IRQ_SPURIOUS)		# 39	spurious interrupt</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_ide, IRQ_OFFSET+IRQ_IDE)					# 46	ide interrupt</span>
+ 	TRAPHANDLER_NOEC(trap_system_call, T_SYSCALL)					# 48	system call
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_error, IRQ_OFFSET+IRQ_ERROR)				# 51	error interrupt</span>
+ 
+ .data
+ .globl idt_entries, idt_entries_end
+@@ -92,8 +98,38 @@ idt_entries:
+ 	.long trap_alignment_check					# 17	alignment check
+ 	.long trap_machine_check					# 18	machine check
+ 	.long trap_SIMD_float_point_error			# 19	SIMD floating point error
+<span class="token deleted">-	.fill 28, 4, 0								# 		28 null entries</span>
+<span class="token inserted">+	.long 0										# 20	null entry</span>
+<span class="token inserted">+	.long 0										# 21	null entry</span>
+<span class="token inserted">+	.long 0										# 22	null entry</span>
+<span class="token inserted">+	.long 0										# 23	null entry</span>
+<span class="token inserted">+	.long 0										# 24	null entry</span>
+<span class="token inserted">+	.long 0										# 25	null entry</span>
+<span class="token inserted">+	.long 0										# 26	null entry</span>
+<span class="token inserted">+	.long 0										# 27	null entry</span>
+<span class="token inserted">+	.long 0										# 28	null entry</span>
+<span class="token inserted">+	.long 0										# 29	null entry</span>
+<span class="token inserted">+	.long 0										# 30	null entry</span>
+<span class="token inserted">+	.long 0										# 31	null entry</span>
+<span class="token inserted">+	.long trap_timer							# 32	timer interrupt</span>
+<span class="token inserted">+	.long trap_keyboard							# 33	keyboard interrupt</span>
+<span class="token inserted">+	.long 0										# 34	null entry</span>
+<span class="token inserted">+	.long 0										# 35	null entry</span>
+<span class="token inserted">+	.long trap_serial_port						# 36	serial port interrupt</span>
+<span class="token inserted">+	.long 0										# 37	null entry</span>
+<span class="token inserted">+	.long 0										# 38	null entry</span>
+<span class="token inserted">+	.long trap_spurious							# 39	squrious interrupt</span>
+<span class="token inserted">+	.long 0										# 40	null entry</span>
+<span class="token inserted">+	.long 0										# 41	null entry</span>
+<span class="token inserted">+	.long 0										# 42	null entry</span>
+<span class="token inserted">+	.long 0										# 43	null entry</span>
+<span class="token inserted">+	.long 0										# 44	null entry</span>
+<span class="token inserted">+	.long 0										# 45	null entry</span>
+<span class="token inserted">+	.long trap_ide								# 46	ide interrupt</span>
+<span class="token inserted">+	.long 0										# 47	null entry</span>
+ 	.long trap_system_call						# 48	system call
+<span class="token inserted">+	.long 0										# 49	null entry</span>
+<span class="token inserted">+	.long 0										# 50</span>
+<span class="token inserted">+	.long trap_error							# 51	error interrupt</span>
+ idt_entries_end:
+ 
+ /*
+</pre><h3 class="mume-header" id="inter-process-communication-ipc">Inter-Process communication (IPC)</h3>
+
+<p>We will add a few more system calls for IPC. The “message” that user enviroments can send to each other using JOS’s IPC mechanism consists of two components: a single 32-bit value and optionally a single page mapping. Allowing environments to pass page mappings in messages provides an efficient way to transfer more data that won’t fit into a single 32-bit integer, and also allows environments to set up shared memory arrangements easily.</p>
+<p>When sending or receiving a message, the process is de-scheduled until the message is transferred successfully. When an environment is waiting to receive a message, any other environment can send it a message - not just a particular environment, and not just environments that have a parent/child arrangement with the receiving environment.</p>
+<p>When an environment calls <code>sys_ipc_recv</code> with a valid <code>dstva</code> parameter (below <code>UTOP</code>), the environment is stating that it is willing to receive a page mapping. If the sender sends a page, then that page should be mapped at <code>dstva</code> in the receiver’s address space. If the receiver already had a page mapped at <code>dstva</code>, then that previous page is unmapped. When an environment calls <code>sys_ipc_try_send</code> with a valid <code>srcva</code> (below <code>UTOP</code>), it means the sender wants to send the page currently mapped at <code>srcva</code> to the receiver, with permissions perm. After a successful IPC, the sender keeps its original mapping for the page at <code>srcva</code> in its address space, but the receiver also obtains a mapping for this same physical page at the dstva originally specified by the receiver, in the receiver’s address space. As a result this page becomes shared between the sender and receiver.</p>
+<h3 class="mume-header" id="exercise-15">Exercise 15</h3>
+
+<blockquote>
+<ol start="15">
+<li>Implement <code>sys_ipc_recv</code> and <code>sys_ipc_try_send</code> in <code>kern/syscall.c</code>. Read the comments on both before implementing them, since they have to work together. When you call <code>envid2env</code> in these routines, you should set the checkperm flag to 0, meaning that any environment is allowed to send IPC messages to any other environment, and the kernel does no special permission checking other than verifying that the target envid is valid.</li>
+</ol>
+<p>Then implement the <code>ipc_recv</code> and <code>ipc_send</code> functions in <code>lib/ipc.c</code>.</p>
+</blockquote>
+<p>Both sending and receiving library routines are synchronized, which means they don’t return until there is a result, either success or failure. Since kernel sets the process as <code>NOT_RUNNABLE</code> and won’t reset its state until there is a result, we can rely on kernel for synchronization. The sending system call will return immediately. So we need to loop in the library routine until there is a result. Furthermore, we give up CPU in each iteration to ease CPU.</p>
+<p>In <code>ipc_send</code> we assign a value above <code>UTOP</code> to state that we don’t want to send a page.</p>
+<p>The code for this exercise is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/syscall.c b/kern/syscall.c
+index d9aaab1..eb59692 100644
+<span class="token deleted">--- a/kern/syscall.c</span>
+<span class="token inserted">+++ b/kern/syscall.c</span>
+@@ -240,8 +240,8 @@ sys_page_map(envid_t srcenvid, void *srcva,
+ 	struct PageInfo *pp;
+ 	if ((uintptr_t)srcva >= UTOP || (uintptr_t)srcva % PGSIZE ||
+ 		(uintptr_t)dstva >= UTOP || (uintptr_t)dstva % PGSIZE ||
+<span class="token deleted">-		(pp = page_lookup(srcenv->env_pgdir, srcva, &amp;pte_ptr)) == NULL ||</span>
+ 		perm &amp; ~PTE_SYSCALL || ~perm &amp; (PTE_U | PTE_P) ||
+<span class="token inserted">+		(pp = page_lookup(srcenv->env_pgdir, srcva, &amp;pte_ptr)) == NULL ||</span>
+ 		((perm &amp; PTE_W) &amp;&amp; !((*pte_ptr) &amp; PTE_W)))
+ 		return -E_INVAL;
+ 
+@@ -319,7 +319,46 @@ static int
+ sys_ipc_try_send(envid_t envid, uint32_t value, void *srcva, unsigned perm)
+ {
+ 	// LAB 4: Your code here.
+<span class="token deleted">-	panic("sys_ipc_try_send not implemented");</span>
+<span class="token inserted">+	// panic("sys_ipc_try_send not implemented");</span>
+<span class="token inserted">+	struct Env *dst_env;</span>
+<span class="token inserted">+	if (envid2env(envid, &amp;dst_env, false) &lt; 0)</span>
+<span class="token inserted">+		return -E_BAD_ENV;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	if (dst_env->env_ipc_recving == false)</span>
+<span class="token inserted">+		return -E_IPC_NOT_RECV;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	if ((uintptr_t)srcva &lt; UTOP) {</span>
+<span class="token inserted">+		// many requirements are asserted in sys_page_map.</span>
+<span class="token inserted">+		// we can rely on sys_page_map to do it.</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		pte_t *pte_ptr;</span>
+<span class="token inserted">+		struct PageInfo *pp;</span>
+<span class="token inserted">+		// (uintptr_t)srcva &lt; UTOP is asserted in outer if.</span>
+<span class="token inserted">+		// (uintptr_t)dst_env->env_ipc_dstva % PGSIZE == 0 is asserted in sys_ipc_recv</span>
+<span class="token inserted">+		// no need to check them</span>
+<span class="token inserted">+		// (uintptr_t)dst_env->env_ipt_dstva &lt; UTOP must be asserted to check whether</span>
+<span class="token inserted">+		// the reciever really wants to recieve a page</span>
+<span class="token inserted">+		if ((uintptr_t)dst_env->env_ipc_dstva >= UTOP || (uintptr_t)srcva % PGSIZE ||</span>
+<span class="token inserted">+			perm &amp; ~PTE_SYSCALL || ~perm &amp; (PTE_U | PTE_P) ||</span>
+<span class="token inserted">+			(pp = page_lookup(curenv->env_pgdir, srcva, &amp;pte_ptr)) == NULL ||</span>
+<span class="token inserted">+			((perm &amp; PTE_W) &amp;&amp; !((*pte_ptr) &amp; PTE_W)))</span>
+<span class="token inserted">+			return -E_INVAL;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		if (page_insert(dst_env->env_pgdir, pp, dst_env->env_ipc_dstva, perm) &lt; 0)</span>
+<span class="token inserted">+			return -E_NO_MEM;</span>
+<span class="token inserted">+		</span>
+<span class="token inserted">+		dst_env->env_ipc_perm = perm;</span>
+<span class="token inserted">+	} else {</span>
+<span class="token inserted">+		dst_env->env_ipc_perm = 0;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	dst_env->env_ipc_recving = false;</span>
+<span class="token inserted">+	dst_env->env_ipc_from = curenv->env_id;</span>
+<span class="token inserted">+	dst_env->env_ipc_value = value;</span>
+<span class="token inserted">+	dst_env->env_status = ENV_RUNNABLE;</span>
+<span class="token inserted">+	dst_env->env_tf.tf_regs.reg_eax = 0;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    return 0;</span>
+ }
+ 
+ // Block until a value is ready.  Record that you want to receive
+@@ -337,7 +376,17 @@ static int
+ sys_ipc_recv(void *dstva)
+ {
+ 	// LAB 4: Your code here.
+<span class="token deleted">-	panic("sys_ipc_recv not implemented");</span>
+<span class="token inserted">+	// panic("sys_ipc_recv not implemented");</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((uintptr_t)dstva &lt; UTOP &amp;&amp; (uintptr_t)dstva % PGSIZE)</span>
+<span class="token inserted">+		return -E_INVAL;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	curenv->env_ipc_recving = true;</span>
+<span class="token inserted">+	curenv->env_ipc_dstva = dstva;</span>
+<span class="token inserted">+	curenv->env_status = ENV_NOT_RUNNABLE;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	sched_yield();</span>
+<span class="token inserted">+</span>
+ 	return 0;
+ }
+ 
+@@ -363,7 +412,8 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4,
+ 		case SYS_env_set_status:	return sys_env_set_status((envid_t)a1, (int)a2);
+ 		case SYS_env_set_pgfault_upcall: return sys_env_set_pgfault_upcall((envid_t)a1, (void *)a2);
+ 		case SYS_yield: sys_yield(); return 0;
+<span class="token deleted">-		</span>
+<span class="token inserted">+		case SYS_ipc_try_send: return sys_ipc_try_send((envid_t)a1, (uint32_t)a2, (void *)a3, (unsigned int)a4);</span>
+<span class="token inserted">+		case SYS_ipc_recv: return sys_ipc_recv((void *)a1);</span>
+ 		default:
+ 			return -E_INVAL;
+ 	}
+diff --git a/lib/ipc.c b/lib/ipc.c
+index 2e222b9..827e68c 100644
+<span class="token deleted">--- a/lib/ipc.c</span>
+<span class="token inserted">+++ b/lib/ipc.c</span>
+@@ -23,8 +23,22 @@ int32_t
+ ipc_recv(envid_t *from_env_store, void *pg, int *perm_store)
+ {
+ 	// LAB 4: Your code here.
+<span class="token deleted">-	panic("ipc_recv not implemented");</span>
+<span class="token deleted">-	return 0;</span>
+<span class="token inserted">+	// panic("ipc_recv not implemented");</span>
+<span class="token inserted">+	if (pg == NULL)</span>
+<span class="token inserted">+		pg = (void *)(UTOP + PGSIZE);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	int r = sys_ipc_recv(pg);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (from_env_store)</span>
+<span class="token inserted">+		*from_env_store = r &lt; 0 ? 0 : thisenv->env_ipc_from;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	if (perm_store)</span>
+<span class="token inserted">+		*perm_store = r &lt; 0 ? 0 : thisenv->env_ipc_perm;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (r &lt; 0)</span>
+<span class="token inserted">+		return r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	return thisenv->env_ipc_value;</span>
+ }
+ 
+ // Send <span class="token string">'val'</span> (and <span class="token string">'pg'</span> with <span class="token string">'perm'</span>, if <span class="token string">'pg'</span> is nonnull) to <span class="token string">'toenv'</span>.
+@@ -39,7 +53,21 @@ void
+ ipc_send(envid_t to_env, uint32_t val, void *pg, int perm)
+ {
+ 	// LAB 4: Your code here.
+<span class="token deleted">-	panic("ipc_send not implemented");</span>
+<span class="token inserted">+	// panic("ipc_send not implemented");</span>
+<span class="token inserted">+	if (pg == NULL)</span>
+<span class="token inserted">+		pg = (void *)(UTOP + PGSIZE);</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	while (true) {</span>
+<span class="token inserted">+		int r = sys_ipc_try_send(to_env, val, pg, perm);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		if (r == 0)</span>
+<span class="token inserted">+			return;</span>
+<span class="token inserted">+		</span>
+<span class="token inserted">+		if (r &lt; 0 &amp;&amp; r != -E_IPC_NOT_RECV)</span>
+<span class="token inserted">+			panic("Failed to try_send: %e\n", r);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		sys_yield();</span>
+<span class="token inserted">+	}</span>
+ }
+ 
+ // Find the first environment of the given type.  We'll use this to
+</pre><h2 class="mume-header" id="challenge">Challenge</h2>
+
+<blockquote>
+<p>Implement a shared-memory <code>fork()</code> called <code>sfork()</code>. This version should have the parent and child share all their memory pages (so writes in one environment appear in the other) except for pages in the stack area, which should be treated in the usual copy-on-write manner.</p>
+</blockquote>
+<p>To finish <code>sfork()</code>, we also need to implement a share-memory <code>duppage()</code> called <code>sduppage()</code>. <code>sduppage()</code> takes <code>envid</code>, <code>pn</code> and an extra arguments <code>cow_enabled</code> that tells <code>sduppage()</code> whether we want to do copy-on-write. The content in <code>sfork()</code> is almost the same as <code>fork()</code>, except that we invoke <code>sduppage()</code> instead of <code>duppage()</code>. To distinguish between stack and heap, we copy page table from <code>USTACKTOP</code> to <code>UTEXT</code>. Since user stack always grows from stack top continuously, all pages belongs to user stack until we meet the first page that’s not mapped.</p>
+<p>Apart from user stack, <code>thisenv</code> is another part of memory that should only belongs to one process. Because <code>thisenv</code> is declared as a global variable, which resides in heap, it will be considered a shared variable. One method to avoid this is to allocate a fixed page in every user space that will not be shared among process and store <code>thisenv</code> at this page. Because the address of this fixed page is determined when we design our OS, user process won’t use it for other purposes. And the library routine is also able to treat this page the same as user stack. This need to re-design the memory layout so I didn’t finish this.</p>
+<p>To test my <code>sfork()</code> I wrote a test program called <code>sfork.c</code>, in which the parent process changes a global variable and the child process get the new value by accessing the same global variable.</p>
+<pre data-role="codeBlock" data-info="c" class="language-c"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;inc/lib.h></span></span>
+
+<span class="token keyword">int</span> share <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+
+<span class="token keyword">void</span> <span class="token function">umain</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">int</span> ch <span class="token operator">=</span> <span class="token function">sfork</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>ch <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">cprintf</span> <span class="token punctuation">(</span><span class="token string">"I’m parent with share num = %d\n"</span><span class="token punctuation">,</span> share<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        share <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token function">sys_yield</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">cprintf</span> <span class="token punctuation">(</span><span class="token string">"I’m child with share num = %d\n"</span><span class="token punctuation">,</span> share<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</pre><p>The child process gives up the CPU the first time it is scheduled so that we can guarantee the parent process changes the global variable before the child process access it.</p>
+<p>The output of this test program is show below.</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash">6828 decimal is 15254 octal<span class="token operator">!</span>
+Physical memory: 131072K available, base <span class="token operator">=</span> 640K, extended <span class="token operator">=</span> 130432K
+check_page_free_list<span class="token punctuation">(</span><span class="token punctuation">)</span> succeeded<span class="token operator">!</span>
+check_page_alloc<span class="token punctuation">(</span><span class="token punctuation">)</span> succeeded<span class="token operator">!</span>
+check_page<span class="token punctuation">(</span><span class="token punctuation">)</span> succeeded<span class="token operator">!</span>
+check_kern_pgdir<span class="token punctuation">(</span><span class="token punctuation">)</span> succeeded<span class="token operator">!</span>
+check_page_free_list<span class="token punctuation">(</span><span class="token punctuation">)</span> succeeded<span class="token operator">!</span>
+check_page_installed_pgdir<span class="token punctuation">(</span><span class="token punctuation">)</span> succeeded<span class="token operator">!</span>
+SMP: CPU 0 found 1 CPU<span class="token punctuation">(</span>s<span class="token punctuation">)</span>
+enabled interrupts: 1 2
+<span class="token punctuation">[</span>00000000<span class="token punctuation">]</span> new <span class="token function">env</span> 00001000
+<span class="token punctuation">[</span>00001000<span class="token punctuation">]</span> new <span class="token function">env</span> 00001001
+I’m parent with share num <span class="token operator">=</span> 1
+<span class="token punctuation">[</span>00001000<span class="token punctuation">]</span> exiting gracefully
+<span class="token punctuation">[</span>00001000<span class="token punctuation">]</span> <span class="token function">free</span> <span class="token function">env</span> 00001000
+I’m child with share num <span class="token operator">=</span> 2
+<span class="token punctuation">[</span>00001001<span class="token punctuation">]</span> exiting gracefully
+<span class="token punctuation">[</span>00001001<span class="token punctuation">]</span> <span class="token function">free</span> <span class="token function">env</span> 00001001
+No runnable environments <span class="token keyword">in</span> the system<span class="token operator">!</span>
+Welcome to the JOS kernel monitor<span class="token operator">!</span>
+Type <span class="token string">'help'</span> <span class="token keyword">for</span> a list of commands.
+K<span class="token operator">></span> QEMU: Terminated
+</pre><p>The code for this challenge is show below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/Makefrag b/kern/Makefrag
+index 00c7efd..466faa3 100644
+<span class="token deleted">--- a/kern/Makefrag</span>
+<span class="token inserted">+++ b/kern/Makefrag</span>
+@@ -75,7 +75,8 @@ KERN_BINFILES +=	user/idle \
+ 			user/fairness \
+ 			user/pingpong \
+ 			user/pingpongs \
+<span class="token deleted">-			user/primes</span>
+<span class="token inserted">+			user/primes \</span>
+<span class="token inserted">+			user/sfork</span>
+ KERN_OBJFILES := $(patsubst %.c, $(OBJDIR)/%.o, $(KERN_SRCFILES))
+ KERN_OBJFILES := $(patsubst %.S, $(OBJDIR)/%.o, $(KERN_OBJFILES))
+ KERN_OBJFILES := $(patsubst $(OBJDIR)/lib/%, $(OBJDIR)/kern/%, $(KERN_OBJFILES))
+diff --git a/lib/fork.c b/lib/fork.c
+index 2e54f5f..bd50755 100644
+<span class="token deleted">--- a/lib/fork.c</span>
+<span class="token inserted">+++ b/lib/fork.c</span>
+@@ -87,6 +87,38 @@ duppage(envid_t envid, unsigned pn)
+ 	return 0;
+ }
+ 
+<span class="token inserted">+//</span>
+<span class="token inserted">+// duppage for share-fork</span>
+<span class="token inserted">+//</span>
+<span class="token inserted">+// Returns: 0 on success, &lt; 0 on error.</span>
+<span class="token inserted">+// It is also OK to panic on error.</span>
+<span class="token inserted">+//</span>
+<span class="token inserted">+static int </span>
+<span class="token inserted">+sduppage(envid_t envid, unsigned pn, int cow_enabled)</span>
+<span class="token inserted">+{</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	int r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	void *addr = (void *)(pn * PGSIZE);</span>
+<span class="token inserted">+	int perm = PGOFF(uvpt[pn]) &amp; PTE_SYSCALL;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (cow_enabled &amp;&amp; (perm &amp; PTE_W)) {</span>
+<span class="token inserted">+		perm |= PTE_COW;</span>
+<span class="token inserted">+		perm &amp;= ~PTE_W;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		if ((r = sys_page_map(0, addr, envid, addr, perm)) &lt; 0)</span>
+<span class="token inserted">+			panic("sduppage: Failed to duppage on child enviroment: %e\n", r);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		if ((r = sys_page_map(0, addr, 0, addr, perm)) &lt; 0)</span>
+<span class="token inserted">+			panic("sduppage: Failed to duppage on self enviroment: %e\n", r);</span>
+<span class="token inserted">+	} else {</span>
+<span class="token inserted">+		if ((r = sys_page_map(0, addr, envid, addr, perm)) &lt; 0)</span>
+<span class="token inserted">+			panic("sduppage: Failed to duppage on child enviroment: %e\n", r);</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	return 0;</span>
+<span class="token inserted">+}</span>
+<span class="token inserted">+</span>
+ //
+ // User-level fork with copy-on-write.
+ // Set up our page fault handler appropriately.
+@@ -151,6 +183,39 @@ COPY_END:
+ int
+ sfork(void)
+ {
+<span class="token deleted">-	panic("sfork not implemented");</span>
+<span class="token deleted">-	return -E_INVAL;</span>
+<span class="token deleted">-}</span>
+<span class="token inserted">+	//panic("sfork not implemented");</span>
+<span class="token inserted">+	int r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	//LAB 4: Your code here.</span>
+<span class="token inserted">+	set_pgfault_handler(pgfault);</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	envid_t envid = sys_exofork();</span>
+<span class="token inserted">+	if (envid &lt; 0)</span>
+<span class="token inserted">+		panic("sys_exofork: %e", envid);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (envid == 0) {</span>
+<span class="token inserted">+		thisenv = &amp;envs[ENVX(sys_getenvid())];</span>
+<span class="token inserted">+		return 0;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	bool stackarea = true;</span>
+<span class="token inserted">+	for (uint32_t addr = USTACKTOP - PGSIZE; addr >= UTEXT; addr -= PGSIZE) {</span>
+<span class="token inserted">+		if ((uvpd[PDX(addr)] &amp; PTE_P) &amp;&amp; (uvpt[PGNUM(addr)] &amp; PTE_P))</span>
+<span class="token inserted">+			sduppage(envid, PGNUM(addr), stackarea);</span>
+<span class="token inserted">+		else</span>
+<span class="token inserted">+			stackarea = false;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = sys_page_alloc(envid, (void *)(UXSTACKTOP - PGSIZE), PTE_U | PTE_W | PTE_P)) &lt; 0)</span>
+<span class="token inserted">+		panic("sfork: Failed to allocate page for child's exception stack: %e", r);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	extern void _pgfault_upcall(void);</span>
+<span class="token inserted">+	if ((r = sys_env_set_pgfault_upcall(envid, _pgfault_upcall)) &lt; 0)</span>
+<span class="token inserted">+		panic("sfork: Failed to set page fault hanlder for child: %e\n", r);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = sys_env_set_status(envid, ENV_RUNNABLE)) &lt; 0)</span>
+<span class="token inserted">+		panic("sfork: Failed to set child's status as ENV_RUNNABLE", r);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	return envid;</span>
+<span class="token inserted">+	//return -E_INVAL;</span>
+<span class="token inserted">+}</span>
+\ No newline at end of file
+diff --git a/user/sfork.c b/user/sfork.c
+new file mode 100644
+index 0000000..eaa4242
+<span class="token deleted">--- /dev/null</span>
+<span class="token inserted">+++ b/user/sfork.c</span>
+<span class="token coord">@@ -0,0 +1,16 @@</span>
+<span class="token inserted">+#include &lt;inc/lib.h></span>
+<span class="token inserted">+</span>
+<span class="token inserted">+int share = 1;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+void umain(int argc, char **argv)</span>
+<span class="token inserted">+{</span>
+<span class="token inserted">+    int ch = sfork ();</span>
+<span class="token inserted">+    </span>
+<span class="token inserted">+    if (ch != 0) {</span>
+<span class="token inserted">+        cprintf ("I'm parent with share num = %d\n", share);</span>
+<span class="token inserted">+        share = 2;</span>
+<span class="token inserted">+    } else {</span>
+<span class="token inserted">+        sys_yield();</span>
+<span class="token inserted">+        cprintf ("I'm child with share num = %d\n", share);</span>
+<span class="token inserted">+    }</span>
+<span class="token inserted">+}</span>
+\ No newline at end of file
+</pre><h2 class="mume-header" id="grade">Grade</h2>
+
+<p>Finally, we got our grade.</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash">dumbfork: OK <span class="token punctuation">(</span>4.4s<span class="token punctuation">)</span>
+Part A score: 5/5
+
+faultread: OK <span class="token punctuation">(</span>0.8s<span class="token punctuation">)</span>
+faultwrite: OK <span class="token punctuation">(</span>1.3s<span class="token punctuation">)</span>
+faultdie: OK <span class="token punctuation">(</span>1.9s<span class="token punctuation">)</span>
+faultregs: OK <span class="token punctuation">(</span>2.0s<span class="token punctuation">)</span>
+faultalloc: OK <span class="token punctuation">(</span>1.0s<span class="token punctuation">)</span>
+faultallocbad: OK <span class="token punctuation">(</span>2.0s<span class="token punctuation">)</span>
+faultnostack: OK <span class="token punctuation">(</span>1.9s<span class="token punctuation">)</span>
+faultbadhandler: OK <span class="token punctuation">(</span>2.0s<span class="token punctuation">)</span>
+faultevilhandler: OK <span class="token punctuation">(</span>1.8s<span class="token punctuation">)</span>
+forktree: OK <span class="token punctuation">(</span>2.2s<span class="token punctuation">)</span>
+Part B score: 50/50
+
+spin: OK <span class="token punctuation">(</span>2.2s<span class="token punctuation">)</span>
+stresssched: OK <span class="token punctuation">(</span>1.8s<span class="token punctuation">)</span>
+sendpage: OK <span class="token punctuation">(</span>2.0s<span class="token punctuation">)</span>
+pingpong: OK <span class="token punctuation">(</span>1.7s<span class="token punctuation">)</span>
+primes: OK <span class="token punctuation">(</span>2.7s<span class="token punctuation">)</span>
+Part C score: 25/25
+
+Score: 80/80
+</pre><div class="code-chunk" data-id="code-chunk-id-3" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><footer style="width:100%;text-align:center;font-family:Times">End of Lab 4 Report<br>Email: <a mailto="caoshuyang1996@pku.edu.cn" href="">caoshuyang@pku.edu.cn</a> GitHub: <a href="https://github.com/CaoSY/JOS-Lab" title="JOS Lab">JOS-Lab</a></footer>
+</div></div>
+      </div>
+      <div class="md-sidebar-toc"><ul>
+<li><a href="#multiprocessor-support-and-cooperative-multitasking">Multiprocessor Support and Cooperative Multitasking</a>
+<ul>
+<li><a href="#multiprocessor-support">Multiprocessor Support</a></li>
+<li><a href="#application-processor-bootstrap">Application Processor Bootstrap</a></li>
+<li><a href="#exercise-1-2">Exercise 1 &amp; 2</a></li>
+<li><a href="#answer-to-q1">Answer to Q1</a></li>
+<li><a href="#per-cpu-state-and-initialization">Per-CPU State and Initialization</a></li>
+<li><a href="#exercise-3-4">Exercise 3 &amp; 4</a></li>
+<li><a href="#locking">Locking</a></li>
+<li><a href="#exercise-5">Exercise 5</a></li>
+<li><a href="#answer-to-q2">Answer to Q2</a></li>
+<li><a href="#round-robin-scheduling-exercise-6">Round-Robin Scheduling &amp; Exercise 6</a></li>
+<li><a href="#answer-to-q3-q4">Answer to Q3 &amp; Q4</a></li>
+<li><a href="#system-calls-for-environment-creation">System Calls for Environment Creation</a></li>
+<li><a href="#exercise-7">Exercise 7</a></li>
+</ul>
+</li>
+<li><a href="#copy-on-write-fork">Copy-on-Write Fork</a>
+<ul>
+<li><a href="#user-space-page-handler">User Space Page Handler</a></li>
+<li><a href="#multiple-page-fault-return-from-user-space-kernel-handler">Multiple Page Fault &amp; Return From User Space Kernel Handler</a></li>
+<li><a href="#exercise-8-9-10-11">Exercise 8 &amp; 9 &amp; 10 &amp; 11</a></li>
+<li><a href="#implementing-copy-on-write-fork">Implementing Copy-on-Write Fork</a></li>
+<li><a href="#exercise-12">Exercise 12</a></li>
+</ul>
+</li>
+<li><a href="#preemptive-multitasking-and-inter-process-communication-ipc">Preemptive Multitasking and Inter-Process communication (IPC)</a>
+<ul>
+<li><a href="#clock-interrupts-and-preemption">Clock Interrupts and Preemption</a></li>
+<li><a href="#exercise-13-14">Exercise 13 &amp; 14</a></li>
+<li><a href="#inter-process-communication-ipc">Inter-Process communication (IPC)</a></li>
+<li><a href="#exercise-15">Exercise 15</a></li>
+</ul>
+</li>
+<li><a href="#challenge">Challenge</a></li>
+<li><a href="#grade">Grade</a></li>
+</ul>
+</div>
+      <a id="sidebar-toc-btn">≡</a>
+    </body>
+    
+    
+    
+    
+    
+    
+    
+<script>
+
+var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
+sidebarTOCBtn.addEventListener('click', function(event) {
+  event.stopPropagation()
+  if (document.body.hasAttribute('html-show-sidebar-toc')) {
+    document.body.removeAttribute('html-show-sidebar-toc')
+  } else {
+    document.body.setAttribute('html-show-sidebar-toc', true)
+  }
+})
+</script>
+      
+  </html>
