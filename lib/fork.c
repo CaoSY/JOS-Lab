@@ -88,6 +88,38 @@ duppage(envid_t envid, unsigned pn)
 }
 
 //
+// duppage for share-fork
+//
+// Returns: 0 on success, < 0 on error.
+// It is also OK to panic on error.
+//
+static int 
+sduppage(envid_t envid, unsigned pn, int cow_enabled)
+{
+
+	int r;
+
+	void *addr = (void *)(pn * PGSIZE);
+	int perm = PGOFF(uvpt[pn]) & PTE_SYSCALL;
+
+	if (cow_enabled && (perm & PTE_W)) {
+		perm |= PTE_COW;
+		perm &= ~PTE_W;
+
+		if ((r = sys_page_map(0, addr, envid, addr, perm)) < 0)
+			panic("sduppage: Failed to duppage on child enviroment: %e\n", r);
+
+		if ((r = sys_page_map(0, addr, 0, addr, perm)) < 0)
+			panic("sduppage: Failed to duppage on self enviroment: %e\n", r);
+	} else {
+		if ((r = sys_page_map(0, addr, envid, addr, perm)) < 0)
+			panic("sduppage: Failed to duppage on child enviroment: %e\n", r);
+	}
+
+	return 0;
+}
+
+//
 // User-level fork with copy-on-write.
 // Set up our page fault handler appropriately.
 // Create a child.
@@ -151,6 +183,39 @@ COPY_END:
 int
 sfork(void)
 {
-	panic("sfork not implemented");
-	return -E_INVAL;
+	//panic("sfork not implemented");
+	int r;
+
+	//LAB 4: Your code here.
+	set_pgfault_handler(pgfault);
+	
+	envid_t envid = sys_exofork();
+	if (envid < 0)
+		panic("sys_exofork: %e", envid);
+
+	if (envid == 0) {
+		thisenv = &envs[ENVX(sys_getenvid())];
+		return 0;
+	}
+
+	bool stackarea = true;
+	for (uint32_t addr = USTACKTOP - PGSIZE; addr >= UTEXT; addr -= PGSIZE) {
+		if ((uvpd[PDX(addr)] & PTE_P) && (uvpt[PGNUM(addr)] & PTE_P))
+			sduppage(envid, PGNUM(addr), stackarea);
+		else
+			stackarea = false;
+	}
+
+	if ((r = sys_page_alloc(envid, (void *)(UXSTACKTOP - PGSIZE), PTE_U | PTE_W | PTE_P)) < 0)
+		panic("sfork: Failed to allocate page for child's exception stack: %e", r);
+
+	extern void _pgfault_upcall(void);
+	if ((r = sys_env_set_pgfault_upcall(envid, _pgfault_upcall)) < 0)
+		panic("sfork: Failed to set page fault hanlder for child: %e\n", r);
+
+	if ((r = sys_env_set_status(envid, ENV_RUNNABLE)) < 0)
+		panic("sfork: Failed to set child's status as ENV_RUNNABLE", r);
+
+	return envid;
+	//return -E_INVAL;
 }
