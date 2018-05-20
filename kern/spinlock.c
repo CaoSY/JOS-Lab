@@ -16,6 +16,33 @@ struct spinlock kernel_lock = {
 #endif
 };
 
+// The page allocator lock
+struct spinlock page_allocator_lock = {
+#ifdef DEBUG_SPINLOCK
+	.name = "page_allocator_lock"
+#endif
+};
+
+// The console lock
+struct spinlock console_lock = {
+#ifdef DEBUG_SPINLOCK
+	.name = "console_lock"
+#endif
+};
+
+// The scheduler lock
+struct spinlock scheduler_lock = {
+#ifdef DEBUG_SPINLOCK
+	.name = "scheduler_lock"
+#endif
+};
+
+struct spinlock IPC_lock = {
+#ifdef DEBUG_SPINLOCK
+	.name = "IPC_lock"
+#endif
+};
+
 #ifdef DEBUG_SPINLOCK
 // Record the current call stack in pcs[] by following the %ebp chain.
 static void

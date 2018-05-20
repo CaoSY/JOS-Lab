@@ -26,6 +26,10 @@ void spin_unlock(struct spinlock *lk);
 #define spin_initlock(lock)   __spin_initlock(lock, #lock)
 
 extern struct spinlock kernel_lock;
+extern struct spinlock page_allocator_lock;
+extern struct spinlock console_lock;
+extern struct spinlock scheduler_lock;
+extern struct spinlock IPC_lock;
 
 static inline void
 lock_kernel(void)
@@ -42,6 +46,66 @@ unlock_kernel(void)
 	// one CPU at a time and has a long time-slice.  Without the
 	// pause, this CPU is likely to reacquire the lock before
 	// another CPU has even been given a chance to acquire it.
+	asm volatile("pause");
+}
+
+static inline void
+lock_page_allocator(void)
+{
+	spin_lock(&page_allocator_lock);
+}
+
+static inline void
+unlock_page_allocator(void)
+{
+	spin_unlock(&page_allocator_lock);
+
+	// refer to unlock_kernel to figure out why we need this instruction.
+	asm volatile("pause");
+}
+
+static inline void
+lock_console(void)
+{
+	spin_lock(&console_lock);
+}
+
+static inline void
+unlock_console(void)
+{
+	spin_unlock(&console_lock);
+
+	// refer to unlock_kernel to figure out why we need this instruction.
+	asm volatile("pause");
+}
+
+static inline void
+lock_scheduler(void)
+{
+	spin_lock(&scheduler_lock);
+}
+
+static inline void
+unlock_scheduler(void)
+{
+	spin_unlock(&scheduler_lock);
+
+	// refer to unlock_kernel to figure out why we need this instruction.
+	asm volatile("pause");
+}
+
+static inline void
+lock_IPC(void)
+{
+	spin_lock(&IPC_lock);
+}
+
+static inline void
+unlock_IPC(void)
+{
+	spin_unlock(&IPC_lock);
+
+	// refer to unlock_kernel to figure out why we need this instruction.
 	asm volatile("pause");
 }
 
