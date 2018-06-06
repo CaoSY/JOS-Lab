@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>LAB3-Report</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      <style> 
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+ 
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview   ">
+      <div class="code-chunk" data-id="global" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><div class="code-chunk" data-id="code-chunk-id-1" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><p><span style="display:inline-block;width:50%;text-align:left">Created: April 18 2018 11:07:00</span><span style="display:inline-block;width:50%;text-align:right">Last Updated: Apr 20 2018 18:07:35</span></p>
+<h1 style="font-style:italic; font-family:Times; font-size:4em"><center>Lab 3 Report</center></h1>
+<div style="font-style:italic; font-family:Times; font-size:1.2em"><center>Shuyang Cao</center><center>Apr 20 2018</center></div>
+</div></div><div class="code-chunk" data-id="code-chunk-id-2" data-cmd="toc"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><ul>
+<li><a href="#user-enviroments-and-exception-handling">User Enviroments and Exception Handling</a>
+<ul>
+<li><a href="#exercise-1">Exercise 1</a></li>
+</ul>
+</li>
+<li><a href="#creating-and-running-environments">Creating and Running Environments</a>
+<ul>
+<li><a href="#exercise-2">Exercise 2</a></li>
+<li><a href="#test-allocating-and-running-enviroments">Test Allocating and Running Enviroments</a></li>
+</ul>
+</li>
+<li><a href="#handling-interrupts-and-exceptions">Handling Interrupts and Exceptions</a>
+<ul>
+<li><a href="#basics-of-protected-control">Basics of Protected Control</a></li>
+<li><a href="#overall-interruptexception-handling-process">Overall Interrupt/Exception Handling Process</a></li>
+<li><a href="#interrupted-in-user-environment">Interrupted in User Environment</a></li>
+<li><a href="#nested-exceptions-and-interrupts">Nested Exceptions and Interrupts</a></li>
+<li><a href="#exercise-4-challenge-1">Exercise 4 &amp; Challenge 1</a></li>
+<li><a href="#answer-to-q1-q2">Answer to Q1 &amp; Q2</a></li>
+</ul>
+</li>
+<li><a href="#page-faults-breakpoints-exceptions-and-system-calls">Page Faults, Breakpoints Exceptions, and System Calls</a>
+<ul>
+<li><a href="#exercise-5-6-7">Exercise 5 &amp; 6 &amp; 7</a></li>
+<li><a href="#answer-to-q3-q4">Answer to Q3 &amp; Q4</a></li>
+<li><a href="#exercise-8">Exercise 8</a></li>
+<li><a href="#page-faults-and-memory-protection">Page faults and memory protection</a></li>
+<li><a href="#exercise-9-10">Exercise 9 &amp; 10</a></li>
+</ul>
+</li>
+<li><a href="#challenges">Challenges</a>
+<ul>
+<li><a href="#challenge-1">Challenge 1</a></li>
+<li><a href="#challenge-2">Challenge 2</a></li>
+<li><a href="#challenge-3">Challenge 3</a></li>
+</ul>
+</li>
+<li><a href="#grade">Grade</a></li>
+</ul>
+<h2 class="mume-header" id="user-enviroments-and-exception-handling">User Enviroments and Exception Handling</h2>
+
+<p>In JOS, the kernel uses <code>struct Env</code> to keep track of each user enviroment. More specifically, a <code>struct Env</code> contains an enviroment of a process. JOS can support <code>NENV</code> enviroments at most. All enviroments are stored at <code>envs</code>, an array of <code>struct Env</code>. The JOS kernel keeps all of the inactive <code>Env</code> structures on the <code>env_free_list</code>. Codes about enviroments are displayed and explained below.</p>
+<pre data-role="codeBlock" data-info="c" class="language-c">
+<span class="token comment">/*
+ * struct Env is defined in inc/env.h
+ */</span>
+
+<span class="token keyword">struct</span> Env <span class="token punctuation">{</span>
+    <span class="token keyword">struct</span> Trapframe env_tf<span class="token punctuation">;</span>    <span class="token comment">// Saved registers</span>
+    <span class="token keyword">struct</span> Env <span class="token operator">*</span>env_link<span class="token punctuation">;</span>       <span class="token comment">// Next free Env</span>
+    envid_t env_id<span class="token punctuation">;</span>             <span class="token comment">// Unique environment identifier</span>
+    envid_t env_parent_id<span class="token punctuation">;</span>      <span class="token comment">// env_id of this env's parent</span>
+    <span class="token keyword">enum</span> EnvType env_type<span class="token punctuation">;</span>      <span class="token comment">// Indicates special system environments</span>
+    <span class="token keyword">unsigned</span> env_status<span class="token punctuation">;</span>        <span class="token comment">// Status of the environment</span>
+    uint32_t env_runs<span class="token punctuation">;</span>          <span class="token comment">// Number of times environment has run</span>
+
+    <span class="token comment">// Address space</span>
+    pde_t <span class="token operator">*</span>env_pgdir<span class="token punctuation">;</span>           <span class="token comment">// Kernel virtual address of page dir</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</pre><h3 class="mume-header" id="exercise-1">Exercise 1</h3>
+
+<blockquote>
+<p>Q : Modify mem_init() in kern/pmap.c to allocate and map the envs array. This array consists of exactly NENV instances of the Env structure allocated much like how you allocated the pages array. Also like the pages array, the memory backing envs should also be mapped user read-only at UENVS (defined in inc/memlayout.h) so user processes can read from this array.<br>
+You should run your code and make sure check_kern_pgdir() succeeds.</p>
+</blockquote>
+<p>There are three things we need to do:</p>
+<ol>
+<li>Allocate pages for <code>envs</code> array.</li>
+<li>Zero allocated pages.</li>
+<li>Insert newly allocated pages to kernel page table.</li>
+</ol>
+<p>Codes for the three things are shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/pmap.c b/kern/pmap.c
+index 082a495..2a37451 100644
+<span class="token deleted">--- a/kern/pmap.c</span>
+<span class="token inserted">+++ b/kern/pmap.c</span>
+@@ -164,6 +164,8 @@ mem_init(void)
+ 	//////////////////////////////////////////////////////////////////////
+ 	// Make <span class="token string">'envs'</span> point to an array of size <span class="token string">'NENV'</span> of <span class="token string">'struct Env'</span>.
+ 	// LAB 3: Your code here.
+<span class="token inserted">+	envs = (struct Env *) boot_alloc(sizeof(struct Env) * NENV);</span>
+<span class="token inserted">+	memset(envs, 0, sizeof(struct Env) * NENV);</span>
+ 
+ 	//////////////////////////////////////////////////////////////////////
+ 	// Now that we've allocated the initial kernel data structures, we set
+@@ -196,6 +198,7 @@ mem_init(void)
+ 	//    - the new image at UENVS  -- kernel R, user R
+ 	//    - envs itself -- kernel RW, user NONE
+ 	// LAB 3: Your code here.
+<span class="token inserted">+	boot_map_region(kern_pgdir, UENVS, PTSIZE, PADDR((void *)envs), PTE_U);</span>
+ 
+ 	//////////////////////////////////////////////////////////////////////
+ 	// Use the physical memory that <span class="token string">'bootstack'</span> refers to as the kernel
+
+</pre><h2 class="mume-header" id="creating-and-running-environments">Creating and Running Environments</h2>
+
+<p>To test our implementation for creating and running enviroments, JOS kernel needs to load a user program and run it. Since we do not yet have a filesystem, JOS kernel loads a static binary image that is embedded within the kernel itself. During compilation, a user program is first compiled to an ELF file, then the ELF file is inserted into JOS kernel wihtout modification when JOS kernel is linked.</p>
+<p>When JOS kernel want to load a program, it will parse the content in memory starting from a pointer assigned by linker. Then JOS kernel copy some of the content to a user space memory when necessary. After all of these have been done, a user program resides at the proper place in memory and waits for execution.</p>
+<h3 class="mume-header" id="exercise-2">Exercise 2</h3>
+
+<blockquote>
+<p>Q :  In the file env.c, finish coding the following functions:<br>
+<code>env_init()</code></p>
+<blockquote>
+<p>Initialize all of the Env structures in the envs array and add them to the env_free_list. Also calls env_init_percpu, which configures the segmentation hardware with separate segments for privilege level 0 (kernel) and privilege level 3 (user).</p>
+</blockquote>
+<p><code>env_setup_vm()</code></p>
+<blockquote>
+<p>Allocate a page directory for a new environment and initialize the kernel portion of the new environment’s address space.</p>
+</blockquote>
+<p><code>region_alloc()</code></p>
+<blockquote>
+<p>Allocates and maps physical memory for an environment</p>
+</blockquote>
+<p><code>load_icode()</code></p>
+<blockquote>
+<p>You will need to parse an ELF binary image, much like the boot loader already does, and load its contents into the user address space of a new environment.</p>
+</blockquote>
+<p><code>env_create()</code></p>
+<blockquote>
+<p>Allocate an environment with env_alloc and call load_icode to load an ELF binary into it.</p>
+</blockquote>
+<p><code>env_run()</code></p>
+<blockquote>
+<p>Start a given environment running in user mode.</p>
+</blockquote>
+</blockquote>
+<p>What we need to do in <code>env_init()</code> is similar to what we do in <code>page_init()</code>. We go through an array and establish a free list. It’s required that the environments are in the free list in the same order they are in the <code>envs</code> array. So we need to go through the <code>envs</code> array backwards.</p>
+<p>After an enviroment is allocated, we need to initialized its page table. Since JOS don’t switch to a kernel page when execution is trapped into kernel, the page table of an enviroment needs to contain the content of kernel page table. So we need to copy kernel page table to a user page table. Furthermore, kernel accesses memory using only the last 256MB of 4GB memory space. We only need to copy content indexed from <code>UTOP</code>. In addition, JOS use a 2-level page table. So we only need to copy the page directory.</p>
+<p><code>region_alloc()</code> is a wrapper for a bunch of page allocation and inserting in a user page table. It need to align addresses passed to it by page.</p>
+<p><code>load_icode()</code> is the function that load a user program. In lab 3, it loads the user program in a strange way that we’ve explained above.</p>
+<p>The task of <code>env_create()</code> is very simple. It allocates a new enviroment, load the program. It should panic if the allocation failed.</p>
+<p>The task of <code>env_run()</code> is even simpler. It first substitue the enviroment passed to it it <code>curenv</code>. Then it replace <code>kern_pgdir</code> with enviroment page directory. Last it pops out register value stored in <code>struct Env</code> and jump to excuting the user program using <code>iret</code>. Of cousre, it should check the sanity of the arguments at the very beginning.</p>
+<p>These functions cooperate in the way shown below.</p>
+<img src="data:image/png;charset=utf-8;base64,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"><p>Codes for exercise 2 are shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/env.c b/kern/env.c
+index db2fda9..3d5f35a 100644
+<span class="token deleted">--- a/kern/env.c</span>
+<span class="token inserted">+++ b/kern/env.c</span>
+@@ -116,6 +116,23 @@ env_init(void)
+ {
+ 	// Set up envs array
+ 	// LAB 3: Your code here.
+<span class="token inserted">+	// In current JOS configuration, we actually don't need to</span>
+<span class="token inserted">+	// set env_id = 0, env_status = ENV_FREE (0). Because we</span>
+<span class="token inserted">+	// zeroed envs array when we allocated it. However, to reserve</span>
+<span class="token inserted">+	// the freedome to change initialized values of env_id and</span>
+<span class="token inserted">+	// ENV_FREE as well as to add new tests in mem_init() that</span>
+<span class="token inserted">+	// would set nonzero values to envs array, we'd better to</span>
+<span class="token inserted">+	// initialize env_id and env_status again here. By the way,</span>
+<span class="token inserted">+	// this function will be invoked only once when booting</span>
+<span class="token inserted">+	// computers and will never be invoked since then. So</span>
+<span class="token inserted">+	// redundant code won't affect the runtime performance of JOS.</span>
+<span class="token inserted">+	env_free_list = NULL;</span>
+<span class="token inserted">+	for (int i = NENV - 1; i >= 0; --i) {</span>
+<span class="token inserted">+		envs[i].env_link = env_free_list;</span>
+<span class="token inserted">+		envs[i].env_id = 0;</span>
+<span class="token inserted">+		envs[i].env_status = ENV_FREE;</span>
+<span class="token inserted">+		env_free_list = &amp;envs[i];</span>
+<span class="token inserted">+	}</span>
+ 
+ 	// Per-CPU part of the initialization
+ 	env_init_percpu();
+@@ -179,7 +196,14 @@ env_setup_vm(struct Env *e)
+ 	//    - The functions in kern/pmap.h are handy.
+ 
+ 	// LAB 3: Your code here.
+<span class="token deleted">-</span>
+<span class="token inserted">+	++(p->pp_ref);</span>
+<span class="token inserted">+	e->env_pgdir = (pde_t *) page2kva(p);</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	// We set ALLOC_ZERO flag when we page_alloc() a page directory.</span>
+<span class="token inserted">+	// So VA below UTOP is empty already.</span>
+<span class="token inserted">+	// can be improved</span>
+<span class="token inserted">+	memcpy(e->env_pgdir+PDX(UTOP), kern_pgdir+PDX(UTOP), PGSIZE-PDX(UTOP)*sizeof(pde_t));</span>
+<span class="token inserted">+	</span>
+ 	// UVPT maps the env's own page table read-only.
+ 	// Permissions: kernel R, user R
+ 	e->env_pgdir[PDX(UVPT)] = PADDR(e->env_pgdir) | PTE_P | PTE_U;
+@@ -267,6 +291,19 @@ region_alloc(struct Env *e, void *va, size_t len)
+ 	//   <span class="token string">'va'</span> and <span class="token string">'len'</span> values that are not page-aligned.
+ 	//   You should round va down, and round (va + len) up.
+ 	//   (Watch out for corner-cases!)
+<span class="token inserted">+	void *start = (void *) ROUNDDOWN((uint32_t) va, PGSIZE);</span>
+<span class="token inserted">+	void *end = (void *) ROUNDUP((uint32_t)(va + len), PGSIZE);</span>
+<span class="token inserted">+	struct PageInfo *pp_ptr;</span>
+<span class="token inserted">+	int err_code;</span>
+<span class="token inserted">+	while (start &lt; end) {</span>
+<span class="token inserted">+		if ((pp_ptr = page_alloc(0)) == NULL)</span>
+<span class="token inserted">+			panic("region alloc, allocation failed.");</span>
+<span class="token inserted">+		</span>
+<span class="token inserted">+		if ((err_code = page_insert(e->env_pgdir, pp_ptr, start, PTE_U | PTE_W)) != 0)</span>
+<span class="token inserted">+			panic("region alloc: %e", err_code);</span>
+<span class="token inserted">+		</span>
+<span class="token inserted">+		start += PGSIZE;</span>
+<span class="token inserted">+	}</span>
+ }
+ 
+ //
+@@ -323,11 +360,36 @@ load_icode(struct Env *e, uint8_t *binary)
+ 	//  What?  (See env_run() and env_pop_tf() below.)
+ 
+ 	// LAB 3: Your code here.
+<span class="token inserted">+	struct Elf *elfhdr = (struct Elf *) binary;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (elfhdr->e_magic != ELF_MAGIC)</span>
+<span class="token inserted">+		panic("the binary to be loaded is not a elf file.");</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	lcr3(PADDR(e->env_pgdir));	// program should be mapped at user page directory.</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	struct Proghdr *ph = (struct Proghdr *) ((uint8_t *)elfhdr + elfhdr->e_phoff);</span>
+<span class="token inserted">+	struct Proghdr *eph = (struct Proghdr *) (ph + elfhdr->e_phnum);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	for (; ph &lt; eph; ++ph) {</span>
+<span class="token inserted">+		if (ph->p_type == ELF_PROG_LOAD) {</span>
+<span class="token inserted">+			if (ph->p_filesz > ph->p_memsz)</span>
+<span class="token inserted">+				panic("file size is great than memory size");</span>
+<span class="token inserted">+			</span>
+<span class="token inserted">+			region_alloc(e, (void *)(ph->p_va), ph->p_memsz);</span>
+<span class="token inserted">+			memcpy((void *)(ph->p_va), binary + ph->p_offset, ph->p_memsz);</span>
+<span class="token inserted">+			memset((void *)(ph->p_va) + ph->p_filesz, 0, ph->p_memsz - ph->p_filesz);</span>
+<span class="token inserted">+		}</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	e->env_tf.tf_eip = elfhdr->e_entry;</span>
+ 
+ 	// Now map one page for the program's initial stack
+ 	// at virtual address USTACKTOP - PGSIZE.
+ 
+ 	// LAB 3: Your code here.
+<span class="token inserted">+	region_alloc(e, (void *)(USTACKTOP - PGSIZE), PGSIZE);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	lcr3(PADDR(kern_pgdir));  // load kern_pgdir back</span>
+ }
+ 
+ //
+@@ -341,6 +403,13 @@ void
+ env_create(uint8_t *binary, enum EnvType type)
+ {
+ 	// LAB 3: Your code here.
+<span class="token inserted">+	struct Env *e;</span>
+<span class="token inserted">+	int err_code;</span>
+<span class="token inserted">+	if ((err_code = env_alloc(&amp;e, 0)) != 0)</span>
+<span class="token inserted">+		panic("env_alloc: %e", err_code);</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	load_icode(e, binary);</span>
+<span class="token inserted">+	e->env_type = type;</span>
+ }
+ 
+ //
+@@ -458,6 +527,17 @@ env_run(struct Env *e)
+ 
+ 	// LAB 3: Your code here.
+ 
+<span class="token deleted">-	panic("env_run not yet implemented");</span>
+<span class="token inserted">+	// curenv != NULL means this is a context switch</span>
+<span class="token inserted">+	if (curenv != NULL &amp;&amp; curenv->env_status == ENV_RUNNING)</span>
+<span class="token inserted">+		curenv->env_status = ENV_RUNNABLE;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	curenv = e;</span>
+<span class="token inserted">+	curenv->env_status = ENV_RUNNING;</span>
+<span class="token inserted">+	++(curenv->env_runs);</span>
+<span class="token inserted">+	lcr3(PADDR(e->env_pgdir));</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	env_pop_tf(&amp;(curenv->env_tf));</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	// panic("env_run not yet implemented");</span>
+ }
+</pre><h3 class="mume-header" id="test-allocating-and-running-enviroments">Test Allocating and Running Enviroments</h3>
+
+<p>We need to confirm that JOS kernel can run as far as the <code>int $0x30</code> now. The <code>int $0x30</code> resides at 0x800a1c in “hello” program. The gdb log is listed below.</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash">The target architecture is assumed to be i8086
+<span class="token punctuation">[</span>f000:fff0<span class="token punctuation">]</span>    0xffff0:	ljmp   <span class="token variable">$0xf000</span>,<span class="token variable">$0xe05b</span>
+0x0000fff0 <span class="token keyword">in</span> ?? <span class="token punctuation">(</span><span class="token punctuation">)</span>
++ symbol-file obj/kern/kernel
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> <span class="token keyword">break</span> env_pop_tf
+Breakpoint 1 at 0xf0102f3f: <span class="token function">file</span> kern/env.c, line 490.
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> c
+Continuing.
+The target architecture is assumed to be i386
+<span class="token operator">=</span><span class="token operator">></span> 0xf0102f3f <span class="token operator">&lt;</span>env_pop_tf<span class="token operator">></span>:	push   %ebp
+
+Breakpoint 1, env_pop_tf <span class="token punctuation">(</span>tf<span class="token operator">=</span>0xf01b2000<span class="token punctuation">)</span> at kern/env.c:490
+490	<span class="token punctuation">{</span>
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> si
+<span class="token operator">=</span><span class="token operator">></span> 0xf0102f40 <span class="token operator">&lt;</span>env_pop_tf+1<span class="token operator">></span>:	mov    %esp,%ebp
+0xf0102f40	490	<span class="token punctuation">{</span>
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> 
+<span class="token operator">=</span><span class="token operator">></span> 0xf0102f42 <span class="token operator">&lt;</span>env_pop_tf+3<span class="token operator">></span>:	sub    <span class="token variable">$0xc</span>,%esp
+0xf0102f42	490	<span class="token punctuation">{</span>
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> 
+<span class="token operator">=</span><span class="token operator">></span> 0xf0102f45 <span class="token operator">&lt;</span>env_pop_tf+6<span class="token operator">></span>:	mov    0x8<span class="token punctuation">(</span>%ebp<span class="token punctuation">)</span>,%esp
+491		asm volatile<span class="token punctuation">(</span>
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> 
+<span class="token operator">=</span><span class="token operator">></span> 0xf0102f48 <span class="token operator">&lt;</span>env_pop_tf+9<span class="token operator">></span>:	popa   
+0xf0102f48	491		asm volatile<span class="token punctuation">(</span>
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> 
+<span class="token operator">=</span><span class="token operator">></span> 0xf0102f49 <span class="token operator">&lt;</span>env_pop_tf+10<span class="token operator">></span>:	pop    %es
+0xf0102f49 <span class="token keyword">in</span> env_pop_tf <span class="token punctuation">(</span>
+    tf<span class="token operator">=</span><span class="token operator">&lt;</span>error reading variable: Unknown argument list address <span class="token keyword">for</span> `tf'.<span class="token operator">></span><span class="token punctuation">)</span>
+    at kern/env.c:491
+491		asm volatile<span class="token punctuation">(</span>
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> 
+<span class="token operator">=</span><span class="token operator">></span> 0xf0102f4a <span class="token operator">&lt;</span>env_pop_tf+11<span class="token operator">></span>:	pop    %ds
+0xf0102f4a	491		asm volatile<span class="token punctuation">(</span>
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> 
+<span class="token operator">=</span><span class="token operator">></span> 0xf0102f4b <span class="token operator">&lt;</span>env_pop_tf+12<span class="token operator">></span>:	add    <span class="token variable">$0x8</span>,%esp
+0xf0102f4b	491		asm volatile<span class="token punctuation">(</span>
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> 
+<span class="token operator">=</span><span class="token operator">></span> 0xf0102f4e <span class="token operator">&lt;</span>env_pop_tf+15<span class="token operator">></span>:	iret   
+0xf0102f4e	491		asm volatile<span class="token punctuation">(</span>
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> 
+<span class="token operator">=</span><span class="token operator">></span> 0x800020:	<span class="token function">cmp</span>    <span class="token variable">$0xeebfe000</span>,%esp
+0x00800020 <span class="token keyword">in</span> ?? <span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> b *0x800a1c
+Breakpoint 2 at 0x800a1c
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> c
+Continuing.
+<span class="token operator">=</span><span class="token operator">></span> 0x800a1c:	int    <span class="token variable">$0x30</span>
+
+Breakpoint 2, 0x00800a1c <span class="token keyword">in</span> ?? <span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">(</span>gdb<span class="token punctuation">)</span> c<span class="token punctuation">[</span>Ksi
+The target architecture is assumed to be i8086
+<span class="token punctuation">[</span>f000:e05b<span class="token punctuation">]</span>    0xfe05b:	cmpl   <span class="token variable">$0x0</span>,%cs:0x6c48
+0x0000e05b <span class="token keyword">in</span> ?? <span class="token punctuation">(</span><span class="token punctuation">)</span>
+</pre><h2 class="mume-header" id="handling-interrupts-and-exceptions">Handling Interrupts and Exceptions</h2>
+
+<h3 class="mume-header" id="basics-of-protected-control">Basics of Protected Control</h3>
+
+<p>Exceptions and interrupts are both “protected control transfers”, which cause the processor to switch from user to kernel mode (CPL=0) without giving the user-mode code any opportunity to interfere with the functioning of the kernel or other enviroments. In Intel’s terminology, an interrupt is a protected control transfer that is caused by an asynchronous event usually external to the processor, such as notification of external device I/O activity. An exception, in contrast, is a protected control transfer caused sysnchronously by the currently running code, for example due to a divide by zero or an invalid memory access.(Ref: <a href="https://pdos.csail.mit.edu/6.828/2017/labs/lab3/">Lab 3</a>). The processor uses the same mechanism to handle exceptions and interrupts except that interrupt is disabled when handling interrupts while interrupt remains enabled when handling exceptions.</p>
+<p>In order to ensure that these protected control transfers are actually protected, the processor’s interrupt/exception mechanism is designed so that the code currently running when the interrupt or exception occurs does not get to choose arbitrarily where the kernel is entered or how. Instead, the processor ensures that the kernel can be entered only under carefully controlled conditions. On x86, two mechanisms work together to privide this protection (Ref: <a href="https://pdos.csail.mit.edu/6.828/2017/labs/lab3/">Lab 3</a>):</p>
+<ol>
+<li>
+<p><strong><em>The Interrupt Descriptor Table</em></strong> The processor ensures that interrupts and exceptions can only cause the kernel to be entered at a few specific, well-defined entry-points determined by the kernel itself, and not by the code running when the interrupt or exception is taken.</p>
+<p>The x86 allows up to 256 different interrupt or exception entry points into the kernel, each with a different interrupt vector. A vector is a number between 0 and 255. An interrupt’s vector is determined by the source of the interrupt: different devices, error conditions, and application requests to the kernel generate interrupts with different vectors. The CPU uses the vector as an index into the processor’s interrupt descriptor table (IDT), which the kernel sets up in kernel-private memory, much like the GDT. From the appropriate entry in this table the processor loads:</p>
+<ul>
+<li>the value to load into the instruction pointer (EIP) register, pointing to the kernel code designated to handle that type of exception.</li>
+<li>the value to load into the code segment (CS) register, which includes in bits 0-1 the privilege level at which the exception handler is to run. (In JOS, all exceptions are handled in kernel mode, privilege level 0.)</li>
+</ul>
+<p>All of the sysnchrouus exceptions that the x86 processor can generate internally use interrupt vectors between 0 and 31, and therefore map to IDT entries 0-31. Interrupt vectors greater than 31 are only used by software interrupts, which can be generated by the int instruction, or asynchronous hardware interrupts, caused by external devices when they need attention.</p>
+<p>On x86, a IDT register (48 bits) stores the entry number and the address of IDT, which is shown below.</p>
+<img src="data:image/png;charset=utf-8;base64,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tJlSAfpfgFu9d56tcAUAAHBbEa4AAACEKwAAgHkZrp577rnly5dXVlbW1tZ2dHR88803Y9euX7/+jjvucNABXn/99fr6+mgtGxoaXnvtNQcEAISr4mRV9A3HTU1NadWpU6fWrVuXFjrowG3uk08+KWotP/roI4cFAISr/3n44Yerqqr++c9/Rvlf//pXDBcqKyvTqijff//9whVA2LRpUzSGra2t3333XUtLS5RjicMCAMJVae+++24MF5544on0sKmpqb+/X7gCCIsXL47G8Ntvv43y4OBglGOJwwIAwlUJy5cvj7FCfX19DBrGLheuAEJFRcXYxnDseX4AQLj6ie++++6tt96K4cLmzZuFK4BJw9WCBQscFgAQrv7nscceW7hwYX9//0TDBeEKICxatCgaw9RaDg0NRbmmpsZhAQDh6n/SfIBtbW1RfvXVV6NcV1cnXAEUaWpqisawpaUlyq2trePP8wMAt3u4Gj+58B//+EfhCqDIBx98YCp2ABCuJvH22283NDSk2SxeeeWVorXCFUCSvkQ4tZa+RBgAhCsAAACEKwAAAOEKAABAuAIAABCuAAAAEK4AAACEKwAAAOEKAABAuAIAAEC4AgAAEK4AAACEKwAAAOEKAAAA4QoAAEC4AgAAEK4AAACEKwAAAIQrAAAA4QoAAEC4AgAAEK6EKwAAAOEKAABAuAIAABCuAAAAEK4AAACEKwAAAOEKAABgPocrAAAApk24AgAAEK4AAADmhv8HW2YiapSS01kAAAAASUVORK5CYII="><p>The IDT may contain any of three kinds of descriptor:</p>
+<ul>
+<li>Task gates</li>
+<li>Interrupt gates</li>
+<li>Trap gates<br>
+Their format are shown below.</li>
+</ul>
+<img src="data:image/png;charset=utf-8;base64,iVBORw0KGgoAAAANSUhEUgAAA/IAAAHACAIAAACOLcTgAAA9UklEQVR42u3dbWhcZd4/8EIIYQghBEIJYQklEEIoIZSFsuwLKaFQihSRECillFJECCGEECQgUnXb6rK4unt7696iu6BuqyxudfuEKFp37Yp1ZX3Itm71zVbrtpamxKamT2n9//DgYf4zyWQynaSZ5vN5Ea65zsNcc+bMdX3PyZkzy74HAAAq3DKbAAAAxHoAAGDRxPobAABARRHrAQBArAcAAMR6AABArAcAALFerAcAALEeAAAQ6wEAALEeAADEerEeAADEegAAQKwHAADEegAAEOvFegAAEOsBAACxHgAAEOsBAECsF+sBAECsBwAAxHoAAECsBwAAsV6sBwAAsR4AABDrAQAAsR4AAMR6sR4AAMR6AABgicT6ixcvDg0NLV++vLq6Ov4ODw9PTk4mk3bv3t3W1hb17e3tzz//fLrIrl27Wltb0/kvXLhQeD2ffvppd3d3JpOpra0dGBi4evVqThuWzSCZGvPHOuNhLD41NZUuFeuPZ2lsbIypTU1NIyMj6ZqzFw9ff/31T37w1Vdf5W+BWGrHjh3xGmM90cg77rjjwIEDOTPkN6BAmwu8FgAAxPp5sXnz5pwAumXLlqh/9913c+oPHz6cZPqc+p6engLrOX78eF1dXXZ95O85xfrXXnstrTl06FC61L333pszfxxX5Mf6b775Jg5OmpubT548mf/y45jk5z//ef5Tv/LKK+k80zZArAcAYBHF+qqqqjSyJ1E+k8lEube3N8r9/f1Xr17t6+uLctRE/bp162KGSLpRPnr0aNRXV1cXWM+2bduiPDAwMDU1FfVRuWrVqpkaM20C3rp1a1Qmhw333HNPWl9TUxM1n376aZTfeuutKMfxQ856ItN3dnYuX7783//+97TPODw8HHO2tLRE26KFX3311R133BE1HR0dszZgpjbL8QAAYv1Cx/qVK1dGBv3rX/8a5fgb5aiJckNDQ5QvXrwY5fHx8ShHTc6yBw4ciPpNmzYVWE8k5kj8ly9fLqYx+YE4onZymU20JLm8J51UX18fMz/44IPp1T456xkbG+vq6orC66+/PtMzrlixImaITJ/WfP75593d3X//+99nbYBYDwDAYon1n376aWdnZ3qtSOTg48eP3/jx7Ht2VE3OyqdaW1ujsq2tLUJ/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9rS1tcVLaG9vf+GFF+wqiPVQyL333pvTEQ8NDc1HrJ+YmIjeOWdSkuwLjCWx1MqVK3Pq45Ag6gs8Y29vr3cWsZ6KUFovN+ukEvr2ImP9Z599tnbt2pxJBw8eLHusP3LkSM4K33nnHTsMYj3MqKamJva60dHRKL/99ttRrqurK5zdZ4310y6yffv2mLRmzZozZ85cunTp7rvvjocxmBVePFkqZktaeOzYsc7OzqiJ+mkX+fDDD+NhvCjvLGI9FWGuvVyRXW5pfXsxM8Sk1atX58zz3HPPxcORkZEybpne3t5YZ39//7Vr1/r6+pyyQayHWdTX18de99BDD0XULr5nLyHWJwNVjFjJwy+//LK7u/u9994rvHhyEit7tvfffz/7eCBnkZgzHra1tXlnEeupCHPt5Yrsckvr24uZoaen5/z58znzbNmyJel743Ciqalp586dN79lGhoaYp3fffddlL/99tsoR40dBrEeZpScAklkMpnBwcF5ura+urp61t07f7XJUtevX09ropx9Pn7aZ/ztb3/rnUWspyKU0MsV6HJvsm8vMvfnz7NmzZqcFf7yl7+8yS1TVVWV82JjW9lhEOthRmfOnLn//vuzr3ofHh6u3Fjf0dHx8ssve1sR61nisb60vr3kWH/nnXc2Nja++eabUf7DH/4Qk1paWsoe611giVgPRYmPwc6dO2MPrK2tnbVnL+EinPb29pj0ySefJA//85//rFmzZtaLcCKm53xNKsrZl9mki3z00UfLly+P8iOPPOLdRKynUhTfy82pyy2tby851udPvfkz68l1RMlNgZI77cSRgx0GsR5m1NzcHHvdwYMHk2Sc/Lt2PmL9fffdF5O6u7vPnj07MTFx1113JXd7KLx48mWyFStWRNviYRwVRHmmL5Olt2LYs2ePdxaxnoowp16u+C63tL695FgfByGx/ldfffX7H8/W53TvJejp6Yn19PX1Rbm/vz/KGzdutMMg1sMsI0q26D2ze+053VWtwCLnz59Pxqps+/fvLzyWxAFAcior50qbnFu/pfNHp598rerMmTPeXMR6Fr+59nJF5u/S+vaSY/0vfvGLnBX++c9/vslTQm+++aYbXCLWw5yTfXNzc1VVVaThgYGB9LYJ5Y313//wc1Tbtm2rra2N5/rpT3+anEaatWc/d+7c4OBgU1NT8qMqQ0ND+T/Ukj7873//W1dX56QOYj0VZE69XPH5u4S+veRYHx555JHk6eKY5I9//OOcGjxTffJzVMklSX6OCrEeALEeQKwX6wEQ6wHEerEeQKwHQKwHQKwHQKwHQKwHEOvFegDEegCxXqwHEOsBEOsBEOsBEOsBEOsBxPqFjvUAAEDxFmOsD+Pj4ydPnhwdHT1y5MihQ4deAgAAZhaZOZJz5OdI0ZGlF0usn5iYOH36dBxqfPzxx9G+1wEAgJlFZo7kHPk5UnRk6cUS6ycnJ8fGxk6dOhUti2OODwAAgJlFZo7kHPk5UnRk6cUS669cuRIHGdGmONo4efLkFwAAwMwiM0dyjvwcKTqy9GKJ9VNTU9GaOM6IZo2Pj48BAAAzi8wcyTnyc6ToyNKLJdYDAAALRqwHAACxHgAAEOsBAACxHgAAxHqxHgAAxHoAAECsBwAAxHoAABDrxXoAABDrAQAAsR4AABDrAQBArBfrAQBArAcAAMR6AABArAcAALFerAcAALEeAAAQ6wEAALEeAADEerEeAADEegAAQKwHAADEegAAEOvFegAAuF1iPQAAUKHEegAAEOsBAIBb7f8BikQkVT5/6DcAAAAASUVORK5CYII="></li>
+<li>
+<p><strong><em>The Task State Segment</em></strong> The processor needs a place to save the old processor state before the interrupt or exception occurred, such as the original values of EIP and CS before the processor invoked the exception handler, so that the exception handler can later restore that old state and resume the interrupted code from where it left off. But this save area for the old processor state must in turn be protected from unprivileged user-mode code; otherwise buggy or malicious user code could compromise the kernel.</p>
+<p>For this reason, when an x86 processor takes an interrupt or trap that causes a privilege level change from user to kernel mode, it also switches to a stack in the kernel’s memory. A structure called the task state segment (TSS) specifies the segment selector and address where this stack lives. The processor pushes (on this new stack) SS, ESP, EFLAGS, CS, EIP, and an optional error code. Then it loads the CS and EIP from the interrupt descriptor, and sets the ESP and SS to refer to the new stack.</p>
+<p>Although the TSS is large and can potentially serve a variety of purposes, JOS only uses it to define the kernel stack that the processor should switch to when it transfers from user to kernel mode. Since “kernel mode” in JOS is privilege level 0 on the x86, the processor uses the ESP0 and SS0 fields of the TSS to define the kernel stack when entering kernel mode. JOS doesn’t use any other TSS fields.<br>
+In JOS, TSS is defined as below.</p>
+<pre data-role="codeBlock" data-info="c" class="language-c"><span class="token comment">// Task state segment format (as described by the Pentium architecture book)</span>
+<span class="token keyword">struct</span> Taskstate <span class="token punctuation">{</span>
+    uint32_t ts_link<span class="token punctuation">;</span>           <span class="token comment">// Old ts selector</span>
+    uintptr_t ts_esp0<span class="token punctuation">;</span>          <span class="token comment">// Stack pointers and segment selectors</span>
+    uint16_t ts_ss0<span class="token punctuation">;</span>            <span class="token comment">//   after an increase in privilege level</span>
+    uint16_t ts_padding1<span class="token punctuation">;</span>
+    uintptr_t ts_esp1<span class="token punctuation">;</span>
+    uint16_t ts_ss1<span class="token punctuation">;</span>
+    uint16_t ts_padding2<span class="token punctuation">;</span>
+    uintptr_t ts_esp2<span class="token punctuation">;</span>
+    uint16_t ts_ss2<span class="token punctuation">;</span>
+    uint16_t ts_padding3<span class="token punctuation">;</span>
+    physaddr_t ts_cr3<span class="token punctuation">;</span>          <span class="token comment">// Page directory base</span>
+    uintptr_t ts_eip<span class="token punctuation">;</span>           <span class="token comment">// Saved state from last task switch</span>
+    uint32_t ts_eflags<span class="token punctuation">;</span>
+    uint32_t ts_eax<span class="token punctuation">;</span>            <span class="token comment">// More saved state (registers)</span>
+    uint32_t ts_ecx<span class="token punctuation">;</span>
+    uint32_t ts_edx<span class="token punctuation">;</span>
+    uint32_t ts_ebx<span class="token punctuation">;</span>
+    uintptr_t ts_esp<span class="token punctuation">;</span>
+    uintptr_t ts_ebp<span class="token punctuation">;</span>
+    uint32_t ts_esi<span class="token punctuation">;</span>
+    uint32_t ts_edi<span class="token punctuation">;</span>
+    uint16_t ts_es<span class="token punctuation">;</span>             <span class="token comment">// Even more saved state (segment selectors)</span>
+    uint16_t ts_padding4<span class="token punctuation">;</span>
+    uint16_t ts_cs<span class="token punctuation">;</span>
+    uint16_t ts_padding5<span class="token punctuation">;</span>
+    uint16_t ts_ss<span class="token punctuation">;</span>
+    uint16_t ts_padding6<span class="token punctuation">;</span>
+    uint16_t ts_ds<span class="token punctuation">;</span>
+    uint16_t ts_padding7<span class="token punctuation">;</span>
+    uint16_t ts_fs<span class="token punctuation">;</span>
+    uint16_t ts_padding8<span class="token punctuation">;</span>
+    uint16_t ts_gs<span class="token punctuation">;</span>
+    uint16_t ts_padding9<span class="token punctuation">;</span>
+    uint16_t ts_ldt<span class="token punctuation">;</span>
+    uint16_t ts_padding10<span class="token punctuation">;</span>
+    uint16_t ts_t<span class="token punctuation">;</span>              <span class="token comment">// Trap on task switch</span>
+    uint16_t ts_iomb<span class="token punctuation">;</span>           <span class="token comment">// I/O map base address</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</pre></li>
+</ol>
+<h3 class="mume-header" id="overall-interruptexception-handling-process">Overall Interrupt/Exception Handling Process</h3>
+
+<h3 class="mume-header" id="interrupted-in-user-environment">Interrupted in User Environment</h3>
+
+<p>Let’s say the processor is executing code in a user enviroment and encounters an interrupt/exception.</p>
+<ol>
+<li>
+<p>The processor switches to the stack defined by the <code>SS0</code> and <code>ESP0</code> fields of the TSS, which in JOS will hold the values GD_KD and KSTACKTOP, respectively.</p>
+</li>
+<li>
+<p>The processor pushes the exception parameters on the kernel stack, starting at address KSTACKTOP:</p>
+<img src="data:image/png;charset=utf-8;base64,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"></li>
+<li>
+<p>For certain types of x86 exceptions, in addition to the “standard” five words above, the processor pushes onto the stack another word containing an error code. When the processor pushes an error code, the stack would look as follows at the beginning of the exception handler when coming in from user mode:</p>
+<img src="data:image/png;charset=utf-8;base64,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"><table>
+<thead>
+<tr>
+<th style="text-align:left">Description</th>
+<th style="text-align:right">Interrupt Number</th>
+<th style="text-align:left">Error Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Divide error</td>
+<td style="text-align:right">0</td>
+<td style="text-align:left">No</td>
+</tr>
+<tr>
+<td style="text-align:left">Debug exception</td>
+<td style="text-align:right">1</td>
+<td style="text-align:left">No</td>
+</tr>
+<tr>
+<td style="text-align:left">Breakpoint</td>
+<td style="text-align:right">3</td>
+<td style="text-align:left">No</td>
+</tr>
+<tr>
+<td style="text-align:left">Overflow</td>
+<td style="text-align:right">4</td>
+<td style="text-align:left">No</td>
+</tr>
+<tr>
+<td style="text-align:left">Bounds check</td>
+<td style="text-align:right">5</td>
+<td style="text-align:left">No</td>
+</tr>
+<tr>
+<td style="text-align:left">Invalid opcode</td>
+<td style="text-align:right">6</td>
+<td style="text-align:left">No</td>
+</tr>
+<tr>
+<td style="text-align:left">Coprocessor not available</td>
+<td style="text-align:right">7</td>
+<td style="text-align:left">No</td>
+</tr>
+<tr>
+<td style="text-align:left">System error</td>
+<td style="text-align:right">8</td>
+<td style="text-align:left">Yes (always 0)</td>
+</tr>
+<tr>
+<td style="text-align:left">Coprocessor Segment Overrun</td>
+<td style="text-align:right">9</td>
+<td style="text-align:left">No</td>
+</tr>
+<tr>
+<td style="text-align:left">Invalid TSS</td>
+<td style="text-align:right">10</td>
+<td style="text-align:left">Yes</td>
+</tr>
+<tr>
+<td style="text-align:left">Segment not present</td>
+<td style="text-align:right">11</td>
+<td style="text-align:left">Yes</td>
+</tr>
+<tr>
+<td style="text-align:left">Stack exception</td>
+<td style="text-align:right">12</td>
+<td style="text-align:left">Yes</td>
+</tr>
+<tr>
+<td style="text-align:left">General protection fault</td>
+<td style="text-align:right">13</td>
+<td style="text-align:left">Yes</td>
+</tr>
+<tr>
+<td style="text-align:left">Page fault</td>
+<td style="text-align:right">14</td>
+<td style="text-align:left">Yes</td>
+</tr>
+<tr>
+<td style="text-align:left">Coprocessor error</td>
+<td style="text-align:right">16</td>
+<td style="text-align:left">No</td>
+</tr>
+<tr>
+<td style="text-align:left">Two-byte SW interrupt</td>
+<td style="text-align:right">0-255</td>
+<td style="text-align:left">No</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>The processor reads IDT entry N (N is the interrupt vector) and sets CS:EIP to point to the handler function described by the entry.</p>
+</li>
+<li>
+<p>The handler function takes control and handles the exception, for example by terminating the user environment.</p>
+</li>
+</ol>
+<h3 class="mume-header" id="nested-exceptions-and-interrupts">Nested Exceptions and Interrupts</h3>
+
+<p>The processor can take exceptions and interrupts both from kernel and user mode. It is only when entering the kernel from user mode, however, that the x86 processor automatically switches stacks before pushing its old register state onto the stack and invoking the appropriate exception handler through the IDT. If the processor is already in kernel mode when the interrupt or exception occurs (the low 2 bits of the CS register are already zero), then the CPU just pushes more values on the same kernel stack. In this way, the kernel can gracefully handle nested exceptions caused by code within the kernel itself.</p>
+<p>If the processor is already in kernel mode and takes a nested exception, since it does not need to switch stacks, it does not save the old SS or ESP registers. The kernel stack therefore looks like the following on entry to the exception handler:</p>
+<img src="data:image/png;charset=utf-8;base64,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"><p>There is one important caveat to the processor’s nested exception capability. If the processor takes an exception while already in kernel mode, and cannot push its old state onto the kernel stack for any reason such as lack of stack space, then there is nothing the processor can do to recover, so it simply resets itself. Needless to say, the kernel should be designed so that this can’t happen.</p>
+<h3 class="mume-header" id="exercise-4-challenge-1">Exercise 4 &amp; Challenge 1</h3>
+
+<blockquote>
+<p>Q : Edit <code>trapentry.S</code> and <code>trap.c</code> and implement the features required. The macros <code>TRAPHANDLER</code> and <code>TRAPHANDLER_NOEC</code> in <code>trapentry.S</code> should help you, as well as the <code>T_*</code> defines in <code>inc/trap.h</code>. You will need to add an entry point in <code>trapentry.S</code> (using those macros) for each trap defined in <code>inc/trap.h</code>, and you’ll have to provide <code>_alltraps</code> which the <code>TRAPHANDLER</code> macros refer to. You will also need to modify <code>trap_init()</code> to initialize the idt to point to each of these entry points defined in <code>trapentry.S</code>; the <code>SETGATE</code> macro will be helpful here.<br>
+Your _alltraps should:</p>
+<ol>
+<li>push values to make the stack look like a struct Trapframe</li>
+<li>load GD_KD into %ds and %es</li>
+<li>pushl %esp to pass a pointer to the Trapframe as an argument to trap()</li>
+<li>call trap (can trap ever return?)</li>
+</ol>
+<p>Consider using the <code>pushal</code> instruction; it fits nicely with the layout of the struct Trapframe.<br>
+Test your trap handling code using some of the test programs in the user directory that cause exceptions before making any system calls, such as user/divzero. You should be able to get make grade to succeed on the divzero, softint, and badsegment tests at this point.</p>
+<p><strong>Challenge</strong> : You probably have a lot of very similar code right now, between the lists of TRAPHANDLER in trapentry.S and their installations in trap.c. Clean this up. Change the macros in trapentry.S to automatically generate a table for trap.c to use. Note that you can switch between laying down code and data in the assembler by using the directives .text and .data.</p>
+</blockquote>
+<p>In <code>trapentry.S</code>, We define entries for each interrupt/exception with <code>TRAPHANDLER</code> if there is an error code or <code>TRAPHANDLER_NOEC</code> if there isn’t. Then we establish an array that stores entries address so that we can iterate over it in <code>trap_init()</code> to reduce tedious work. We set null entries that don’t belong to a valid interrupt vector to zero. So some invalid IDT entries would have handle entries with zero address. The array will end at the last entry with a valid interrupt vector. So IDT entries without valid interrupt vectors will not be initalized. Hardwares assure that they won’t generate an interrupt with an invalid interrupt vector. All invalid IDT entries have a zero-value DPL. Any attempt to generate an invalid exception from user programs will end up generating a “General Protection Exception”.</p>
+<p>Codes for setting up the IDT is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/inc/trap.h b/inc/trap.h
+index c3437af..7884372 100644
+<span class="token deleted">--- a/inc/trap.h</span>
+<span class="token inserted">+++ b/inc/trap.h</span>
+<span class="token coord">@@ -12,13 +12,13 @@</span>
+ #define T_ILLOP      6		// illegal opcode
+ #define T_DEVICE     7		// device not available
+ #define T_DBLFLT     8		// double fault
+<span class="token deleted">-/* #define T_COPROC  9 */	// reserved (not generated by recent processors)</span>
+<span class="token inserted">+#define T_COPROC  	 9 		// reserved (not generated by recent processors)</span>
+ #define T_TSS       10		// invalid task switch segment
+ #define T_SEGNP     11		// segment not present
+ #define T_STACK     12		// stack exception
+ #define T_GPFLT     13		// general protection fault
+ #define T_PGFLT     14		// page fault
+<span class="token deleted">-/* #define T_RES    15 */	// reserved</span>
+<span class="token inserted">+#define T_RES  		15 		// reserved</span>
+ #define T_FPERR     16		// floating point error
+ #define T_ALIGN     17		// aligment check
+ #define T_MCHK      18		// machine check
+diff --git a/kern/trap.c b/kern/trap.c
+index e27b556..e94cb5b 100644
+<span class="token deleted">--- a/kern/trap.c</span>
+<span class="token inserted">+++ b/kern/trap.c</span>
+@@ -65,6 +65,20 @@ trap_init(void)
+ 	extern struct Segdesc gdt[];
+ 
+ 	// LAB 3: Your code here.
+<span class="token inserted">+	extern uint32_t idt_entries[];</span>
+<span class="token inserted">+	extern uint32_t idt_entries_end[];</span>
+<span class="token inserted">+	int entry_num = idt_entries_end - idt_entries;</span>
+<span class="token inserted">+	for (int i = 0; i &lt; entry_num; ++i) {</span>
+<span class="token inserted">+		switch (i) {</span>
+<span class="token inserted">+			case T_BRKPT :</span>
+<span class="token inserted">+			case T_SYSCALL :</span>
+<span class="token inserted">+				SETGATE(idt[i], 0, GD_KT, idt_entries[i], 3);</span>
+<span class="token inserted">+				break;</span>
+<span class="token inserted">+			default :</span>
+<span class="token inserted">+				SETGATE(idt[i], 0, GD_KT, idt_entries[i], 0);</span>
+<span class="token inserted">+				break;</span>
+<span class="token inserted">+		}</span>
+<span class="token inserted">+	}</span>
+ 
+ 	// Per-CPU setup 
+ 	trap_init_percpu();
+diff --git a/kern/trapentry.S b/kern/trapentry.S
+index 22fc640..ea24a22 100644
+<span class="token deleted">--- a/kern/trapentry.S</span>
+<span class="token inserted">+++ b/kern/trapentry.S</span>
+<span class="token coord">@@ -46,10 +46,68 @@</span>
+ /*
+  * Lab 3: Your code here for generating entry points for the different traps.
+  */
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_divide_error, T_DIVIDE)				# divide error</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_debug_exception, T_DEBUG)						# debug exception</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_nmi, T_NMI)							# non-maskable interrupt</span>
+<span class="token inserted">+    TRAPHANDLER_NOEC(trap_breakpoint, T_BRKPT)					# breakpoint</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_overflow, T_OFLOW)						# overflow</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_bounds_check, T_BOUND)						# bounds check</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_illegal_opcode, T_ILLOP)					# illegal opcode</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_device_not_available, T_DEVICE)		# device not available</span>
+<span class="token inserted">+	TRAPHANDLER(trap_double_fault, T_DBLFLT)						# double fault</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_coprocessor_segment_overrun, T_COPROC)	# reserved (not generated by recent processors)</span>
+<span class="token inserted">+	TRAPHANDLER(trap_invalid_TSS, T_TSS)							# invalid task switch segment</span>
+<span class="token inserted">+	TRAPHANDLER(trap_segment_not_present, T_SEGNP)				# segment not present</span>
+<span class="token inserted">+	TRAPHANDLER(trap_stack_exception, T_STACK)						# stack exception</span>
+<span class="token inserted">+	TRAPHANDLER(trap_general_protection_fault, T_GPFLT)				# general protection fault</span>
+<span class="token inserted">+	TRAPHANDLER(trap_page_fault, T_PGFLT)						# page fault</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_reserved, T_RES)						# reserved</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_float_point_error, T_FPERR)			# floating point error</span>
+<span class="token inserted">+	TRAPHANDLER(trap_alignment_check, T_ALIGN)					# alignment check</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_machine_check, T_MCHK)					# machine check</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_SIMD_float_point_error, T_SIMDERR)		# SIMD floating point error</span>
+<span class="token inserted">+	TRAPHANDLER_NOEC(trap_system_call, T_SYSCALL)				# system call</span>
+ 
+<span class="token deleted">-</span>
+<span class="token inserted">+.data</span>
+<span class="token inserted">+.globl idt_entries</span>
+<span class="token inserted">+idt_entries:</span>
+<span class="token inserted">+	.long trap_divide_error</span>
+<span class="token inserted">+	.long trap_debug_exception</span>
+<span class="token inserted">+	.long trap_nmi</span>
+<span class="token inserted">+	.long trap_breakpoint</span>
+<span class="token inserted">+	.long trap_overflow</span>
+<span class="token inserted">+	.long trap_bounds_check</span>
+<span class="token inserted">+	.long trap_illegal_opcode</span>
+<span class="token inserted">+	.long trap_device_not_available</span>
+<span class="token inserted">+	.long trap_double_fault</span>
+<span class="token inserted">+	.long trap_coprocessor_segment_overrun</span>
+<span class="token inserted">+	.long trap_invalid_TSS</span>
+<span class="token inserted">+	.long trap_segment_not_present</span>
+<span class="token inserted">+	.long trap_stack_exception</span>
+<span class="token inserted">+	.long trap_general_protection_fault</span>
+<span class="token inserted">+	.long trap_page_fault</span>
+<span class="token inserted">+	.long trap_reserved</span>
+<span class="token inserted">+	.long trap_float_point_error</span>
+<span class="token inserted">+	.long trap_alignment_check</span>
+<span class="token inserted">+	.long trap_machine_check</span>
+<span class="token inserted">+	.long trap_SIMD_float_point_error</span>
+<span class="token inserted">+	.fill 29, 4, 0						# 29 null entries</span>
+<span class="token inserted">+	.long trap_system_call</span>
+<span class="token inserted">+.global idt_entries_end</span>
+<span class="token inserted">+idt_entries_end:</span>
+ 
+ /*
+  * Lab 3: Your code here for _alltraps
+  */
+<span class="token deleted">-</span>
+<span class="token inserted">+.text</span>
+<span class="token inserted">+_alltraps:</span>
+<span class="token inserted">+	push %ds</span>
+<span class="token inserted">+	push %es</span>
+<span class="token inserted">+	pushal</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	movw $GD_KD, %ax</span>
+<span class="token inserted">+	movw %ax, %ds</span>
+<span class="token inserted">+	movw %ax, %es</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	pushl %esp</span>
+<span class="token inserted">+	call trap</span>
+\ No newline at end of file
+</pre><h3 class="mume-header" id="answer-to-q1-q2">Answer to Q1 &amp; Q2</h3>
+
+<blockquote>
+<ol>
+<li>What is the purpose of having an individual handler function for each exception/interrupt? (i.e., if all exceptions/interrupts were delivered to the same handler, what feature that exists in the current implementation could not be provided?)</li>
+</ol>
+</blockquote>
+<p>We can’t push <strong><em>Interrupt Vector</em></strong> on to the stack for <code>trap_dispatch()</code> to choose the right handler accordingly if we all exceptions/interrupts were delivered to the same handler.</p>
+<blockquote>
+<ol start="2">
+<li>Did you have to do anything to make the user/softint program behave correctly? The grade script expects it to produce a general protection fault (trap 13), but softint’s code says int $14. Why should this produce interrupt vector 13? What happens if the kernel actually allows softint’s int $14 instruction to invoke the kernel’s page fault handler (which is interrupt vector 14)?</li>
+</ol>
+</blockquote>
+<p>We don’t need to do anything to make user/softint program behave correctly. DPLs of all IDT entries except syscall and break point are zero. Therefore, any attempt from user/softint program to generate an interrupt vector that are not allowed will end up in “General Protection Fault”.</p>
+<h2 class="mume-header" id="page-faults-breakpoints-exceptions-and-system-calls">Page Faults, Breakpoints Exceptions, and System Calls</h2>
+
+<h3 class="mume-header" id="exercise-5-6-7">Exercise 5 &amp; 6 &amp; 7</h3>
+
+<blockquote>
+<p>Q : Modify <code>trap_dispatch()</code> to dispatch page fault exceptions to <code>page_fault_handler()</code>. You should now be able to get make grade to succeed on the faultread, faultreadkernel, faultwrite, and faultwritekernel tests. If any of them don’t work, figure out why and fix them. Remember that you can boot JOS into a particular user program using make run-x or make run-x-nox. For instance, make run-hello-nox runs the hello user program.</p>
+</blockquote>
+<blockquote>
+<p>Q : Modify trap_dispatch() to make breakpoint exceptions invoke the kernel monitor. You should now be able to get make grade to succeed on the breakpoint test.</p>
+</blockquote>
+<blockquote>
+<p>Q :  Add a handler in the kernel for interrupt vector T_SYSCALL. You will have to edit kern/trapentry.S and kern/trap.c’s trap_init(). You also need to change trap_dispatch() to handle the system call interrupt by calling syscall() (defined in kern/syscall.c) with the appropriate arguments, and then arranging for the return value to be passed back to the user process in %eax. Finally, you need to implement syscall() in kern/syscall.c. Make sure syscall() returns -E_INVAL if the system call number is invalid. You should read and understand lib/syscall.c (especially the inline assembly routine) in order to confirm your understanding of the system call interface. Handle all the system calls listed in inc/syscall.h by invoking the corresponding kernel function for each call.</p>
+<p>Run the user/hello program under your kernel (make run-hello). It should print “hello, world” on the console and then cause a page fault in user mode. If this does not happen, it probably means your system call handler isn’t quite right. You should also now be able to get make grade to succeed on the testbss test.</p>
+</blockquote>
+<p>It’s easy to finish exercise 5 &amp; 6. All we need to do is to use a <code>switch</code> structure to invoke different interrupt handler function according to the interrupt vector passed to <code>trap_dispatch()</code>. As you can see in <strong><em>Exercise 4</em></strong>, we already add system call entry address in <code>idt_entries</code> array in <code>trapentry.S</code>. So we don’t need to set up modify codes for IDT trap initialization any more (I miscalculate the place of syscall entry in <code>idt_entries</code> by one. I correct it in this exercise).</p>
+<p>When it comes to syscall, we need to know that user program passes its parameters using register when invoking a system call. So in <code>trap_dispatch()</code>, parameters for system call are stored in the <code>TrapFrame</code> passed to <code>trap_dispatch()</code>. The calling convetion is that system call number and the return value stored in <code>%eax</code>. You can read <code>lib/syscall.c/syscall()</code> to understand how JOS arrange parameters among general registers.</p>
+<p>In <code>kern/syscall.c/syscall()</code>, we dispatch syscall request according to syscall number in the same way that we did in <code>trap_dispatch()</code>.</p>
+<p>Codes for these exercise are shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/syscall.c b/kern/syscall.c
+index 414d489..4e7b70f 100644
+<span class="token deleted">--- a/kern/syscall.c</span>
+<span class="token inserted">+++ b/kern/syscall.c</span>
+@@ -70,11 +70,15 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4,
+ 	// Return any appropriate return value.
+ 	// LAB 3: Your code here.
+ 
+<span class="token deleted">-	panic("syscall not implemented");</span>
+<span class="token inserted">+	// panic("syscall not implemented");</span>
+ 
+ 	switch (syscallno) {
+<span class="token deleted">-	default:</span>
+<span class="token deleted">-		return -E_INVAL;</span>
+<span class="token inserted">+		case SYS_cputs: sys_cputs((const char *)a1, a2); return 0;</span>
+<span class="token inserted">+		case SYS_cgetc: return (int32_t)sys_cgetc();</span>
+<span class="token inserted">+		case SYS_getenvid: return (int32_t)sys_getenvid();</span>
+<span class="token inserted">+		case SYS_env_destroy: return (int32_t)sys_env_destroy((envid_t)a1);</span>
+<span class="token inserted">+		default:</span>
+<span class="token inserted">+			return -E_INVAL;</span>
+ 	}
+ }
+ 
+diff --git a/kern/trap.c b/kern/trap.c
+index e94cb5b..6e6b1b7 100644
+<span class="token deleted">--- a/kern/trap.c</span>
+<span class="token inserted">+++ b/kern/trap.c</span>
+@@ -79,7 +79,7 @@ trap_init(void)
+ 				break;
+ 		}
+ 	}
+<span class="token deleted">-</span>
+<span class="token inserted">+	cprintf("entry number: %d\n", entry_num);</span>
+ 	// Per-CPU setup 
+ 	trap_init_percpu();
+ }
+@@ -159,6 +159,20 @@ trap_dispatch(struct Trapframe *tf)
+ 	// Handle processor exceptions.
+ 	// LAB 3: Your code here.
+ 
+<span class="token inserted">+	switch(tf->tf_trapno) {</span>
+<span class="token inserted">+		case T_BRKPT: monitor(tf);</span>
+<span class="token inserted">+					  return;</span>
+<span class="token inserted">+		case T_PGFLT: page_fault_handler(tf);</span>
+<span class="token inserted">+					  return;</span>
+<span class="token inserted">+		case T_SYSCALL: syscall(tf->tf_regs.reg_eax,</span>
+<span class="token inserted">+								tf->tf_regs.reg_edx,</span>
+<span class="token inserted">+								tf->tf_regs.reg_ecx,</span>
+<span class="token inserted">+								tf->tf_regs.reg_ebx,</span>
+<span class="token inserted">+								tf->tf_regs.reg_edi,</span>
+<span class="token inserted">+								tf->tf_regs.reg_esi);</span>
+<span class="token inserted">+					  return;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+ 	// Unexpected trap: The user process or the kernel has a bug.
+ 	print_trapframe(tf);
+ 	if (tf->tf_cs == GD_KT)
+diff --git a/kern/trapentry.S b/kern/trapentry.S
+index ea24a22..ca457ee 100644
+<span class="token deleted">--- a/kern/trapentry.S</span>
+<span class="token inserted">+++ b/kern/trapentry.S</span>
+@@ -91,7 +91,7 @@ idt_entries:
+ 	.long trap_alignment_check
+ 	.long trap_machine_check
+ 	.long trap_SIMD_float_point_error
+<span class="token deleted">-	.fill 29, 4, 0						# 29 null entries</span>
+<span class="token inserted">+	.fill 28, 4, 0						# 29 null entries</span>
+ 	.long trap_system_call
+ .global idt_entries_end
+ idt_entries_end:
+</pre><h3 class="mume-header" id="answer-to-q3-q4">Answer to Q3 &amp; Q4</h3>
+
+<blockquote>
+<ol start="3">
+<li>The break point test case will either generate a break point exception or a general protection fault depending on how you initialized the break point entry in the IDT (i.e., your call to SETGATE from trap_init). Why? How do you need to set it up in order to get the breakpoint exception to work as specified above and what incorrect setup would cause it to trigger a general protection fault?</li>
+</ol>
+</blockquote>
+<p>We need to set the DPL = 3 for break point trap handler to give user program the privilege to invoke it. Otherwise a program generating break point exception will trigger a general protection fault.</p>
+<blockquote>
+<ol start="4">
+<li>What do you think is the point of these mechanisms, particularly in light of what the user/softint test program does?</li>
+</ol>
+</blockquote>
+<p>These mechanisms prevents user program from invoking arbitrary interrupt handlers that gives user program a chance to interfere with kernel or other programs unconsciously or deliberately.</p>
+<h3 class="mume-header" id="exercise-8">Exercise 8</h3>
+
+<blockquote>
+<p>Q : Add the required code to the user library, then boot your kernel. You should see user/hello print “hello, world” and then print “i am environment 00001000”. user/hello then attempts to “exit” by calling sys_env_destroy() (see lib/libmain.c and lib/exit.c). Since the kernel currently only supports one user environment, it should report that it has destroyed the only environment and then drop into the kernel monitor. You should be able to get make grade to succeed on the hello test.</p>
+</blockquote>
+<p>The user program has access to <code>envs</code>. It have access to its <code>envid</code> by using <code>sys_getenvid()</code>, too. So it’s easy for a user program to get the pointer to it’s own enviroment. By the way, I fixed a bug left in last exercise.</p>
+<p>Codes for this exercise are shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/trap.c b/kern/trap.c
+index 6e6b1b7..8e99f14 100644
+<span class="token deleted">--- a/kern/trap.c</span>
+<span class="token inserted">+++ b/kern/trap.c</span>
+@@ -164,12 +164,13 @@ trap_dispatch(struct Trapframe *tf)
+ 					  return;
+ 		case T_PGFLT: page_fault_handler(tf);
+ 					  return;
+<span class="token deleted">-		case T_SYSCALL: syscall(tf->tf_regs.reg_eax,</span>
+<span class="token deleted">-								tf->tf_regs.reg_edx,</span>
+<span class="token deleted">-								tf->tf_regs.reg_ecx,</span>
+<span class="token deleted">-								tf->tf_regs.reg_ebx,</span>
+<span class="token deleted">-								tf->tf_regs.reg_edi,</span>
+<span class="token deleted">-								tf->tf_regs.reg_esi);</span>
+<span class="token inserted">+		case T_SYSCALL: tf->tf_regs.reg_eax = syscall(</span>
+<span class="token inserted">+									tf->tf_regs.reg_eax,</span>
+<span class="token inserted">+									tf->tf_regs.reg_edx,</span>
+<span class="token inserted">+									tf->tf_regs.reg_ecx,</span>
+<span class="token inserted">+									tf->tf_regs.reg_ebx,</span>
+<span class="token inserted">+									tf->tf_regs.reg_edi,</span>
+<span class="token inserted">+									tf->tf_regs.reg_esi);</span>
+ 					  return;
+ 	}
+ 
+diff --git a/lib/libmain.c b/lib/libmain.c
+index 8a14b29..e42ca80 100644
+<span class="token deleted">--- a/lib/libmain.c</span>
+<span class="token inserted">+++ b/lib/libmain.c</span>
+<span class="token coord">@@ -2,6 +2,7 @@</span>
+ // entry.S already took care of defining envs, pages, uvpd, and uvpt.
+ 
+ #include &lt;inc/lib.h>
+<span class="token inserted">+#include &lt;inc/env.h></span>
+ 
+ extern void umain(int argc, char **argv);
+ 
+@@ -13,7 +14,7 @@ libmain(int argc, char **argv)
+ {
+ 	// set thisenv to point at our Env structure in envs[].
+ 	// LAB 3: Your code here.
+<span class="token deleted">-	thisenv = 0;</span>
+<span class="token inserted">+	thisenv = &amp;envs[ENVX(sys_getenvid())];</span>
+ 
+ 	// save the name of the program so that panic() can use it
+ 	if (argc > 0)
+</pre><h3 class="mume-header" id="page-faults-and-memory-protection">Page faults and memory protection</h3>
+
+<p>OS usually rely on hardware support to implement memory protection. When a program tries to access an invalid address or one for which it has no permissions, the processor stops the program at the instruction causing the fault and then traps into the kernel with information about the attempted operation. If the fault is fixable, the kernel fixes it and let the program continue running. If the fault is not fixable, then the program is destroyed, since it will never get past the instruction causing the fault.</p>
+<p>System calls present an interesting problem for memory protection. Most system call interfaces let user programs pass pointers to the kernel. These pointers point at user buffers to be read or written. The kernel then dereferences these pointers while carrying out the system call. There are two problems with this:</p>
+<ol>
+<li>A page fault in the kernel is potentially a lot more serious than a page fault in a user program. If the kernel page-faults while manipulating its own data structures, that’s a kernel bug, and the fault handler should panic the kernel (and hence the whole system). But when the kernel is dereferencing pointers given to it by the user program, it needs a way to remember that any page faults these dereferences cause are actually on behalf of the user program.</li>
+<li>The kernel typically has more memory permissions than the user program. The user program might pass a pointer to a system call that points to memory that the kernel can read or write but that the program cannot. The kernel must be careful not to be tricked into dereferencing such a pointer, since that might reveal private information or destroy the integrity of the kernel.</li>
+</ol>
+<p>For both reasons the kernel must be extremely careful when handling pointers presented by user programs. JOS solves these problems by checking that the address passed by a user program is the user part of the address space and that the page table would allow the memory operation. In this way, the kernel will never suffer a page fault due to dereferencing a user-supplied pointer. If the kernel does page fault, it should panic and terminate.</p>
+<h3 class="mume-header" id="exercise-9-10">Exercise 9 &amp; 10</h3>
+
+<blockquote>
+<p>Q : Change <code>kern/trap.c</code> to panic if a page fault happens in kernel mode. Change debuginfo_eip in <code>kern/kdebug.c</code> to call <code>user_mem_check</code> on <code>usd</code>, <code>stabs</code>, and <code>stabstr</code>.</p>
+</blockquote>
+<blockquote>
+<p>Q : Boot your kernel, running user/evilhello. The environment should be destroyed, and the kernel should not panic. You should see:</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash">	<span class="token punctuation">[</span>00000000<span class="token punctuation">]</span> new <span class="token function">env</span> 00001000
+	<span class="token punctuation">..</span>.
+	<span class="token punctuation">[</span>00001000<span class="token punctuation">]</span> user_mem_check assertion failure <span class="token keyword">for</span> va f010000c
+	<span class="token punctuation">[</span>00001000<span class="token punctuation">]</span> <span class="token function">free</span> <span class="token function">env</span> 00001000
+</pre></blockquote>
+<p>Using <code>pgdir_walk</code>, it’s quite easy to check the memory address. There is a corner case that needs our attention. It’s much more effcient to round addresses passed to <code>user_mem_check</code> and check the beginning address of each page insteat of checking every address. If the first page we check failed, we should recored <code>va</code> as <code>user_mem_check_addr</code> instead of the beginning address of the first page because what really caused the fault was the <code>va</code> passed to <code>user_mem_check</code> from the perspective of a user program.</p>
+<p>Codes for these two exercises are shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/kdebug.c b/kern/kdebug.c
+index 38cfc6b..32a2ff1 100644
+<span class="token deleted">--- a/kern/kdebug.c</span>
+<span class="token inserted">+++ b/kern/kdebug.c</span>
+@@ -142,6 +142,8 @@ debuginfo_eip(uintptr_t addr, struct Eipdebuginfo *info)
+ 		// Make sure this memory is valid.
+ 		// Return -1 if it is not.  Hint: Call user_mem_check.
+ 		// LAB 3: Your code here.
+<span class="token inserted">+		if (user_mem_check(curenv, (const void *)usd, sizeof(struct UserStabData), 0) &lt; 0)</span>
+<span class="token inserted">+			return -1;</span>
+ 
+ 		stabs = usd->stabs;
+ 		stab_end = usd->stab_end;
+@@ -150,6 +152,9 @@ debuginfo_eip(uintptr_t addr, struct Eipdebuginfo *info)
+ 
+ 		// Make sure the STABS and string table memory is valid.
+ 		// LAB 3: Your code here.
+<span class="token inserted">+		if (user_mem_check(curenv, (const void *)stabs, (stab_end - stabs)*sizeof(struct Stab), 0) &lt; 0 ||</span>
+<span class="token inserted">+			user_mem_check(curenv, (const void *)stabstr, (stabstr_end - stabstr)*sizeof(char), 0) &lt; 0)</span>
+<span class="token inserted">+			return -1;</span>
+ 	}
+ 
+ 	// String table validity checks
+diff --git a/kern/pmap.c b/kern/pmap.c
+index 2a37451..78f13a7 100644
+<span class="token deleted">--- a/kern/pmap.c</span>
+<span class="token inserted">+++ b/kern/pmap.c</span>
+@@ -682,6 +682,25 @@ user_mem_check(struct Env *env, const void *va, size_t len, int perm)
+ {
+ 	// LAB 3: Your code here.
+ 
+<span class="token inserted">+	uintptr_t va_start = (uintptr_t) ROUNDDOWN(va, PGSIZE);</span>
+<span class="token inserted">+	uintptr_t va_end = (uintptr_t) ROUNDUP(va + len, PGSIZE);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	for (; va_start &lt; va_end; va_start += PGSIZE) {</span>
+<span class="token inserted">+		if (va_start &lt; ULIM) {</span>
+<span class="token inserted">+			pte_t *pt_entry = pgdir_walk(env->env_pgdir, (const void *)va_start, false);</span>
+<span class="token inserted">+			if (pt_entry != NULL &amp;&amp;</span>
+<span class="token inserted">+				((uint32_t)*pt_entry &amp; perm) == perm)</span>
+<span class="token inserted">+				continue;</span>
+<span class="token inserted">+		}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		if (va_start &lt; (uintptr_t) va)</span>
+<span class="token inserted">+			user_mem_check_addr = (uintptr_t )va;</span>
+<span class="token inserted">+		else</span>
+<span class="token inserted">+			user_mem_check_addr = va_start;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		return -E_FAULT;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+ 	return 0;
+ }
+ 
+diff --git a/kern/syscall.c b/kern/syscall.c
+index 4e7b70f..c39afc3 100644
+<span class="token deleted">--- a/kern/syscall.c</span>
+<span class="token inserted">+++ b/kern/syscall.c</span>
+@@ -21,6 +21,7 @@ sys_cputs(const char *s, size_t len)
+ 	// Destroy the environment if not.
+ 
+ 	// LAB 3: Your code here.
+<span class="token inserted">+	user_mem_assert(curenv, (const void *)s, len, 0);</span>
+ 
+ 	// Print the string supplied by the user.
+ 	cprintf(<span class="token string">"%.*s"</span>, len, s);
+diff --git a/kern/trap.c b/kern/trap.c
+index 8e99f14..ebf2b3c 100644
+<span class="token deleted">--- a/kern/trap.c</span>
+<span class="token inserted">+++ b/kern/trap.c</span>
+@@ -234,6 +234,11 @@ page_fault_handler(struct Trapframe *tf)
+ 	// Handle kernel-mode page faults.
+ 
+ 	// LAB 3: Your code here.
+<span class="token inserted">+	// the low 2 bits in code stack register (CS) gives the</span>
+<span class="token inserted">+	// privilege level of the trapframe. The low 2 bits of kernel</span>
+<span class="token inserted">+	// mode is 0 while the low 2 bits of user mode is 3</span>
+<span class="token inserted">+	if ((tf->tf_cs &amp; 0x3) == 0)</span>
+<span class="token inserted">+		panic("Page fault in kernel.");</span>
+ 
+ 	// We've already handled kernel-mode exceptions, so if we get here,
+ 	// the page fault happened in user mode.
+</pre><h2 class="mume-header" id="challenges">Challenges</h2>
+
+<h3 class="mume-header" id="challenge-1">Challenge 1</h3>
+
+<p>Challenge 1 has already been implemented in section <a href="#exercise-4-challenge-1">Exericse 4 &amp; Challenge 1</a></p>
+<h3 class="mume-header" id="challenge-2">Challenge 2</h3>
+
+<blockquote>
+<p>Q : Modify the JOS kernel monitor so that you can ‘continue’ execution from the current location (e.g., after the int3, if the kernel monitor was invoked via the breakpoint exception), and so that you can single-step one instruction at a time. You will need to understand certain bits of the EFLAGS register in order to implement single-stepping.</p>
+</blockquote>
+<p>Since <code>curenv</code> doesn’t change when a user program is trapped into kernel monitor, to continue to execute it, we only need to add a command to kernel monitor which will invoke <code>env_run(curenv)</code>. To single step the user program, we need to turn on the TF flag bit (bit 8) in EFLAGS which tells the processor enter single stepping mode, namely, execute one instruction and generate a debug exception. We should recall that we need to tell the processor to single step the user program not the kernel monitor so we need to modify <code>tf-&gt;tf_eflags</code> instead of the real EFLAGS register. In addition, in single step mode, the processor generate debug exception instead of breakpoint exception. Thus we need to modify <code>trap_dispatch()</code> to dispacth both break point exception and debug exception to kernel monitor.</p>
+<p>To demonstrate our implementation, we modify <code>breakpoint.c</code>, add a <code>nop</code> instruction and another <code>int3</code> to it, then run <code>make run-qemu-nox</code>. The log and explanation are listed below.</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash">6828 decimal is 15254 octal<span class="token operator">!</span>
+Physical memory: 131072K available, base <span class="token operator">=</span> 640K, extended <span class="token operator">=</span> 130432K
+check_page_free_list<span class="token punctuation">(</span><span class="token punctuation">)</span> succeeded<span class="token operator">!</span>
+check_page_alloc<span class="token punctuation">(</span><span class="token punctuation">)</span> succeeded<span class="token operator">!</span>
+check_page<span class="token punctuation">(</span><span class="token punctuation">)</span> succeeded<span class="token operator">!</span>
+check_kern_pgdir<span class="token punctuation">(</span><span class="token punctuation">)</span> succeeded<span class="token operator">!</span>
+check_page_free_list<span class="token punctuation">(</span><span class="token punctuation">)</span> succeeded<span class="token operator">!</span>
+check_page_installed_pgdir<span class="token punctuation">(</span><span class="token punctuation">)</span> succeeded<span class="token operator">!</span>
+entry number: 49
+<span class="token punctuation">[</span>00000000<span class="token punctuation">]</span> new <span class="token function">env</span> 00001000
+Incoming TRAP frame at 0xefffffbc
+Incoming TRAP frame at 0xefffffbc
+Welcome to the JOS kernel monitor<span class="token operator">!</span>
+Type <span class="token string">'help'</span> <span class="token keyword">for</span> a list of commands.
+TRAP frame at 0xf01b4000
+  edi  0x00000000
+  esi  0x00000000
+  ebp  0xeebfdfd0
+  oesp 0xefffffdc
+  ebx  0x00000000
+  edx  0x00000000
+  ecx  0x00000000
+  eax  0xeec00000
+  es   0x----0023
+  ds   0x----0023
+  <span class="token function">trap</span> 0x00000003 Breakpoint                    <span class="token comment"># break point exception generated by the first "int3"</span>
+  err  0x00000000
+  eip  0x00800037
+  cs   0x----001b
+  flag 0x00000082
+  esp  0xeebfdfd0
+  ss   0x----0023
+K<span class="token operator">></span> stepi                                        <span class="token comment"># excute next instruction, namely "nop"</span>
+Incoming TRAP frame at 0xefffffbc
+Welcome to the JOS kernel monitor<span class="token operator">!</span>
+Type <span class="token string">'help'</span> <span class="token keyword">for</span> a list of commands.
+TRAP frame at 0xf01b4000
+  edi  0x00000000
+  esi  0x00000000
+  ebp  0xeebfdfd0
+  oesp 0xefffffdc
+  ebx  0x00000000
+  edx  0x00000000
+  ecx  0x00000000
+  eax  0xeec00000
+  es   0x----0023
+  ds   0x----0023
+  <span class="token function">trap</span> 0x00000001 Debug                         <span class="token comment"># debug exception generated by the processor after executing "nop"</span>
+  err  0x00000000
+  eip  0x00800038
+  cs   0x----001b
+  flag 0x00000182
+  esp  0xeebfdfd0
+  ss   0x----0023
+K<span class="token operator">></span> stepi
+Incoming TRAP frame at 0xefffffbc
+Welcome to the JOS kernel monitor<span class="token operator">!</span>
+Type <span class="token string">'help'</span> <span class="token keyword">for</span> a list of commands.
+TRAP frame at 0xf01b4000
+  edi  0x00000000
+  esi  0x00000000
+  ebp  0xeebfdfd0
+  oesp 0xefffffdc
+  ebx  0x00000000
+  edx  0x00000000
+  ecx  0x00000000
+  eax  0xeec00000
+  es   0x----0023
+  ds   0x----0023
+  <span class="token function">trap</span> 0x00000003 Breakpoint                    <span class="token comment"># break point exception generated by the second "int3"</span>
+  err  0x00000000
+  eip  0x00800039
+  cs   0x----001b
+  flag 0x00000182
+  esp  0xeebfdfd0
+  ss   0x----0023
+K<span class="token operator">></span> stepi
+Incoming TRAP frame at 0xefffffbc
+Welcome to the JOS kernel monitor<span class="token operator">!</span>
+Type <span class="token string">'help'</span> <span class="token keyword">for</span> a list of commands.
+TRAP frame at 0xf01b4000
+  edi  0x00000000
+  esi  0x00000000
+  ebp  0xeebfdff0
+  oesp 0xefffffdc
+  ebx  0x00000000
+  edx  0x00000000
+  ecx  0x00000000
+  eax  0xeec00000
+  es   0x----0023
+  ds   0x----0023
+  <span class="token function">trap</span> 0x00000001 Debug                         <span class="token comment"># debug exception generated by the processor after executing</span>
+  err  0x00000000                               <span class="token comment"># the instruction after the second "int3". We know this exception</span>
+  eip  0x0080003a                               <span class="token comment"># wasn't generated by executing "int3" in single step mode</span>
+  cs   0x----001b                               <span class="token comment"># because it's "eip" is different from last trapframe.</span>
+  flag 0x00000182
+  esp  0xeebfdfd4
+  ss   0x----0023
+K<span class="token operator">></span> stepi
+Incoming TRAP frame at 0xefffffbc
+Welcome to the JOS kernel monitor<span class="token operator">!</span>
+Type <span class="token string">'help'</span> <span class="token keyword">for</span> a list of commands.
+TRAP frame at 0xf01b4000
+  edi  0x00000000
+  esi  0x00000000
+  ebp  0xeebfdff0
+  oesp 0xefffffdc
+  ebx  0x00000000
+  edx  0x00000000
+  ecx  0x00000000
+  eax  0xeec00000
+  es   0x----0023
+  ds   0x----0023
+  <span class="token function">trap</span> 0x00000001 Debug
+  err  0x00000000
+  eip  0x00800075
+  cs   0x----001b
+  flag 0x00000182
+  esp  0xeebfdfd8
+  ss   0x----0023
+K<span class="token operator">></span> <span class="token keyword">continue</span>                                     <span class="token comment"># continue to run the program. As we can see, the program</span>
+Incoming TRAP frame at 0xefffffbc               <span class="token comment"># ended ans was destroyed by the kernel normally after "continue".</span>
+<span class="token punctuation">[</span>00001000<span class="token punctuation">]</span> exiting gracefully
+<span class="token punctuation">[</span>00001000<span class="token punctuation">]</span> <span class="token function">free</span> <span class="token function">env</span> 00001000
+Destroyed the only environment - nothing <span class="token function">more</span> to do<span class="token operator">!</span>
+Welcome to the JOS kernel monitor<span class="token operator">!</span>
+Type <span class="token string">'help'</span> <span class="token keyword">for</span> a list of commands.
+K<span class="token operator">></span> QEMU: Terminated
+</pre><p>Codes for this challenge are shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/monitor.c b/kern/monitor.c
+index cd43b29..513e2e7 100644
+<span class="token deleted">--- a/kern/monitor.c</span>
+<span class="token inserted">+++ b/kern/monitor.c</span>
+<span class="token coord">@@ -11,6 +11,7 @@</span>
+ #include &lt;kern/monitor.h>
+ #include &lt;kern/kdebug.h>
+ #include &lt;kern/trap.h>
+<span class="token inserted">+#include &lt;kern/env.h></span>
+ 
+ #define CMDBUF_SIZE	80	// enough for one VGA text line
+ 
+@@ -26,6 +27,8 @@ static struct Command commands[] = {
+ 	{ <span class="token string">"help"</span>, CMD_HELP_HELP_STR, mon_help },
+ 	{ <span class="token string">"kerninfo"</span>, CMD_KERNINFO_HELP_STR, mon_kerninfo },
+ 	{ <span class="token string">"backtrace"</span>, CMD_BACKTRACE_HELP_STR, mon_backtrace},
+<span class="token inserted">+	{ "continue", CMD_CONTINUE_HELP_STR, mon_continue},</span>
+<span class="token inserted">+	{ "stepi", CMD_STEPI_HELP_STR, mon_stepi},</span>
+ };
+ 
+ 
+@@ -130,7 +133,53 @@ mon_backtrace(int argc, char **argv, struct Trapframe *tf)
+ 	return 0;
+ }
+ 
+<span class="token inserted">+int</span>
+<span class="token inserted">+mon_continue(int argc, char **argv, struct Trapframe *tf)</span>
+<span class="token inserted">+{</span>
+<span class="token inserted">+	if (!curenv) {</span>
+<span class="token inserted">+		cprintf("No runnable enviroment available.\n");</span>
+<span class="token inserted">+		return 0;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (!tf) {</span>
+<span class="token inserted">+		cprintf("No trapframe available.\n");</span>
+<span class="token inserted">+		return 0;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (tf->tf_trapno != T_BRKPT &amp;&amp; tf->tf_trapno != T_DEBUG) {</span>
+<span class="token inserted">+		cprintf("Kernel monitor is not invoked by a break point or debug interrupt.\n");</span>
+<span class="token inserted">+		return 0;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	tf->tf_eflags &amp;= ~(FL_TF);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	env_run(curenv);</span>
+<span class="token inserted">+	return 0;</span>
+<span class="token inserted">+}</span>
+ 
+<span class="token inserted">+int</span>
+<span class="token inserted">+mon_stepi(int argc, char **argv, struct Trapframe *tf)</span>
+<span class="token inserted">+{</span>
+<span class="token inserted">+	if (!curenv) {</span>
+<span class="token inserted">+		cprintf("No runnable enviroment available.\n");</span>
+<span class="token inserted">+		return 0;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (!tf) {</span>
+<span class="token inserted">+		cprintf("No trapframe available.\n");</span>
+<span class="token inserted">+		return 0;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (tf->tf_trapno != T_BRKPT &amp;&amp; tf->tf_trapno != T_DEBUG) {</span>
+<span class="token inserted">+		cprintf("Kernel monitor is not invoked by a break point or debug interrupt.\n");</span>
+<span class="token inserted">+		return 0;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	tf->tf_eflags |= FL_TF;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	env_run(curenv);</span>
+<span class="token inserted">+	return 0;</span>
+<span class="token inserted">+}</span>
+ 
+ /***** Kernel monitor command interpreter *****/
+ 
+diff --git a/kern/monitor.h b/kern/monitor.h
+index 9aea717..1b26be5 100644
+<span class="token deleted">--- a/kern/monitor.h</span>
+<span class="token inserted">+++ b/kern/monitor.h</span>
+@@ -15,6 +15,8 @@ void monitor(struct Trapframe *tf);
+ int mon_help(int argc, char **argv, struct Trapframe *tf);
+ int mon_kerninfo(int argc, char **argv, struct Trapframe *tf);
+ int mon_backtrace(int argc, char **argv, struct Trapframe *tf);
+<span class="token inserted">+int mon_continue(int argc, char **argv, struct Trapframe *tf);</span>
+<span class="token inserted">+int mon_stepi(int argc, char **argv, struct Trapframe *tf);</span>
+ 
+ #define CMD_HELP_HELP_STR       "\
+ -SYNOPSIS:\n\
+@@ -23,8 +25,17 @@ int mon_backtrace(int argc, char **argv, struct Trapframe *tf);
+     list: display all help information of all commands.\n\
+     command name: display help information of given name\n"
+ 
+<span class="token deleted">-#define CMD_KERNINFO_HELP_STR   "Display information about the kernel\n"</span>
+<span class="token inserted">+#define CMD_KERNINFO_HELP_STR   "    Display information about the kernel\n"</span>
+ 
+<span class="token deleted">-#define CMD_BACKTRACE_HELP_STR  "Display the current call stack\n"</span>
+<span class="token inserted">+#define CMD_BACKTRACE_HELP_STR  "    Display the current call stack\n"</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+#define CMD_CONTINUE_HELP_STR   "\</span>
+<span class="token inserted">+    Continue executing the program that caused a break point or debug\n\</span>
+<span class="token inserted">+    interrupt.\n"</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+#define CMD_STEPI_HELP_STR      "\</span>
+<span class="token inserted">+    Execute next intruction of the program that caused a break point or\n\</span>
+<span class="token inserted">+    debug interrupt. Then a debug interrupt is raised and execution is\n\</span>
+<span class="token inserted">+    trapped into kernel monitor again.\n"</span>
+ 
+ #endif	// !JOS_KERN_MONITOR_H
+diff --git a/kern/trap.c b/kern/trap.c
+index ebf2b3c..bd63da7 100644
+<span class="token deleted">--- a/kern/trap.c</span>
+<span class="token inserted">+++ b/kern/trap.c</span>
+@@ -160,6 +160,7 @@ trap_dispatch(struct Trapframe *tf)
+ 	// LAB 3: Your code here.
+ 
+ 	switch(tf->tf_trapno) {
+<span class="token inserted">+		case T_DEBUG:</span>
+ 		case T_BRKPT: monitor(tf);
+ 					  return;
+ 		case T_PGFLT: page_fault_handler(tf);
+diff --git a/user/breakpoint.c b/user/breakpoint.c
+index 47e4cb2..d23469d 100644
+<span class="token deleted">--- a/user/breakpoint.c</span>
+<span class="token inserted">+++ b/user/breakpoint.c</span>
+@@ -6,5 +6,7 @@ void
+ umain(int argc, char **argv)
+ {
+ 	asm volatile(<span class="token string">"int $3"</span>);
+<span class="token inserted">+	asm volatile("nop");</span>
+<span class="token inserted">+	asm volatile("int $3");</span>
+ }
+ 
+</pre><h3 class="mume-header" id="challenge-3">Challenge 3</h3>
+
+<blockquote>
+<p>Q : Implement system calls using the sysenter and sysexit instructions instead of using int 0x30 and iret.</p>
+</blockquote>
+<p>Ref: Intel<sup>®</sup> 64 and IA-32 Architectures Software Developer’s Manual</p>
+<p><code>sysenter</code> give user program a chance to jump directly to system call handler instead of taking a detour to interrupt mechanism for system call, which results in a better performance.</p>
+<p>When <code>sysenter</code> is executed, the processor:</p>
+<ol>
+<li>Loads the segment selector from the <strong><em>IA32_SYSENTER_CS</em></strong> into the <strong><em>CS</em></strong> register.</li>
+<li>Loads the instruction pointer from the <strong><em>IA32_SYSENTER_EIP</em></strong> into the EIP register.</li>
+<li>Adds 8 to the value in <strong><em>IA32_SYSENTER_CS</em></strong> and loads it into the <strong><em>SS</em></strong> register.</li>
+<li>Loads the stack pointer from the <strong><em>IA32_SYSENTER_ESP</em></strong> into the <strong><em>ESP</em></strong> register.</li>
+<li>Switches to privilege level 0.</li>
+<li>Clears the <strong><em>VM</em></strong> flag in the <strong><em>EFLAGS</em></strong> register, if the flag is set.</li>
+<li>Begins executing the selected system procedure.</li>
+</ol>
+<p>The processor does not save a return <strong><em>IP</em></strong> or other state information for the calling procedure.</p>
+<p>When <code>sysexit</code> is executed, the processor:</p>
+<ol>
+<li>Adds 16 to the value in <strong><em>IA32_SYSENTER_CS</em></strong> and loads the sum into the <strong><em>CS</em></strong> selector register.</li>
+<li>Loads the instruction pointer from the <strong><em>EDX</em></strong> register into <strong><em>EIP</em></strong> register.</li>
+<li>Adds 24 to the value in <strong><em>IA32_SYSENTER_CS</em></strong> and loads the sum into the <strong><em>SS</em></strong> selector register.</li>
+<li>Loads the stack pointer from the <strong><em>ECX</em></strong> register into the <strong><em>ESP</em></strong> register.</li>
+<li>Switches to privilege level 3.</li>
+<li>Begins executing the user code at the <strong><em>EIP</em></strong> address.</li>
+</ol>
+<p>From the above description, we can conclude that to use <code>sysenter/sysexit</code> mechanism, we need to do:</p>
+<ol>
+<li>Put the code stack segment selector of system call handler in <strong><em>IA32_SYSENTER_CS</em></strong>.</li>
+<li>Put the address of the beginning of system call handler in its code segment in <strong><em>IA32_SYSENTER_EIP</em></strong>.</li>
+<li>Put the stack pointer used by system call handler in <strong><em>IA32_SYSENTER_ESP</em></strong>.</li>
+<li>The processor use <strong><em>IA32_SYSENTER_CS+8</em></strong> for system call handler stack segment selector on <strong><em>SYSENTER</em></strong>, <strong><em>IA32_SYSENTER_CS+16</em></strong> for user code segment selector on <strong><em>SYSEXIT</em></strong>, <strong><em>IA32_SYSENTER_CS+24</em></strong> for user stack segment selector on <strong><em>SYSEXIT</em></strong>. So we need to design JOS to fulfill this requirement.</li>
+<li>Put the address of the user instruction to be executed in <strong><em>EDX</em></strong> before executing <strong><em>SYSEXIT</em></strong>.</li>
+<li>Put the user stack pointer in <strong><em>ECX</em></strong> before executing <strong><em>SYSEXIT</em></strong>.</li>
+</ol>
+<p>In JOS, we have the following macros for code segment and stack segment of kernel and user. They meet the requirement so we don’t need to modify them.</p>
+<pre data-role="codeBlock" data-info="c" class="language-c"><span class="token macro property">#<span class="token directive keyword">define</span> GD_KT     0x08     </span><span class="token comment">// kernel text</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> GD_KD     0x10     </span><span class="token comment">// kernel data</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> GD_UT     0x18     </span><span class="token comment">// user text</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> GD_UD     0x20     </span><span class="token comment">// user data</span>
+</pre><p>JOS needs to set up <strong><em>IA32_SYSENTER_CS</em></strong>, <strong><em>IA32_SYSENTER_EIP</em></strong>, <strong><em>IA32_SYSENTER_ESP</em></strong> for user. Since values in these reigster never change after initialization, we initialize them during kernel initialization using macros we defined in <code>inc/x86.h</code>. <strong><em>SYSENTER/SYSEXIT</em></strong> mechanism doesn’t store anything for us. Thus we need to pass parameters for system call as well as the returning instuction address and user stack pointer for <strong><em>SYSEXIT</em></strong> using registers. We arrange registers in the way shown below while preserve the GCC calling convention.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">register</th>
+<th>usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">eax</td>
+<td>syscall number</td>
+</tr>
+<tr>
+<td style="text-align:center">edx</td>
+<td>argument 1</td>
+</tr>
+<tr>
+<td style="text-align:center">ecx</td>
+<td>argument 2</td>
+</tr>
+<tr>
+<td style="text-align:center">ebx</td>
+<td>argument 3</td>
+</tr>
+<tr>
+<td style="text-align:center">edi</td>
+<td>argument 4</td>
+</tr>
+<tr>
+<td style="text-align:center">ebp</td>
+<td>return esp</td>
+</tr>
+<tr>
+<td style="text-align:center">esp</td>
+<td>trashed by sysenter</td>
+</tr>
+</tbody>
+</table>
+<p>Because <strong><em>SYSENTER</em></strong> will change the value in <strong><em>ESP</em></strong>, we can’t store anything in it. This leaves us registers enough only for 4 arguments. To pass five arguments, we store a pointer to real argument 4 in <strong><em>EDI</em></strong>. In GCC calling convention, argument 4 and 5 reside consecutively on the stack. Thus system call handler is able to get the real argument 4 by <code>*(edi)</code> and argument 5 by <code>*(edi + 4)</code>. In the first few instructions of system call handler, we push arguments onto stack then we can reuse the real system call handler function. After the system call handler function return, we set up <strong><em>EDX</em></strong> and <strong><em>ECX</em></strong> then execute <strong><em>SYSEXIT</em></strong> to return to the user program.</p>
+<p>After everything is in place, we can pass all tests as we did by using interrupt for system call.</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash">divzero: OK <span class="token punctuation">(</span>2.2s<span class="token punctuation">)</span>
+softint: OK <span class="token punctuation">(</span>0.9s<span class="token punctuation">)</span>
+badsegment: OK <span class="token punctuation">(</span>1.0s<span class="token punctuation">)</span>
+Part A score: 30/30
+
+faultread: OK <span class="token punctuation">(</span>0.9s<span class="token punctuation">)</span>
+faultreadkernel: OK <span class="token punctuation">(</span>1.6s<span class="token punctuation">)</span>
+faultwrite: OK <span class="token punctuation">(</span>2.3s<span class="token punctuation">)</span>
+faultwritekernel: OK <span class="token punctuation">(</span>2.0s<span class="token punctuation">)</span>
+breakpoint: OK <span class="token punctuation">(</span>1.0s<span class="token punctuation">)</span>
+testbss: OK <span class="token punctuation">(</span>1.9s<span class="token punctuation">)</span>
+hello: OK <span class="token punctuation">(</span>1.8s<span class="token punctuation">)</span>
+buggyhello: OK <span class="token punctuation">(</span>2.1s<span class="token punctuation">)</span>
+buggyhello2: OK <span class="token punctuation">(</span>1.0s<span class="token punctuation">)</span>
+evilhello: OK <span class="token punctuation">(</span>2.0s<span class="token punctuation">)</span>
+Part B score: 50/50
+
+Score: 80/80
+</pre><p>Codes for this challenge are shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/inc/x86.h b/inc/x86.h
+index cc15ff4..430341c 100644
+<span class="token deleted">--- a/inc/x86.h</span>
+<span class="token inserted">+++ b/inc/x86.h</span>
+@@ -261,4 +261,25 @@ xchg(volatile uint32_t *addr, uint32_t newval)
+ 	return result;
+ }
+ 
+<span class="token inserted">+/*</span>
+<span class="token inserted">+ * Access to machine-specific registers (available on 586 and better only)</span>
+<span class="token inserted">+ * Note: the rd* operations modify the parameters directly (without using</span>
+<span class="token inserted">+ * pointer indirection), this allows gcc to optimize better</span>
+<span class="token inserted">+ */</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+#define IA32_SYSENTER_CS	0x174</span>
+<span class="token inserted">+#define IA32_SYSENTER_ESP	0x175</span>
+<span class="token inserted">+#define IA32_SYSENTER_EIP	0x176</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+#define rdmsr(msr,val1,val2) \</span>
+<span class="token inserted">+	__asm__ __volatile__("rdmsr" \</span>
+<span class="token inserted">+	: "=a" (val1), "=d" (val2) \</span>
+<span class="token inserted">+	: "c" (msr))</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+#define wrmsr(msr,val1,val2) \</span>
+<span class="token inserted">+	__asm__ __volatile__("wrmsr" \</span>
+<span class="token inserted">+	: /* no outputs */ \</span>
+<span class="token inserted">+	: "c" (msr), "a" (val1), "d" (val2))</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+</span>
+ #endif /* !JOS_INC_X86_H */
+diff --git a/kern/init.c b/kern/init.c
+index 87ed126..731b635 100644
+<span class="token deleted">--- a/kern/init.c</span>
+<span class="token inserted">+++ b/kern/init.c</span>
+<span class="token coord">@@ -3,6 +3,7 @@</span>
+ #include &lt;inc/stdio.h>
+ #include &lt;inc/string.h>
+ #include &lt;inc/assert.h>
+<span class="token inserted">+#include &lt;inc/x86.h></span>
+ 
+ #include &lt;kern/monitor.h>
+ #include &lt;kern/console.h>
+@@ -35,6 +36,13 @@ i386_init(void)
+ 	env_init();
+ 	trap_init();
+ 
+<span class="token inserted">+	// initialize Machine Specific Registers to support</span>
+<span class="token inserted">+	// system call using sysenter/sysexit</span>
+<span class="token inserted">+	extern char _sysenter[];</span>
+<span class="token inserted">+	wrmsr(IA32_SYSENTER_CS, GD_KT, 0);</span>
+<span class="token inserted">+	wrmsr(IA32_SYSENTER_ESP, KSTACKTOP, 0);</span>
+<span class="token inserted">+	wrmsr(IA32_SYSENTER_EIP, _sysenter, 0);</span>
+<span class="token inserted">+</span>
+ #if defined(TEST)
+ 	// Don't touch -- used by grading script!
+ 	ENV_CREATE(TEST, ENV_TYPE_USER);
+diff --git a/kern/trapentry.S b/kern/trapentry.S
+index ca457ee..fcfe3a4 100644
+<span class="token deleted">--- a/kern/trapentry.S</span>
+<span class="token inserted">+++ b/kern/trapentry.S</span>
+@@ -110,4 +110,21 @@ _alltraps:
+ 	movw %ax, %es
+ 	
+ 	pushl %esp
+<span class="token deleted">-	call trap</span>
+\ No newline at end of file
+<span class="token inserted">+	call trap</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+/*</span>
+<span class="token inserted">+ * entry code for system call using sysenter/sysexit</span>
+<span class="token inserted">+ */</span>
+<span class="token inserted">+.global _sysenter</span>
+<span class="token inserted">+_sysenter:</span>
+<span class="token inserted">+	pushl 4(%edi)</span>
+<span class="token inserted">+	pushl (%edi)</span>
+<span class="token inserted">+	pushl %ebx</span>
+<span class="token inserted">+	pushl %ecx</span>
+<span class="token inserted">+	pushl %edx</span>
+<span class="token inserted">+	pushl %eax</span>
+<span class="token inserted">+	call syscall</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	movl %ebp, %ecx</span>
+<span class="token inserted">+	movl %esi, %edx</span>
+<span class="token inserted">+	sysexit</span>
+diff --git a/lib/syscall.c b/lib/syscall.c
+index 8d28dda..9eab046 100644
+<span class="token deleted">--- a/lib/syscall.c</span>
+<span class="token inserted">+++ b/lib/syscall.c</span>
+<span class="token coord">@@ -3,33 +3,34 @@</span>
+ #include &lt;inc/syscall.h>
+ #include &lt;inc/lib.h>
+ 
+<span class="token deleted">-static inline int32_t</span>
+<span class="token inserted">+/*</span>
+<span class="token inserted">+ * new syscall using sysenter/sysexit</span>
+<span class="token inserted">+ * </span>
+<span class="token inserted">+ * We use a label (_sysexit) in inline asm that C doesn't know.</span>
+<span class="token inserted">+ * So we can't declare syscall() with 'inline'. Otherwise C</span>
+<span class="token inserted">+ * preprocessor will copy those asm codes to multiple places then</span>
+<span class="token inserted">+ * the compiler will complain that it found the same label</span>
+<span class="token inserted">+ * declaration in multiple places.</span>
+<span class="token inserted">+ */</span>
+<span class="token inserted">+static int32_t</span>
+ syscall(int num, int check, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5)
+ {
+ 	int32_t ret;
+ 
+<span class="token deleted">-	// Generic system call: pass system call number in AX,</span>
+<span class="token deleted">-	// up to five parameters in DX, CX, BX, DI, SI.</span>
+<span class="token deleted">-	// Interrupt kernel with T_SYSCALL.</span>
+<span class="token deleted">-	//</span>
+<span class="token deleted">-	// The "volatile" tells the assembler not to optimize</span>
+<span class="token deleted">-	// this instruction away just because we don't use the</span>
+<span class="token deleted">-	// return value.</span>
+<span class="token deleted">-	//</span>
+<span class="token deleted">-	// The last clause tells the assembler that this can</span>
+<span class="token deleted">-	// potentially change the condition codes and arbitrary</span>
+<span class="token deleted">-	// memory locations.</span>
+<span class="token deleted">-</span>
+<span class="token deleted">-	asm volatile("int %1\n"</span>
+<span class="token deleted">-		     : "=a" (ret)</span>
+<span class="token deleted">-		     : "i" (T_SYSCALL),</span>
+<span class="token deleted">-		       "a" (num),</span>
+<span class="token deleted">-		       "d" (a1),</span>
+<span class="token deleted">-		       "c" (a2),</span>
+<span class="token deleted">-		       "b" (a3),</span>
+<span class="token deleted">-		       "D" (a4),</span>
+<span class="token deleted">-		       "S" (a5)</span>
+<span class="token deleted">-		     : "cc", "memory");</span>
+<span class="token inserted">+	asm volatile(</span>
+<span class="token inserted">+			"pushl %%ebp\n\t"</span>
+<span class="token inserted">+			"movl $_sysexit, %%esi\n\t"</span>
+<span class="token inserted">+			"movl %%esp, %%ebp\n\t"</span>
+<span class="token inserted">+			"sysenter\n\t"</span>
+<span class="token inserted">+			"_sysexit:\n\t"</span>
+<span class="token inserted">+			"popl %%ebp"</span>
+<span class="token inserted">+			: "=a" (ret)</span>
+<span class="token inserted">+			: "a" (num),</span>
+<span class="token inserted">+			  "d" (a1),</span>
+<span class="token inserted">+			  "c" (a2),</span>
+<span class="token inserted">+			  "b" (a3),</span>
+<span class="token inserted">+			  "D" (&amp;a4)		/* store pointer to a4 in edi to pass a4 and a5 */</span>
+<span class="token inserted">+			: "cc", "memory", "esi");</span>
+
+ 	if(check &amp;&amp; ret > 0)
+ 		panic(<span class="token string">"syscall %d returned %d (> 0)"</span>, num, ret);
+</pre><h2 class="mume-header" id="grade">Grade</h2>
+
+<p>Finally, we got our grade.</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash">divzero: OK <span class="token punctuation">(</span>6.7s<span class="token punctuation">)</span>
+softint: OK <span class="token punctuation">(</span>1.2s<span class="token punctuation">)</span>
+badsegment: OK <span class="token punctuation">(</span>1.1s<span class="token punctuation">)</span>
+Part A score: 30/30
+
+faultread: OK <span class="token punctuation">(</span>2.0s<span class="token punctuation">)</span>
+faultreadkernel: OK <span class="token punctuation">(</span>2.1s<span class="token punctuation">)</span>
+faultwrite: OK <span class="token punctuation">(</span>1.9s<span class="token punctuation">)</span>
+faultwritekernel: OK <span class="token punctuation">(</span>2.0s<span class="token punctuation">)</span>
+breakpoint: OK <span class="token punctuation">(</span>1.1s<span class="token punctuation">)</span>
+testbss: OK <span class="token punctuation">(</span>1.6s<span class="token punctuation">)</span>
+hello: OK <span class="token punctuation">(</span>1.2s<span class="token punctuation">)</span>
+buggyhello: OK <span class="token punctuation">(</span>1.8s<span class="token punctuation">)</span>
+buggyhello2: OK <span class="token punctuation">(</span>2.1s<span class="token punctuation">)</span>
+evilhello: OK <span class="token punctuation">(</span>1.2s<span class="token punctuation">)</span>
+Part B score: 50/50
+
+Score: 80/80
+</pre><div class="code-chunk" data-id="code-chunk-id-3" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><footer style="width:100%;text-align:center;font-family:Times">End of Lab 3 Report<br>Email: <a mailto="caoshuyang1996@pku.edu.cn" href="">caoshuyang@pku.edu.cn</a> GitHub: <a href="https://github.com/CaoSY/JOS-Lab" title="JOS Lab">JOS-Lab</a></footer>
+</div></div>
+      </div>
+      <div class="md-sidebar-toc"><ul>
+<li><a href="#user-enviroments-and-exception-handling">User Enviroments and Exception Handling</a>
+<ul>
+<li><a href="#exercise-1">Exercise 1</a></li>
+</ul>
+</li>
+<li><a href="#creating-and-running-environments">Creating and Running Environments</a>
+<ul>
+<li><a href="#exercise-2">Exercise 2</a></li>
+<li><a href="#test-allocating-and-running-enviroments">Test Allocating and Running Enviroments</a></li>
+</ul>
+</li>
+<li><a href="#handling-interrupts-and-exceptions">Handling Interrupts and Exceptions</a>
+<ul>
+<li><a href="#basics-of-protected-control">Basics of Protected Control</a></li>
+<li><a href="#overall-interruptexception-handling-process">Overall Interrupt/Exception Handling Process</a></li>
+<li><a href="#interrupted-in-user-environment">Interrupted in User Environment</a></li>
+<li><a href="#nested-exceptions-and-interrupts">Nested Exceptions and Interrupts</a></li>
+<li><a href="#exercise-4-challenge-1">Exercise 4 &amp; Challenge 1</a></li>
+<li><a href="#answer-to-q1-q2">Answer to Q1 &amp; Q2</a></li>
+</ul>
+</li>
+<li><a href="#page-faults-breakpoints-exceptions-and-system-calls">Page Faults, Breakpoints Exceptions, and System Calls</a>
+<ul>
+<li><a href="#exercise-5-6-7">Exercise 5 &amp; 6 &amp; 7</a></li>
+<li><a href="#answer-to-q3-q4">Answer to Q3 &amp; Q4</a></li>
+<li><a href="#exercise-8">Exercise 8</a></li>
+<li><a href="#page-faults-and-memory-protection">Page faults and memory protection</a></li>
+<li><a href="#exercise-9-10">Exercise 9 &amp; 10</a></li>
+</ul>
+</li>
+<li><a href="#challenges">Challenges</a>
+<ul>
+<li><a href="#challenge-1">Challenge 1</a></li>
+<li><a href="#challenge-2">Challenge 2</a></li>
+<li><a href="#challenge-3">Challenge 3</a></li>
+</ul>
+</li>
+<li><a href="#grade">Grade</a></li>
+</ul>
+</div>
+      <a id="sidebar-toc-btn">≡</a>
+    </body>
+    
+    
+    
+    
+    
+    
+    
+<script>
+
+var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
+sidebarTOCBtn.addEventListener('click', function(event) {
+  event.stopPropagation()
+  if (document.body.hasAttribute('html-show-sidebar-toc')) {
+    document.body.removeAttribute('html-show-sidebar-toc')
+  } else {
+    document.body.setAttribute('html-show-sidebar-toc', true)
+  }
+})
+</script>
+      
+  </html>
