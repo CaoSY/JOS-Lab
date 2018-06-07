@@ -67,21 +67,21 @@ duppage(envid_t envid, unsigned pn)
 
 	// LAB 4: Your code here.
 	// panic("duppage not implemented");
-	void *addr = (void *)(pn*PGSIZE);
-	int perm = PGOFF(uvpt[pn]) & PTE_SYSCALL;
+	void *addr = (void *)(pn * PGSIZE);
+	int perm = uvpt[pn] & PTE_SYSCALL;
 
-	if (perm & (PTE_W | PTE_COW)) {
+	if ((perm & PTE_SHARE) || !(perm & (PTE_W | PTE_COW))) {
+		if ((r = sys_page_map(0, addr, envid, addr, perm)) < 0)
+			return r;
+	} else {
 		perm |= PTE_COW;
 		perm &= ~PTE_W;
 
 		if ((r = sys_page_map(0, addr, envid, addr, perm)) < 0)
-			panic("Failed to duppage on child enviroment: %e\n", r);
+			return r;
 		
 		if ((r = sys_page_map(0, addr, 0, addr, perm)) < 0)
-			panic("Failed to duppage on self enviroment: %e\n", r);
-	} else {
-		if ((r = sys_page_map(0, addr, envid, addr, perm)) < 0)
-			panic("Failed to duppage on child enviroment: %e\n", r);
+			return r;
 	}
 	
 	return 0;
