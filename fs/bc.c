@@ -29,9 +29,15 @@ va_is_dirty(void *va)
 static void
 bc_pgfault(struct UTrapframe *utf)
 {
+	static uint32_t pgfault_count = 0;
 	void *addr = (void *) utf->utf_fault_va;
 	uint32_t blockno = ((uint32_t)addr - DISKMAP) / BLKSIZE;
 	int r;
+
+	if (++pgfault_count > EVIC_INTER) {
+		evict_page();
+		pgfault_count = 0;
+	}
 
 	// Check that the fault was within the block cache region
 	if (addr < (void*)DISKMAP || addr >= (void*)(DISKMAP + DISKSIZE))
@@ -93,6 +99,40 @@ flush_block(void *addr)
 		
 		if ((r = sys_page_map(0, addr, 0, addr, uvpt[PGNUM(addr)] & PTE_SYSCALL)) < 0)
 			panic("flush_block, sys_page_map: %e\n", r);
+	}
+}
+
+
+// clean up block cache every 100 bc page faults.
+// strategy:
+// 		1. unmap page not accessed
+// 		2. unset access bit on pages accessed
+// 		3. flush out dirty pages and unset their accessed bit
+void
+evict_page()
+{
+	// this code is buggy if DISKMAP is not page directory aligned (NPTEENTRIES * PGSIZE);
+	static_assert(DISKMAP % PTSIZE == 0);
+
+	for (size_t i = PDX(DISKMAP); i < PDX(ROUNDUP(DISKMAP + DISKSIZE, PTSIZE)); ++i) {
+		if (uvpd[i] & PTE_P) {
+			pte_t *pgtable = (pte_t *)(uvpt + i * NPTENTRIES);
+
+			for (size_t j = 0; j < NPTENTRIES; ++j) {
+				if (pgtable[j] & PTE_P) {
+					void *addr = PGADDR(i, j, 0);
+
+					if (pgtable[j] & PTE_A) {
+						if (pgtable[j] & PTE_D)
+							flush_block(addr);
+							
+						sys_page_map(0, addr, 0, addr, pgtable[j] & PTE_SYSCALL);
+					} else {
+						sys_page_unmap(0, addr);
+					}
+				}
+			}
+		}
 	}
 }
 

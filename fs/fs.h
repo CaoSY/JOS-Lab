@@ -11,6 +11,9 @@
 /* Maximum disk size we can handle (3GB) */
 #define DISKSIZE	0xC0000000
 
+/* Block cache eviction interval */
+#define EVIC_INTER  100
+
 struct Super *super;		// superblock
 uint32_t *bitmap;		// bitmap blocks mapped in memory
 
@@ -26,6 +29,7 @@ void*	diskaddr(uint32_t blockno);
 bool	va_is_mapped(void *va);
 bool	va_is_dirty(void *va);
 void	flush_block(void *addr);
+void    evict_page();
 void	bc_init(void);
 
 /* fs.c */
