@@ -225,6 +225,7 @@ trap_dispatch(struct Trapframe *tf)
 		case T_PGFLT: page_fault_handler(tf);
 					  return;
 		case IRQ_OFFSET + IRQ_TIMER: lapic_eoi();
+									 time_tick();
 									 sched_yield();
 									 return;
 		case IRQ_OFFSET + IRQ_KBD:	kbd_intr();
