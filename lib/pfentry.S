@@ -65,18 +65,31 @@ _pgfault_upcall:
 	// ways as registers become unavailable as scratch space.
 	//
 	// LAB 4: Your code here.
+	// the size of UTrapframe is 13*4=52 bytes
+	movl 48(%esp), %eax		# move utf_esp to %eax
+	subl $4, %eax			# %eax points to trap-time stack now, reserve 4 bytes for eip
+	movl %eax, 48(%esp)		# store trap-time stack pointer to utf_esp so that we can
+							# pop it to later when we want to set %esp but no register can be used.
+	movl 40(%esp), %ebx		# move utf_eip to %ebx
+	movl %ebx, (%eax)		# move utf_eip to trap-time stack
 
 	// Restore the trap-time registers.  After you do this, you
 	// can no longer modify any general-purpose registers.
 	// LAB 4: Your code here.
+	addl $8, %esp
+	popal
 
 	// Restore eflags from the stack.  After you do this, you can
 	// no longer use arithmetic operations or anything else that
 	// modifies eflags.
 	// LAB 4: Your code here.
+	addl $4, %esp
+	popfl
 
 	// Switch back to the adjusted trap-time stack.
 	// LAB 4: Your code here.
+	popl %esp
 
 	// Return to re-execute the instruction that faulted.
 	// LAB 4: Your code here.
+	ret
