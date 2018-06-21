@@ -122,3 +122,15 @@ sys_time_msec(void)
 {
 	return (unsigned int) syscall(SYS_time_msec, 0, 0, 0, 0, 0, 0);
 }
+
+int
+sys_net_transmit(void *addr, size_t length)
+{
+	return syscall(SYS_net_transmit, 0, (uint32_t)addr, (uint32_t)length, 0, 0, 0);
+}
+
+int
+sys_net_receive(void *addr)
+{
+	return syscall(SYS_net_receive, 0, (uint32_t)addr, 0, 0, 0, 0);
+}

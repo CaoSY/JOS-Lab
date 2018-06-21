@@ -12,6 +12,7 @@
 #include <kern/console.h>
 #include <kern/sched.h>
 #include <kern/time.h>
+#include <kern/e1000.h>
 
 // Print a string to the system console.
 // The string is exactly 'len' characters long.
@@ -422,7 +423,25 @@ static int
 sys_time_msec(void)
 {
 	// LAB 6: Your code here.
-	panic("sys_time_msec not implemented");
+	// panic("sys_time_msec not implemented");
+	return time_msec();
+}
+
+static int
+sys_net_transmit(void *addr, size_t length)
+{
+	// Check that the user has permission to read memory [s, s+len).
+	// Destroy the environment if not.
+	user_mem_assert(curenv, addr, length, PTE_P | PTE_U);
+	return e1000_tx(addr, length);
+}
+
+static int
+sys_net_receive(void *addr)
+{
+	// user cannot receive the packet to read-only memory
+	user_mem_assert(curenv, addr, 0, PTE_U | PTE_P | PTE_W);
+	return e1000_rx(addr);
 }
 
 // Dispatches to the correct kernel function, passing the arguments.
@@ -450,7 +469,9 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 		case SYS_yield: sys_yield(); return 0;
 		case SYS_ipc_try_send: return sys_ipc_try_send((envid_t)a1, (uint32_t)a2, (void *)a3, (unsigned int)a4);
 		case SYS_ipc_recv: return sys_ipc_recv((void *)a1);
-		case SYS_time_msec: return time_msec();
+		case SYS_time_msec: return sys_time_msec();
+		case SYS_net_transmit: return sys_net_transmit((void *)a1, (size_t)a2);
+		case SYS_net_receive: return sys_net_receive((void *)a1);
 		default:
 			return -E_INVAL;
 	}
