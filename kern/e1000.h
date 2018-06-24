@@ -75,9 +75,6 @@
 #define NRDESC      128     // the number of receive descriptors, Exercise 10 claims at least 128
 #define MAXPKTLEN   1518    // The maximum size of an Ethernet packet
 
-#define E_TXD_ARRAY_FULL    1   // Transmit Descriptor Array is full
-#define E_RXD_ARRAY_FULL    2   // Receive Descriptor Array is full
-
 /* Transmit Descriptor */
 struct e1000_tx_desc {
     uint64_t addr;          /* Address of the descriptor's data buffer */

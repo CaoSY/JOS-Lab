@@ -35,6 +35,8 @@ static const char * const error_string[MAXERROR] =
 	[E_FILE_EXISTS]	= "file already exists",
 	[E_NOT_EXEC]	= "file is not a valid executable",
 	[E_NOT_SUPP]	= "operation not supported",
+	[E_TXD_ARRAY_FULL]	= "trasmit buffer array is full",
+	[E_RXD_ARRAY_EMPTY]	= "receive buffer array is emtpy",
 };
 
 /*

@@ -433,6 +433,8 @@ sys_net_transmit(void *addr, size_t length)
 	// Check that the user has permission to read memory [s, s+len).
 	// Destroy the environment if not.
 	user_mem_assert(curenv, addr, length, PTE_P | PTE_U);
+
+	// e1000_rx will check the sanity of length
 	return e1000_tx(addr, length);
 }
 
@@ -440,7 +442,8 @@ static int
 sys_net_receive(void *addr)
 {
 	// user cannot receive the packet to read-only memory
-	user_mem_assert(curenv, addr, 0, PTE_U | PTE_P | PTE_W);
+	// user should prepare enough memory for the biggest possible data length (MAXPKTLEN)
+	user_mem_assert(curenv, addr, MAXPKTLEN, PTE_U | PTE_P | PTE_W);
 	return e1000_rx(addr);
 }
 

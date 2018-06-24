@@ -20,12 +20,21 @@ input(envid_t ns_envid)
 	int r, i;
 	
 	while (true) {
-		if ((r = sys_page_alloc(0, pkt, PTE_P | PTE_U | PTE_W)) < 0)
-			panic("sys_page_alloc: %e\n", r);
-		
-		if ((r = sys_net_receive(pkt->jp_data)) < 0) {
+		// we allocate a new physical page at pkt each time we
+		// receive new data, so we don't need to wait a few schedule
+		// cycles for the page being read, which is prone to be buggy.
+		while((r = sys_page_alloc(0, pkt, PTE_P | PTE_U | PTE_W)) < 0) {
+			if (r != -E_NO_MEM)
+				panic("sys_page_alloc: %e\n", r);
+			
 			sys_yield();
-			continue;
+		}
+
+		while ((r = sys_net_receive(pkt->jp_data)) < 0) {
+			if (r != -E_RXD_ARRAY_EMPTY)
+				panic("Net receive failed. %e\n", r);
+			
+			sys_yield();
 		}
 
 		pkt->jp_len = r;
@@ -36,8 +45,5 @@ input(envid_t ns_envid)
 		#endif
 
 		ipc_send(ns_envid, NSREQ_INPUT, pkt, PTE_U | PTE_P | PTE_W);
-
-		// each time we use a new page
-		sys_page_unmap(0, pkt);
 	}
 }

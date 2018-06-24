@@ -26,6 +26,9 @@ enum {
 	E_NOT_EXEC	,	// File not a valid executable
 	E_NOT_SUPP	,	// Operation not supported
 
+	// Network system error codes
+	E_TXD_ARRAY_FULL	,	// Transmit Descriptor Array is full
+	E_RXD_ARRAY_EMPTY	,	// Receive Descriptor Array is full
 	MAXERROR
 };
 

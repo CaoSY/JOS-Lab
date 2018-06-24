@@ -33,10 +33,11 @@ e1000_attach(struct pci_func *pcif)
     e1000[E1000_TCTL] |= E1000_TCTL_EN;
     e1000[E1000_TCTL] |= E1000_TCTL_PSP;
     e1000[E1000_TCTL] |= E1000_TCTL_CT_INIT;
-    e1000[E1000_TCTL] | E1000_TCTL_COLD_INIT;
+    e1000[E1000_TCTL] |= E1000_TCTL_COLD_INIT;
     e1000[E1000_TIPG] |= E1000_TIPG_INIT;
 
     // init transmit descriptors
+    memset(tx_descs, 0, sizeof(tx_descs));
     for (size_t i = 0; i < NTDESC; ++i) {
         tx_descs[i].addr = PADDR(tx_packets[i]);
         tx_descs[i].cmd |= E1000_TXD_CMD_RS;
@@ -60,6 +61,7 @@ e1000_attach(struct pci_func *pcif)
     e1000[E1000_RCTL] |= E1000_RCTL_SECRC;
 
     // init receive descriptors
+    memset(rx_descs, 0, sizeof(rx_descs));
     for (size_t i = 0; i < NRDESC; ++i) {
         rx_descs[i].addr = PADDR(rx_packets[i]);
     }
@@ -107,14 +109,14 @@ e1000_tx(void *addr, size_t length)
     return 0;
 }
 
-// Return 0 on success.
-// Return -E_RXD_ARRAY_FULL if receive descriptor array is full.
+// Return length on success.
+// Return -E_RXD_ARRAY_EMPTY if receive descriptor array is full.
 int
 e1000_rx(void *addr) {
-    // To avoid head catching up tail and stop accepting packets,
-    // we let the tail always behind head and probing the dd bit
-    // in head. But this could also waste one desctriptor in some
-    // extreme cases.
+    // To avoid tail catching up head which prevent the network
+    // card from accepting packets, we let the tail always one slot
+    // behind slots that are filled and update tail first when we
+    // fetch a received packet. This could waste one slot.
     uint32_t tail = (e1000[E1000_RDT] + 1) % NRDESC;
 
     #if DEBUG
@@ -124,7 +126,7 @@ e1000_rx(void *addr) {
 
     if (!(rx_descs[tail].status & E1000_RXD_STA_DD)) {
         // if the dd field is not set, there is nothing to receive
-        return -E_RXD_ARRAY_FULL;
+        return -E_RXD_ARRAY_EMPTY;
     }
 
     // assume there is no long packets
@@ -135,7 +137,7 @@ e1000_rx(void *addr) {
     rx_descs[tail].status &= ~E1000_RXD_STA_DD;
     rx_descs[tail].status &= ~E1000_RXD_STA_EOP;
     rx_descs[tail].status &= ~E1000_RXD_STA_IXSM;
-    e1000[E1000_RDT] = (e1000[E1000_RDT] + 1) % NRDESC;
+    e1000[E1000_RDT] = tail;
 
     return length;
 }
