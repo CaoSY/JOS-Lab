@@ -63,7 +63,7 @@
 #define E1000_RCTL_BSEX			0x02000000    /* Buffer size extension */
 #define E1000_RCTL_SZ_2048      0x00000000    /* rx buffer size 2048 */
 #define E1000_RCTL_SZ_4096      0x00030000    /* rx buffer size 4096 */
-#define E1000_RAH_AV			0x80000000    /* Receive descriptor valid */
+#define E1000_RAH_AV			0x80000000    /* MAC address valid */
 
 #define E1000_RXD_STA_DD        0x01    /* Descriptor Done */
 #define E1000_RXD_STA_EOP       0x02    /* End of Packet */
