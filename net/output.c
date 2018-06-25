@@ -42,6 +42,7 @@ output(envid_t ns_envid)
 				else
 					cprintf("Output request of [%08x] failed\n", whom);
 				#endif
+				sys_yield();
 			}
 		}
 		#if DEBUG
