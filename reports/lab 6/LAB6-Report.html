@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>LAB6-Report</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      <style> 
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+ 
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview   ">
+      <div class="code-chunk" data-id="global" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><div class="code-chunk" data-id="code-chunk-id-1" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><p><span style="display:inline-block;width:50%;text-align:left">Created: June 24 2018 22:47:00</span><span style="display:inline-block;width:50%;text-align:right">Last Updated: Jun 25 2018 22:56:01</span></p>
+<h1 style="font-style:italic; font-family:Times; font-size:4em"><center>Lab 6 Report</center></h1>
+<div style="font-style:italic; font-family:Times; font-size:1.2em"><center>Shuyang Cao</center><center>Jun 25 2018</center></div>
+</div></div><div class="code-chunk" data-id="code-chunk-id-2" data-cmd="toc"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><ul>
+<li><a href="#the-network-server">The Network Server</a></li>
+<li><a href="#the-core-network-server-environment">The Core Network Server Environment</a></li>
+<li><a href="#the-output-environment">The Output Environment</a></li>
+<li><a href="#the-input-environment">The Input Environment</a></li>
+<li><a href="#the-timer-environment-exercise-1">The Timer Environment &amp; Exercise 1</a></li>
+<li><a href="#pci-interface-exercise-3">PCI Interface &amp; Exercise 3</a></li>
+<li><a href="#memory-mapped-io-exercise-4">Memory-mapped I/O &amp; Exercise 4</a></li>
+<li><a href="#dma">DMA</a></li>
+<li><a href="#transmitting-packets">Transmitting Packets</a>
+<ul>
+<li><a href="#exercise-5">Exercise 5</a></li>
+<li><a href="#exercise-6">Exercise 6</a></li>
+<li><a href="#exercise-7">Exercise 7</a></li>
+<li><a href="#transmitting-packets-network-server-exercise-8">Transmitting Packets: Network Server &amp; Exercise 8</a></li>
+</ul>
+</li>
+<li><a href="#receiving-packets">Receiving Packets</a>
+<ul>
+<li><a href="#exercise-10">Exercise 10</a></li>
+<li><a href="#exercise-11">Exercise 11</a></li>
+<li><a href="#receiving-packets-network-server-exercise-12">Receiving Packets: Network Server &amp; Exercise 12</a></li>
+</ul>
+</li>
+<li><a href="#the-web-server-exercise-13">The Web Server &amp; Exercise 13</a></li>
+<li><a href="#code-for-lab-6">Code for Lab 6</a></li>
+<li><a href="#grade">Grade</a></li>
+</ul>
+<h2 class="mume-header" id="the-network-server">The Network Server</h2>
+
+<p>JOS utilizes lwIP, an open source lightweight TCP/IP protocol suite that includes a network stack. In this lab, we treat lwIP as a black box that implements a BSD socket interface and has a packet input port and packet output port.</p>
+<p>The network server of JOS is a combination of four enviroments:</p>
+<ul>
+<li>core network server environment (includes socket call dispatcher and lwIP)</li>
+<li>input environment</li>
+<li>output environment</li>
+<li>timer environment</li>
+</ul>
+<p>The following diagram shows these different environments and their relationships.</p>
+<p><img src="network-server.png" alt="JOS Network Server"></p>
+<h2 class="mume-header" id="the-core-network-server-environment">The Core Network Server Environment</h2>
+
+<p>The core network server environment is composed of the socket call dispatcher and lwIP itself. The socket call dispatcher works exactly like the file server. User environments use stubs (found in <code>lib/nsipc.c</code>) to send IPC messages to the core network environment. In <code>lib/nsipc.c</code> we find the core network server the same way we found the file server: <code>i386_init</code> created the NS environment with <code>NS_TYPE_NS</code>, so we scan envs, looking for this special environment type. For each user environment IPC, the dispatcher in the network server calls the appropriate BSD socket interface function provided by lwIP on behalf of the user.</p>
+<p>Regular user environments use the functions in lib/sockets.c, which provides a file descriptor-based sockets API, instead of use the <code>nsipc_*</code> calls directly. User environments refer to sockets via file descriptors. A number of operations (connect, accept, etc.) are specific to sockets, but read, write, and close go through the normal file descriptor device-dispatch code in <code>lib/fd.c</code>. Much like the file server, lwIP also generates unique ID’s for all open sockets. In both the file server and the network server, JOS use information stored in <code>struct Fd</code> to map per-environment file descriptors to these unique ID spaces.</p>
+<p>Despite of the similarities of the IPC dispatchers of the file server and network server, there is a key difference. BSD socket calls like accept and recv can block indefinitely. If the dispatcher were to let lwIP execute one of these blocking calls, the dispatcher would also block and there could only be one outstanding network call at a time for the whole system. Since this is unacceptable, the network server uses user-level threading to avoid blocking the entire server environment. For every incoming IPC message, the dispatcher creates a thread and processes the request in the newly created thread. If the thread blocks, then only that thread is put to sleep while other threads continue to run.</p>
+<p>In addition to the core network environment there are three helper environments. Besides accepting messages from user applications, the core network environment’s dispatcher also accepts messages from the input and timer environments.</p>
+<h2 class="mume-header" id="the-output-environment">The Output Environment</h2>
+
+<p>When servicing user environment socket calls, lwIP will generate packets for the network card to transmit. LwIP will send each packet to be transmitted to the output helper environment using the <code>NSREQ_OUTPUT</code> IPC message with the packet attached in the page argument of the IPC message. The output environment is responsible for accepting these messages and forwarding the packet on to the device driver via the system call interface that you will soon create.</p>
+<h2 class="mume-header" id="the-input-environment">The Input Environment</h2>
+
+<p>Packets received by the network card need to be injected into lwIP. For every packet received by the device driver, the input environment pulls the packet out of kernel space and sends the packet to the core server environment using the <code>NSREQ_INPUT</code> IPC message.</p>
+<p>The packet input functionality is separated from the core network environment because JOS makes it hard to simultaneously accept IPC messages and poll or wait for a packet from the device driver. We do not have a select system call in JOS that would allow environments to monitor multiple input sources to identify which input is ready to be processed.</p>
+<h2 class="mume-header" id="the-timer-environment-exercise-1">The Timer Environment &amp; Exercise 1</h2>
+
+<p>The timer environment periodically sends messages of type <code>NSREQ_TIMER</code> to the core network server notifying it that a timer has expired. The timer messages from this thread are used by lwIP to implement various network timeouts.</p>
+<blockquote>
+<p>Add a call to <code>time_tick</code> for every clock interrupt in <code>kern/trap.c</code>. Implement <code>sys_time_msec</code> and add it to syscall in <code>kern/syscall.c</code> so that user space has access to the time.</p>
+</blockquote>
+<p>To finish this exercise, we need to add a call to <code>time_tick</code> in <code>trap_dispatch</code> and a call to <code>sys_time_mesc</code> in <code>syscall</code>, which is easy. Sine JOS uses a big kernel lock, we don’t need to worry about the race on <code>kern/time.c/ticks</code>.</p>
+<h2 class="mume-header" id="pci-interface-exercise-3">PCI Interface &amp; Exercise 3</h2>
+
+<p>The E1000 is a PCI device, which means it plugs into the PCI bus on the motherboard. The PCI bus has address, data, and interrupt lines, and allows the CPU to communicate with PCI devices and PCI devices to read and write memory. A PCI device needs to be discovered and initialized before it can be used. Discovery is the process of walking the PCI bus looking for attached devices. Initialization is the process of allocating I/O and memory space as well as negotiating the IRQ line for the device to use.</p>
+<p>To perform PCI initialization during boot, the PCI code walks the PCI bus looking for devices. When it finds a device, it reads its vendor ID and device ID and uses these two values as a key to search <code>the pci_attach_vendor</code> array. The array is composed of <code>struct pci_driver</code> entries like this:</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token keyword">struct</span> pci_driver <span class="token punctuation">{</span>
+    <span class="token keyword">uint32_t</span> key1<span class="token punctuation">,</span> key2<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span>attachfn<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> pci_func <span class="token operator">*</span>pcif<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</pre><p>If the discovered device’s vendor ID and device ID match an entry in the array, the PCI code calls that entry’s <code>attachfn</code> to perform device initialization. (Devices can also be identified by class, which is what the other driver table in <code>kern/pci.c</code> is for.)</p>
+<p>The attach function is passed a PCI function to initialize. A PCI card can expose multiple functions, though the E1000 exposes only one. Here is how we represent a PCI function in JOS:</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token keyword">struct</span> pci_func <span class="token punctuation">{</span>
+    <span class="token keyword">struct</span> pci_bus <span class="token operator">*</span>bus<span class="token punctuation">;</span>
+
+    <span class="token keyword">uint32_t</span> dev<span class="token punctuation">;</span>
+    <span class="token keyword">uint32_t</span> func<span class="token punctuation">;</span>
+
+    <span class="token keyword">uint32_t</span> dev_id<span class="token punctuation">;</span>
+    <span class="token keyword">uint32_t</span> dev_class<span class="token punctuation">;</span>
+
+    <span class="token keyword">uint32_t</span> reg_base<span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">uint32_t</span> reg_size<span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">uint8_t</span> irq_line<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</pre><p>The above structure reflects some of the entries found in Table 4-1 of Section 4.1 of the developer manual. The last three entries of <code>struct pci_func</code> are of particular interest to us, as they record the negotiated memory, I/O, and interrupt resources for the device. The <code>reg_base</code> and <code>reg_size</code> arrays contain information for up to six Base Address Registers or BARs. <code>reg_base</code> stores the base memory addresses for memory-mapped I/O regions (or base I/O ports for I/O port resources), <code>reg_size</code> contains the size in bytes or number of I/O ports for the corresponding base values from <code>reg_base</code>, and <code>irq_line</code> contains the IRQ line assigned to the device for interrupts. The specific meanings of the E1000 BARs are given in the second half of table 4-2.</p>
+<p>When the attach function of a device is called, the device has been found but not yet enabled. This means that the PCI code has not yet determined the resources allocated to the device, such as address space and an IRQ line, and, thus, the last three elements of the <code>struct pci_func</code> structure are not yet filled in. The attach function should call <code>pci_func_enable</code>, which will enable the device, negotiate these resources, and fill in the <code>struct pci_func</code>.</p>
+<blockquote>
+<p>Implement an attach function to initialize the E1000. Add an entry to the <code>pci_attach_vendor</code> array in <code>kern/pci.c</code> to trigger your function if a matching PCI device is found (be sure to put it before the {0, 0, 0} entry that mark the end of the table). You can find the vendor ID and device ID of the 82540EM that QEMU emulates in section 5.2. You should also see these listed when JOS scans the PCI bus while booting.</p>
+<p>For now, just enable the E1000 device via <code>pci_func_enable</code>. We’ll add more initialization throughout the lab.<br>
+We have provided the <code>kern/e1000.c</code> and <code>kern/e1000.h</code> files for you so that you do not need to mess with the build system. They are currently blank; you need to fill them in for this exercise. You may also need to include the e1000.h file in other places in the kernel.</p>
+<p>When you boot your kernel, you should see it print that the PCI function of the E1000 card was enabled. Your code should now pass the pci attach test of make grade.</p>
+</blockquote>
+<p>According to the manual, the vendor ID of E1000 is 0x8086 and the dev ID of E1000 is 0x100E. We defined a funtion named <code>e1000_attach</code> in <code>kern/e1000.c</code> and called <code>pci_func_enable</code> from it. The function returns 0 on success. At last, we add a new entry in the <code>pci_func_enable</code> array.</p>
+<h2 class="mume-header" id="memory-mapped-io-exercise-4">Memory-mapped I/O &amp; Exercise 4</h2>
+
+<p>Software communicates with the E1000 via memory-mapped I/O (MMIO). <code>pci_func_enable</code> negotiates an MMIO region with the E1000 and stores its base and size in BAR 0 (that is, <code>reg_base[0]</code> and <code>reg_size[0]</code>). This is a range of physical memory addresses assigned to the device, which means JOS havs to do something to access it via virtual addresses. Since MMIO regions are assigned very high physical addresses (typically above 3GB), we can’t use KADDR to access it because of JOS’s 256MB limit. Thus, we have to create a new memory mapping. We’ll use the area above <code>MMIOBASE</code> (using <code>mmio_map_region</code> from lab 4 will make sure we don’t overwrite the mapping used by the <code>LAPIC</code>). Since PCI device initialization happens before JOS creates user environments, we can create the mapping in <code>kern_pgdir</code> and it will always be available.</p>
+<blockquote>
+<p>In your attach function, create a virtual memory mapping for the E1000’s BAR 0 by calling <code>mmio_map_region</code> (which you wrote in lab 4 to support memory-mapping the LAPIC).</p>
+<p>You’ll want to record the location of this mapping in a variable so you can later access the registers you just mapped. Take a look at the lapic variable in <code>kern/lapic.c</code> for an example of one way to do this. If you do use a pointer to the device register mapping, be sure to declare it volatile; otherwise, the compiler is allowed to cache values and reorder accesses to this memory.</p>
+<p>To test your mapping, try printing out the device status register (section 13.4.2). This is a 4 byte register that starts at byte 8 of the register space. You should get 0x80080783, which indicates a full duplex link is up at 1000 MB/s, among other things.</p>
+</blockquote>
+<p>We invoke <code>mmio_map_region</code> from <code>e1000.c/e1000_attach</code> after we invoked <code>pci_func_enable</code>. The starting physical address and space size are stored in <code>pcif-&gt;reg_base[0]</code> and <code>pcif-&gt;reg_size[0]</code>. The returned virtual address is stored in <code>e1000</code>, a global variable defined in <code>kern/e1000.c</code> with the type of <code>volatile uint32_t</code>.</p>
+<p>To test our mapping, we read the device status register using <code>e1000</code> and print out the result of comparision.</p>
+<h2 class="mume-header" id="dma">DMA</h2>
+
+<p>The E1000 uses Direct Memory Access or DMA to read and write packet data directly from memory without involving the CPU. The driver is responsible for allocating memory for the transmit and receive queues, setting up DMA descriptors, and configuring the E1000 with the location of these queues, but everything after that is asynchronous. To transmit a packet, the driver copies it into the next DMA descriptor in the transmit queue and informs the E1000 that another packet is available; the E1000 will copy the data out of the descriptor when there is time to send the packet. Likewise, when the E1000 receives a packet, it copies it into the next DMA descriptor in the receive queue, which the driver can read from at its next opportunity.</p>
+<p>The receive and transmit queues are very similar at a high level. Both consist of a sequence of descriptors. While the exact structure of these descriptors varies, each descriptor contains some flags and the physical address of a buffer containing packet data (either packet data for the card to send, or a buffer allocated by the OS for the card to write a received packet to).</p>
+<p>The queues are implemented as circular arrays, meaning that when the card or the driver reach the end of the array, it wraps back around to the beginning. Both have a head pointer and a tail pointer and the contents of the queue are the descriptors between these two pointers. The hardware always consumes descriptors from the head and moves the head pointer, while the driver always add descriptors to the tail and moves the tail pointer. The descriptors in the transmit queue represent packets waiting to be sent (hence, in the steady state, the transmit queue is empty). For the receive queue, the descriptors in the queue are free descriptors that the card can receive packets into (hence, in the steady state, the receive queue consists of all available receive descriptors). The pointers to these arrays as well as the addresses of the packet buffers in the descriptors must all be physical addresses because hardware performs DMA directly to and from physical RAM without going through the MMU.</p>
+<h2 class="mume-header" id="transmitting-packets">Transmitting Packets</h2>
+
+<p>The transmit and receive functions of the E1000 are basically independent of each other, so we can work on one at a time. We’ll attack transmitting packets first.</p>
+<p>First, we have to initialize the card to transmit, following the steps described in section 14.5. The first step of transmit initialization is setting up the transmit queue. The precise structure of the queue is described in section 3.4 and the structure of the descriptors is described in section 3.3.3. We won’t be using the TCP offload features of the E1000, so we can focus on the “legacy transmit descriptor format.”</p>
+<p>We use C structs to describe the E1000’s structures, as what we’ve done with the <code>struct Trapframe</code>. The legacy transmit descriptor given in table 3-8 of the manual looks like the diagram below:</p>
+<img src="data:image/png;charset=utf-8;base64,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"><p>The first byte of the structure starts at the top right, so to convert this into a C struct, we read from right to left, top to bottom. Hence we define our transmit descriptor structure as the following.</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token comment">/* Transmit Descriptor */</span>
+<span class="token keyword">struct</span> e1000_tx_desc <span class="token punctuation">{</span>
+    <span class="token keyword">uint64_t</span> addr<span class="token punctuation">;</span>          <span class="token comment">/* Address of the descriptor's data buffer */</span>
+    <span class="token keyword">uint16_t</span> length<span class="token punctuation">;</span>        <span class="token comment">/* Data buffer length */</span>
+    <span class="token keyword">uint8_t</span> cso<span class="token punctuation">;</span>            <span class="token comment">/* Checksum offset */</span>
+    <span class="token keyword">uint8_t</span> cmd<span class="token punctuation">;</span>            <span class="token comment">/* Descriptor control */</span>
+    <span class="token keyword">uint8_t</span> status<span class="token punctuation">;</span>         <span class="token comment">/* Descriptor status */</span>
+    <span class="token keyword">uint8_t</span> css<span class="token punctuation">;</span>            <span class="token comment">/* Checksum start */</span>
+    <span class="token keyword">uint16_t</span> special<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token function">__attribute__</span><span class="token punctuation">(</span><span class="token punctuation">(</span>packed<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p>Our network driver will have to reserve memory for the transmit descriptor array and the packet buffers pointed to by the transmit descriptors. In addition, the E1000 accesses physical memory directly, which means any buffer it accesses must be contiguous in physical memory. There are several ways to do this, ranging from dynamically allocating pages to simply declaring them in global variables. There are also multiple ways to handle the packet buffers.</p>
+<p>To keep things simple, we declare our descriptor array and buffer array in global variables, reserving space for a packet buffer for each discriptor during driver initialization. The maximum size of an Ethernet packet is 1518 bytes, which bounds how big these buffers need to be.</p>
+<h3 class="mume-header" id="exercise-5">Exercise 5</h3>
+
+<blockquote>
+<p>Perform the initialization steps described in section 14.5 (but not its subsections). Use section 13 as a reference for the registers the initialization process refers to and sections 3.3.3 and 3.4 for reference to the transmit descriptors and transmit descriptor array.</p>
+<p>Be mindful of the alignment requirements on the transmit descriptor array and the restrictions on length of this array. Since <code>TDLEN</code> must be 128-byte aligned and each transmit descriptor is 16 bytes, your transmit descriptor array will need some multiple of 8 transmit descriptors. However, don’t use more than 64 descriptors or our tests won’t be able to test transmit ring overflow.</p>
+<p>For the TCTL.COLD, you can assume full-duplex operation. For TIPG, refer to the default values described in table 13-77 of section 13.4.34 for the IEEE 802.3 standard IPG (don’t use the values in the table in section 14.5).</p>
+</blockquote>
+<p>According to the manual, we first <code>static_assert</code> the <code>tx_desc</code> array is 128-byte aligned, <code>static_assert(sizeof(tx_descs) % 128 == 0); // should be 128-byte aligned</code>.</p>
+<p>Then we program the Transmit Descriptor Base Address (TDBAL) register with the address of the region (<code>PADDR(tx_descs)</code>). Since we use a 32-bit CPU, we don’t need to configure TDBAH. Next we set the Transmit Descriptor Length (TDLEN) register to the size of (in bytes) of the descriptor ring (<code>sizeof(tx_descs)</code>), which must be 128-byte aligned.</p>
+<p>The Transmit Descriptor Head and Tail (TDH/TDT) register are initialized (by hardware) to 0b after a power-on or a software initiated Ethernet controller reset. We write 0b to both these registers to ensure this.</p>
+<p>Initialize the Transmit Control Register (TCTL) for desired operation to include the the following:</p>
+<ul>
+<li>Set the Enable (TCTL.EN) bit to 1b for normal operation.</li>
+<li>Set the Pad short Packets (TCTL.PSP) bit to 1b.</li>
+<li>Configure the Collision Threshold (TCTL.CT) to the desired value. We chose 10h.</li>
+<li>Configure the Collision Distance (TCTL.COLD) to its expected value. We chose 40h for full duplex.</li>
+</ul>
+<p>Program the Transmit IPG (TIPG) Register with 0x0060200a (for details refer to subsection 13.4.34).</p>
+<p>Besides these control registers, we also need to initialize transmit descriptors. We need to initialize the <code>addr</code> field in the descriptor to their corresponding pre-allocated buffer, toggle on the <code>E1000_TXD_CMD_RS</code> bit in <code>cmd</code> field so that E1000 will toggle on the <code>E1000_TXD_STA_DD</code> in <code>status</code> field indicating the descriptor can be reused. Finally we toggle on the <code>E1000_TXD_STA_DD</code> manually in our initialization.</p>
+<h3 class="mume-header" id="exercise-6">Exercise 6</h3>
+
+<blockquote>
+<p>Write a function to transmit a packet by checking that the next descriptor is free, copying the packet data into the next descriptor, and updating TDT. Make sure you handle the transmit queue being full.</p>
+</blockquote>
+<p>We define a new function named <code>e1000_tx</code> to send packets. The procedure follows the steps described below:</p>
+<ol>
+<li>It’s the system call’s duty to ensure the sanity of memory space passed to <code>e1000_tx</code>, so we don’t check it again in <code>e1000_tx</code>.</li>
+<li>To keep things simple, we don’t allow package to reside at multiple descriptors. So the <code>length</code> should not be larger than <code>MAXPKTLEN</code>. Otherwise we return <code>-E_INVAL</code>.</li>
+<li>We read <code>tail</code> from <code>e1000[E1000_TDT]</code> and check the <code>DD</code> bit in <code>tx_descs[tail].status</code>. If the bit is not set, then the descriptor array is full, we return <code>-E_TXD_ARRAY_FULL</code>.</li>
+<li>Copy data from <code>void *addr</code> to the buffer of tail descriptor.</li>
+<li>Configure the <code>tx_descs[tail].length</code> with <code>length</code> passed to <code>e1000_tx</code>.</li>
+<li>Unset the DD bit of tx_descs[tail].status。</li>
+<li>Set the EOP bit in <code>tx_descs[tail].cmd</code>, indicating this is the end of a package.</li>
+<li>Update <code>e1000[E1000_TDT]</code> with <code>(tail + 1) % NTDESC</code></li>
+</ol>
+<blockquote>
+<p>Now would be a good time to test your packet transmit code. Try transmitting just a few packets by directly calling your transmit function from the kernel. You don’t have to create packets that conform to any particular network protocol in order to test this. Run make E1000_DEBUG=TXERR,TX qemu to run your test.</p>
+</blockquote>
+<p>I add a simple test in <code>e1000_attach</code>. To ensure <code>e1000_tx</code> works fine, we can use <code>tcpdump -XXnr qemu.pcap</code> to check packages sent.</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token macro property">#<span class="token directive keyword">if</span> TEST_TX</span>
+    <span class="token keyword">char</span> int_packet<span class="token punctuation">[</span><span class="token number">200</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>size_t i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">200</span><span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span>
+        int_packet<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> i<span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span>size_t i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">2</span> <span class="token operator">*</span> NTDESC<span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">cprintf</span><span class="token punctuation">(</span><span class="token string">"transmit packet %d, length: %d\n"</span><span class="token punctuation">,</span> i<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>int_packet<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        int_packet<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> i<span class="token punctuation">;</span>
+        <span class="token function">e1000_tx</span><span class="token punctuation">(</span>int_packet<span class="token punctuation">,</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>int_packet<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token macro property">#<span class="token directive keyword">endif</span></span>
+</pre><h3 class="mume-header" id="exercise-7">Exercise 7</h3>
+
+<blockquote>
+<p>Add a system call that lets you transmit packets from user space. The exact interface is up to you. Don’t forget to check any pointers passed to the kernel from user space.</p>
+</blockquote>
+<p>I allocated a new system call number <code>SYS_net_transmit</code> and define the corresponding function <code>sys_net_transmit</code>. In this function we first check the sanity of the memory space passed to kernel and then invoke <code>e1000_tx</code>, return the value returned by <code>e1000_tx</code>.</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token keyword">static</span> <span class="token keyword">int</span>
+<span class="token function">sys_net_transmit</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span>addr<span class="token punctuation">,</span> size_t length<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+	<span class="token comment">// Check that the user has permission to read memory [s, s+len).</span>
+	<span class="token comment">// Destroy the environment if not.</span>
+	<span class="token function">user_mem_assert</span><span class="token punctuation">(</span>curenv<span class="token punctuation">,</span> addr<span class="token punctuation">,</span> length<span class="token punctuation">,</span> PTE_P <span class="token operator">|</span> PTE_U<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+	<span class="token comment">// e1000_rx will check the sanity of length</span>
+	<span class="token keyword">return</span> <span class="token function">e1000_tx</span><span class="token punctuation">(</span>addr<span class="token punctuation">,</span> length<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</pre><h3 class="mume-header" id="transmitting-packets-network-server-exercise-8">Transmitting Packets: Network Server &amp; Exercise 8</h3>
+
+<blockquote>
+<p>Implement <code>net/output.c</code>.</p>
+</blockquote>
+<blockquote>
+<p><strong>Question</strong></p>
+<ol>
+<li>How did you structure your transmit implementation? In particular, what do you do if the transmit ring is full?</li>
+</ol>
+</blockquote>
+<p>The output helper environment’s goal is to do the following in a loop: accept <code>NSREQ_OUTPUT</code> IPC messages from the core network server and send the packets accompanying these IPC message to the network device driver using the system call you added above. The <code>NSREQ_OUTPUT</code> IPC’s are sent by the low_level_output function in <code>net/lwip/jos/jif/jif.c</code>, which glues the lwIP stack to JOS’s network system. Each IPC will include a page consisting of a <code>union Nsipc</code> with the packet in its struct <code>jif_pkt</code> pkt field (see <code>inc/ns.h</code>). <code>struct jif_pkt</code> looks like</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token keyword">struct</span> jif_pkt <span class="token punctuation">{</span>
+    <span class="token keyword">int</span> jp_len<span class="token punctuation">;</span>
+    <span class="token keyword">char</span> jp_data<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</pre><p><code>jp_len</code> represents the length of the packet. All subsequent bytes on the IPC page are dedicated to the packet contents.</p>
+<p>The output environment receives <code>jif_pkt</code> at <code>REQVA</code> that is defined in <code>ns.h</code>. There is a infinite loop in the output environment and all work is done within the loop. The logic follows the steps below:</p>
+<ol>
+<li>Wait to receive a IPC request.</li>
+<li>Assert the package is sent from Network Server.</li>
+<li>Ensure the IPC request comes with a page, otherwise, discard the IPC request sliently.</li>
+<li>Ensure the type of the IPC request is <code>NSREQ_OUTPUT</code>, otherwise, discard the IPC sliently.</li>
+<li>Send data using <code>sys_net_transmit</code>.</li>
+<li>If the returned value is 0, continue to wait for next IPC request.</li>
+<li>If the returned value is eqaul to <code>-E_TXD_ARRAY_FULL</code>, retry. Invoke <code>sys_yield</code> before retry to ease our cpu.</li>
+<li>If the returned value is less than 0 but not eqaul to <code>-E_TXD_ARRAY_FULL</code>, panic.</li>
+</ol>
+<h2 class="mume-header" id="receiving-packets">Receiving Packets</h2>
+
+<h3 class="mume-header" id="exercise-10">Exercise 10</h3>
+
+<blockquote>
+<p>Set up the receive queue and configure the E1000 by following the process in section 14.4. You don’t have to support “long packets” or multicast. For now, don’t configure the card to use interrupts; you can change that later if you decide to use receive interrupts. Also, configure the E1000 to strip the Ethernet CRC, since the grade script expects it to be stripped.</p>
+<p>By default, the card will filter out all packets. You have to configure the Receive Address Registers (RAL and RAH) with the card’s own MAC address in order to accept packets addressed to that card. You can simply hard-code QEMU’s default MAC address of 52:54:00:12:34:56 (we already hard-code this in lwIP, so doing it here too doesn’t make things any worse). Be very careful with the byte order; MAC addresses are written from lowest-order byte to highest-order byte, so 52:54:00:12 are the low-order 32 bits of the MAC address and 34:56 are the high-order 16 bits.</p>
+<p>The E1000 only supports a specific set of receive buffer sizes (given in the description of RCTL.BSIZE in 13.4.22). If you make your receive packet buffers large enough and disable long packets, you won’t have to worry about packets spanning multiple receive buffers. Also, remember that, just like for transmit, the receive queue and the packet buffers must be contiguous in physical memory.</p>
+<p>You should use at least 128 receive descriptors</p>
+</blockquote>
+<p>Very similar to transmitting packages, we define <code>e1000_rx_desc</code> for Receive Descriptors.</p>
+<pre data-role="codeBlock" data-info="cpp" class="language-cpp"><span class="token comment">/* Receive Descriptor */</span>
+<span class="token keyword">struct</span> e1000_rx_desc <span class="token punctuation">{</span>
+    <span class="token keyword">uint64_t</span> buffer_addr<span class="token punctuation">;</span>   <span class="token comment">/* Address of the descriptor's data buffer */</span>
+    <span class="token keyword">uint16_t</span> length<span class="token punctuation">;</span>        <span class="token comment">/* Length of data DMAed into data buffer */</span>
+    <span class="token keyword">uint16_t</span> csum<span class="token punctuation">;</span>          <span class="token comment">/* Packet checksum */</span>
+    <span class="token keyword">uint8_t</span> status<span class="token punctuation">;</span>         <span class="token comment">/* Descriptor status */</span>
+    <span class="token keyword">uint8_t</span> errors<span class="token punctuation">;</span>         <span class="token comment">/* Descriptor Errors */</span>
+    <span class="token keyword">uint16_t</span> special<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token function">__attribute__</span><span class="token punctuation">(</span><span class="token punctuation">(</span>packed<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</pre><p>To keep things simple, we don’t accept long packets. So our receving buffer size is <code>MAXPKTLEN</code> bytes per Descriptor.</p>
+<p>According to the manual, we first <code>static_assert</code> the <code>rx_desc</code> array is 128-byte aligned, <code>static_assert(sizeof(rx_descs) % 128 == 0); // should be 128-byte aligned</code>.</p>
+<p>Then we program the Receive Address Registers (RAL/RAH) with desired Ethernet address <code>52:54:00:12:34:56</code>, <code>e1000[E1000_RAL] = 0x12005452; e1000[E1000_RAH] = 0x00005634 | E1000_RAH_AV;</code>. Since we won’t use multicast, we don’t need to initialize the MTA (Multicast Table Array). Furthermore, we don’t use interrupt, either.</p>
+<p>Next we program the Receive Descriptor Base Address (RDBAL) register with the address of the region (<code>PADDR(rx_descs)</code>). Since we use a 32-bit CPU, we don’t need to configure RDBAH. We set the Receive Descriptor Length (TDLEN) register to the size of (in bytes) of the descriptor ring (<code>sizeof(rx_descs)</code>), which must be 128-byte aligned. The Receive Descriptor Head is initialized to 0b and Tail  register to <code>NRDESC - 1</code>.</p>
+<p>Program the Receive Control (RCTL) register with appropriate values for desired operation to include the following:</p>
+<ul>
+<li>
+<p>Set the Enable (RCTL.EN) bit to 1b for normal operation.</p>
+</li>
+<li>
+<p>Unset the Long Packet Enable (RCTL.LPE) bit to disable long packets.</p>
+</li>
+<li>
+<p>Set the Loopback Mode (RCTL.LBM) to 00b for normal operation.</p>
+</li>
+<li>
+<p>Configure the Receive Descriptor Minimum Threshold Size (RCTL.RDMTS) bits to the desired value. We chose 0.</p>
+</li>
+<li>
+<p>Configure the Multicast Offset (<a href="http://RCTL.MO">RCTL.MO</a>) bits to the desired value. We chose 0.</p>
+</li>
+<li>
+<p>Set the Broadcast Accept Mode (RCTL.BAM) bit to 1b allowing the hardware to accept broadcast packets.</p>
+</li>
+<li>
+<p>Configure the Receive Buffer Size (RCTL.BSIZE) bits to reflect the size of receive buffers software provides to hardware. We chose 0 (meaning 2048 bytes). Although 2048 bytes is larger than the buffer size we actually provided, it is not buggy because we diable long packets and the maximum IP package size is <code>MAXPKTLEN</code>.</p>
+</li>
+<li>
+<p>Set the Strip Ethernet CRC (RCTL.SECRC) bit to strip the CRC prior to DMA-ing the receive packet to host memory.</p>
+</li>
+<li>
+<p>Set the Pad short Packets (TCTL.PSP) bit to 1b.</p>
+</li>
+<li>
+<p>Configure the Collision Threshold (TCTL.CT) to the desired value. We chose 10h.</p>
+</li>
+<li>
+<p>Configure the Collision Distance (TCTL.COLD) to its expected value. We chose 40h for full duplex.</p>
+</li>
+</ul>
+<p>Besides these control registers, we also need to initialize receive descriptors. We need to initialize the <code>addr</code> field in the descriptor to their corresponding pre-allocated buffer.</p>
+<h3 class="mume-header" id="exercise-11">Exercise 11</h3>
+
+<blockquote>
+<p>Write a function to receive a packet from the E1000 and expose it to user space by adding a system call. Make sure you handle the receive queue being empty.</p>
+</blockquote>
+<p>We define a function named <code>e1000_rx</code> to receive a packet from the E1000. In particular, we use a trick to distinguish whether the receive descriptor array is full or empty. To avoid tail catching up head which prevent the network card from accepting packets, we let the tail always one slot behind slots that are filled (We’ve already done it during initialization by setting <code>e1000[E1000_RDT]</code> to <code>NRDESC - 1</code>) and update tail first when we fetch a received packet. This could waste one slot.</p>
+<p>The logic of <code>e1000_rx</code> is the following:</p>
+<ul>
+<li>Set <code>tail</code> to be the next descriptor indicated by <code>e1000[E1000_RDT]</code>, <code>tail = (e1000[E1000_RDT] + 1) % NRDESC</code>.</li>
+<li>If the DD bits of <code>rx_descs[tail].status</code> is not set, return <code>-E_RXD_ARRAY_EMPTY</code>.</li>
+<li>Assert the EOP bit is set in <code>rx_descs[tail].status</code>.</li>
+<li>Read data length from <code>rx_descs[tail].length</code>.</li>
+<li>Copy data to the memory space represented by the argument <code>addr</code>.</li>
+<li>Unset DD bit, EOP bit, IXSM bit in <code>rx_descs[tail].status</code>.</li>
+<li>Return data length.</li>
+</ul>
+<p>I allocated a new system call number <code>SYS_net_receive</code> and define the corresponding function <code>sys_net_receive</code>. In this function we first check the sanity of address passed to kernel and then invoke <code>e1000_rx</code>, return the value returned by <code>e1000_rx</code>.</p>
+<h3 class="mume-header" id="receiving-packets-network-server-exercise-12">Receiving Packets: Network Server &amp; Exercise 12</h3>
+
+<blockquote>
+<p>Implement <code>net/input.c</code></p>
+</blockquote>
+<blockquote>
+<p><strong>Question</strong><br>
+2. How did you structure your receive implementation? In particular, what do you do if the receive queue is empty and a user environment requests the next incoming packet?</p>
+</blockquote>
+<p>Similar to the output environment, the input environment receives <code>jif_pkt</code> at <code>REQVA</code> that is defined in <code>ns.h</code>. There is a infinite loop in the input environment and all work is done within the loop. The logic follows the steps below:</p>
+<ol>
+<li>To avoid the data race on a IPC page, we allocate a new page at <code>REQVA</code> in each iteration.</li>
+<li>If the allocation failed, if the error code is <code>-E_NO_MEM</code>, we yield and then retry. Otherwise, we panic JOS.</li>
+<li>We invoke <code>sys_net_receive</code> to receive a package.</li>
+<li>If the system call return a error code, if the error code is <code>E_RXD_ARRAY_EMPTY</code>, we yield and then retry. Otherwise, we panic JOS.</li>
+<li>Set <code>pkt-&gt;jp_len</code> to the value returned by <code>sys_net_receive</code>.</li>
+<li>Send the IPC page to JOS Network Server with a type of <code>NSREQ_INPUT</code>.</li>
+</ol>
+<h2 class="mume-header" id="the-web-server-exercise-13">The Web Server &amp; Exercise 13</h2>
+
+<blockquote>
+<p>The web server is missing the code that deals with sending the contents of a file back to the client. Finish the web server by implementing <code>send_file</code> and <code>send_data</code>.</p>
+</blockquote>
+<p>In <code>send_data</code>, we allocate a 1024-byte long buffer. Then we read content from <code>fd</code> into buffer and then write buffer content to <code>req-&gt;sock</code> until the returned value is not positive. When we jump out of the loop, we check the value returned by our last invoke of <code>readn</code>, if it’s negative, something wrong happened during our reading content so we kill the process, otherwise, we return 0.</p>
+<p>In <code>send_file</code>, we open the file requested by <code>req-&gt;url</code> with <code>O_RDONLY</code> mode. If we failed, we respond <code>404</code> and <code>goto end</code>. Then we fetch the state of the file. If we failed, we respond <code>404</code> and <code>goto end</code>. Next we check whether the file is a directory. If it is, we respond <code>404</code> and <code>goto end</code>. Set <code>file_size</code> to be <code>state.st_size</code>.</p>
+<blockquote>
+<p>Question<br>
+3. What does the web page served by JOS’s web server say?</p>
+</blockquote>
+<p><img src="jos-web-page.png" alt="JOS Web Page"></p>
+<p>The sentence, “Cheesy web page!”, repeats moving from right side to left side.</p>
+<blockquote>
+<p>Question<br>
+4. How long approximately did it take you to do this lab?</p>
+</blockquote>
+<p>The lab costed me approximately two days.</p>
+<h2 class="mume-header" id="code-for-lab-6">Code for Lab 6</h2>
+
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/inc/error.h b/inc/error.h
+index 181e34c..cc17651 100644
+<span class="token deleted">--- a/inc/error.h</span>
+<span class="token inserted">+++ b/inc/error.h</span>
+@@ -26,6 +26,9 @@ enum {
+ 	E_NOT_EXEC	,	// File not a valid executable
+ 	E_NOT_SUPP	,	// Operation not supported
+ 
+<span class="token inserted">+	// Network system error codes</span>
+<span class="token inserted">+	E_TXD_ARRAY_FULL	,	// Transmit Descriptor Array is full</span>
+<span class="token inserted">+	E_RXD_ARRAY_EMPTY	,	// Receive Descriptor Array is full</span>
+ 	MAXERROR
+ };
+ 
+diff --git a/inc/lib.h b/inc/lib.h
+index 66740e8..ad0254b 100644
+<span class="token deleted">--- a/inc/lib.h</span>
+<span class="token inserted">+++ b/inc/lib.h</span>
+@@ -60,6 +60,8 @@ int	sys_page_unmap(envid_t env, void *pg);
+ int	sys_ipc_try_send(envid_t to_env, uint32_t value, void *pg, int perm);
+ int	sys_ipc_recv(void *rcv_pg);
+ unsigned int sys_time_msec(void);
+<span class="token inserted">+int sys_net_transmit(void *addr, size_t length);</span>
+<span class="token inserted">+int sys_net_receive(void *addr);</span>
+ 
+ // This must be inlined.  Exercise for reader: why?
+ static inline envid_t __attribute__((always_inline))
+diff --git a/inc/syscall.h b/inc/syscall.h
+index 36f26de..499ad54 100644
+<span class="token deleted">--- a/inc/syscall.h</span>
+<span class="token inserted">+++ b/inc/syscall.h</span>
+@@ -18,6 +18,8 @@ enum {
+ 	SYS_ipc_try_send,
+ 	SYS_ipc_recv,
+ 	SYS_time_msec,
+<span class="token inserted">+	SYS_net_transmit,</span>
+<span class="token inserted">+	SYS_net_receive,</span>
+ 	NSYSCALLS
+ };
+ 
+diff --git a/kern/e1000.c b/kern/e1000.c
+index 7570e75..5e60d9b 100644
+<span class="token deleted">--- a/kern/e1000.c</span>
+<span class="token inserted">+++ b/kern/e1000.c</span>
+<span class="token coord">@@ -1,3 +1,143 @@</span>
+ #include &lt;kern/e1000.h>
+<span class="token inserted">+#include &lt;inc/error.h></span>
+<span class="token inserted">+#include &lt;inc/string.h></span>
+<span class="token inserted">+</span>
+<span class="token inserted">+#define DEBUG 0</span>
+<span class="token inserted">+#define TEST_TX 0</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+volatile uint32_t *e1000;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+struct e1000_tx_desc tx_descs[NTDESC];</span>
+<span class="token inserted">+uint8_t tx_packets[NTDESC][MAXPKTLEN];</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+struct e1000_tx_desc rx_descs[NRDESC];</span>
+<span class="token inserted">+uint8_t rx_packets[NRDESC][MAXPKTLEN];</span>
+ 
+ // LAB 6: Your driver code here
+<span class="token inserted">+int</span>
+<span class="token inserted">+e1000_attach(struct pci_func *pcif)</span>
+<span class="token inserted">+{</span>
+<span class="token inserted">+    pci_func_enable(pcif);</span>
+<span class="token inserted">+    e1000 = mmio_map_region(pcif->reg_base[0], pcif->reg_size[0]);</span>
+<span class="token inserted">+    cprintf("Status is 0x%08x %s Desired: 0x80080783\n",</span>
+<span class="token inserted">+        e1000[E1000_STATUS], e1000[E1000_STATUS] == 0x80080783 ? "==" : "!=");</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    static_assert(sizeof(tx_descs) % 128 == 0); // should be 128-byte aligned</span>
+<span class="token inserted">+    static_assert(sizeof(rx_descs) % 128 == 0); // should be 128-byte aligned</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    // perform transmit initialization</span>
+<span class="token inserted">+    e1000[E1000_TDBAL] = PADDR(tx_descs);</span>
+<span class="token inserted">+    e1000[E1000_TDLEN] = sizeof(tx_descs);</span>
+<span class="token inserted">+    e1000[E1000_TDH] = 0;</span>
+<span class="token inserted">+    e1000[E1000_TDT] = 0;</span>
+<span class="token inserted">+    e1000[E1000_TCTL] |= E1000_TCTL_EN;</span>
+<span class="token inserted">+    e1000[E1000_TCTL] |= E1000_TCTL_PSP;</span>
+<span class="token inserted">+    e1000[E1000_TCTL] |= E1000_TCTL_CT_INIT;</span>
+<span class="token inserted">+    e1000[E1000_TCTL] |= E1000_TCTL_COLD_INIT;</span>
+<span class="token inserted">+    e1000[E1000_TIPG] |= E1000_TIPG_INIT;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    // init transmit descriptors</span>
+<span class="token inserted">+    memset(tx_descs, 0, sizeof(tx_descs));</span>
+<span class="token inserted">+    for (size_t i = 0; i &lt; NTDESC; ++i) {</span>
+<span class="token inserted">+        tx_descs[i].addr = PADDR(tx_packets[i]);</span>
+<span class="token inserted">+        tx_descs[i].cmd |= E1000_TXD_CMD_RS;</span>
+<span class="token inserted">+        tx_descs[i].status |= E1000_TXD_STA_DD;</span>
+<span class="token inserted">+    }</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    // perform receive initialization</span>
+<span class="token inserted">+    e1000[E1000_RAL] = 0x12005452; // hardcoded 52:54:00:12:34:56</span>
+<span class="token inserted">+    e1000[E1000_RAH] = 0x00005634 | E1000_RAH_AV; // hardcoded 52:54:00:12:34:56</span>
+<span class="token inserted">+    e1000[E1000_RDBAL] = PADDR(rx_descs);</span>
+<span class="token inserted">+    e1000[E1000_RDLEN] = sizeof(rx_descs);</span>
+<span class="token inserted">+    e1000[E1000_RDH] = 0;</span>
+<span class="token inserted">+    e1000[E1000_RDT] = NRDESC - 1;</span>
+<span class="token inserted">+    e1000[E1000_RCTL] |= E1000_RCTL_EN;</span>
+<span class="token inserted">+    e1000[E1000_RCTL] &amp;= ~E1000_RCTL_LPE;   // turn off long packet</span>
+<span class="token inserted">+    e1000[E1000_RCTL] |= E1000_RCTL_LBM_NO;</span>
+<span class="token inserted">+    e1000[E1000_RCTL] |= E1000_RCTL_RDMTS_HALF;</span>
+<span class="token inserted">+    e1000[E1000_RCTL] |= E1000_RCTL_MO_0;</span>
+<span class="token inserted">+    e1000[E1000_RCTL] |= E1000_RCTL_BAM;</span>
+<span class="token inserted">+    e1000[E1000_RCTL] |= E1000_RCTL_SZ_2048;</span>
+<span class="token inserted">+    e1000[E1000_RCTL] |= E1000_RCTL_SECRC;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    // init receive descriptors</span>
+<span class="token inserted">+    memset(rx_descs, 0, sizeof(rx_descs));</span>
+<span class="token inserted">+    for (size_t i = 0; i &lt; NRDESC; ++i) {</span>
+<span class="token inserted">+        rx_descs[i].addr = PADDR(rx_packets[i]);</span>
+<span class="token inserted">+    }</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    #if TEST_TX</span>
+<span class="token inserted">+        char int_packet[200];</span>
+<span class="token inserted">+        for (size_t i = 0; i &lt; 200; ++i)</span>
+<span class="token inserted">+            int_packet[i] = i;</span>
+<span class="token inserted">+        for (size_t i = 0; i &lt; 2 * NTDESC; ++i) {</span>
+<span class="token inserted">+            cprintf("transmit packet %d, length: %d\n", i, sizeof(int_packet));</span>
+<span class="token inserted">+            int_packet[0] = i;</span>
+<span class="token inserted">+            e1000_tx(int_packet, sizeof(int_packet));</span>
+<span class="token inserted">+        }</span>
+<span class="token inserted">+    #endif</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    return 0;</span>
+<span class="token inserted">+}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+// Return 0 on success.</span>
+<span class="token inserted">+// Return -E_TXD_ARRAY_FULL if transmit descriptor array is full.</span>
+<span class="token inserted">+int</span>
+<span class="token inserted">+e1000_tx(void *addr, size_t length)</span>
+<span class="token inserted">+{</span>
+<span class="token inserted">+    if (length > MAXPKTLEN)</span>
+<span class="token inserted">+        return -E_INVAL;</span>
+<span class="token inserted">+    </span>
+<span class="token inserted">+    size_t tail = e1000[E1000_TDT];</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    #if DEBUG</span>
+<span class="token inserted">+        cprintf("e1000 transmit tail: %d\n", tail);</span>
+<span class="token inserted">+        cprintf("transmit tail status %0x\n", tx_descs[tail].status);</span>
+<span class="token inserted">+    #endif</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    if (!(tx_descs[tail].status &amp; E1000_TXD_STA_DD)) {</span>
+<span class="token inserted">+        cprintf("e1000 transmit descriptors array is full\n");</span>
+<span class="token inserted">+        return -E_TXD_ARRAY_FULL;</span>
+<span class="token inserted">+    }</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    memcpy(KADDR(tx_descs[tail].addr), addr, length);</span>
+<span class="token inserted">+    tx_descs[tail].length = length;</span>
+<span class="token inserted">+    tx_descs[tail].status &amp;= ~E1000_TXD_STA_DD;</span>
+<span class="token inserted">+    tx_descs[tail].cmd |= E1000_TXD_CMD_EOP;</span>
+<span class="token inserted">+    e1000[E1000_TDT] = (tail + 1) % NTDESC;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    return 0;</span>
+<span class="token inserted">+}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+// Return length on success.</span>
+<span class="token inserted">+// Return -E_RXD_ARRAY_EMPTY if receive descriptor array is full.</span>
+<span class="token inserted">+int</span>
+<span class="token inserted">+e1000_rx(void *addr) {</span>
+<span class="token inserted">+    // To avoid tail catching up head which prevent the network</span>
+<span class="token inserted">+    // card from accepting packets, we let the tail always one slot</span>
+<span class="token inserted">+    // behind slots that are filled and update tail first when we</span>
+<span class="token inserted">+    // fetch a received packet. This could waste one slot.</span>
+<span class="token inserted">+    uint32_t tail = (e1000[E1000_RDT] + 1) % NRDESC;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    #if DEBUG</span>
+<span class="token inserted">+    cprintf("prepare to receive tail: %d\n", e1000[E1000_RDT]);</span>
+<span class="token inserted">+    cprintf("receive tail status %d0x\n", rx_descs[tail].status);</span>
+<span class="token inserted">+    #endif</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    if (!(rx_descs[tail].status &amp; E1000_RXD_STA_DD)) {</span>
+<span class="token inserted">+        // if the dd field is not set, there is nothing to receive</span>
+<span class="token inserted">+        return -E_RXD_ARRAY_EMPTY;</span>
+<span class="token inserted">+    }</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    // assume there is no long packets</span>
+<span class="token inserted">+    assert(rx_descs[tail].status &amp; E1000_RXD_STA_EOP);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    size_t length = rx_descs[tail].length;</span>
+<span class="token inserted">+    memcpy(addr, KADDR(rx_descs[tail].addr), length);</span>
+<span class="token inserted">+    rx_descs[tail].status &amp;= ~E1000_RXD_STA_DD;</span>
+<span class="token inserted">+    rx_descs[tail].status &amp;= ~E1000_RXD_STA_EOP;</span>
+<span class="token inserted">+    rx_descs[tail].status &amp;= ~E1000_RXD_STA_IXSM;</span>
+<span class="token inserted">+    e1000[E1000_RDT] = tail;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    return length;</span>
+<span class="token inserted">+}</span>
+\ No newline at end of file
+diff --git a/kern/e1000.h b/kern/e1000.h
+index e563ac4..6780c9e 100644
+<span class="token deleted">--- a/kern/e1000.h</span>
+<span class="token inserted">+++ b/kern/e1000.h</span>
+<span class="token coord">@@ -1,4 +1,104 @@</span>
+ #ifndef JOS_KERN_E1000_H
+ #define JOS_KERN_E1000_H
+ 
+<span class="token inserted">+#include &lt;kern/pci.h></span>
+<span class="token inserted">+#include &lt;kern/pmap.h></span>
+<span class="token inserted">+</span>
+<span class="token inserted">+#define E1000_VENDOR_ID     0x8086</span>
+<span class="token inserted">+#define E1000_DEV_ID_82540EM             0x100E</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+/* The value given in the manual is byte indexed. In our code, we use uint32_t index.*/</span>
+<span class="token inserted">+#define E1000_STATUS    (0x00008 / sizeof(uint32_t))  /* Device Status - RO */</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+/* Transmit Control Register */</span>
+<span class="token inserted">+/* The value given in the manual is byte indexed. In our code, we use uint32_t index.*/</span>
+<span class="token inserted">+#define E1000_TDBAL     (0x03800 / sizeof(uint32_t))  /* TX Descriptor Base Address Low - RW */</span>
+<span class="token inserted">+#define E1000_TDLEN     (0x03808 / sizeof(uint32_t))  /* TX Descriptor Length - RW */ </span>
+<span class="token inserted">+#define E1000_TDH       (0x03810 / sizeof(uint32_t))  /* TX Descriptor Head - RW */</span>
+<span class="token inserted">+#define E1000_TDT       (0x03818 / sizeof(uint32_t))  /* TX Descriptor Tail - RW */ </span>
+<span class="token inserted">+#define E1000_TCTL      (0x00400 / sizeof(uint32_t))  /* TX Control - RW */</span>
+<span class="token inserted">+#define E1000_TIPG      (0x00410 / sizeof(uint32_t))  /* Transmit IPG Register */</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+/* Transmit Control */</span>
+<span class="token inserted">+#define E1000_TCTL_RST    0x00000001    /* software reset */</span>
+<span class="token inserted">+#define E1000_TCTL_EN     0x00000002    /* enable tx */</span>
+<span class="token inserted">+#define E1000_TCTL_BCE    0x00000004    /* busy check enable */</span>
+<span class="token inserted">+#define E1000_TCTL_PSP    0x00000008    /* pad short packets */</span>
+<span class="token inserted">+#define E1000_TCTL_CT     0x00000ff0    /* collision threshold */</span>
+<span class="token inserted">+#define E1000_TCTL_COLD   0x003ff000    /* collision distance */</span>
+<span class="token inserted">+#define E1000_TCTL_SWXOFF 0x00400000    /* SW Xoff transmission */</span>
+<span class="token inserted">+#define E1000_TCTL_PBE    0x00800000    /* Packet Burst Enable */</span>
+<span class="token inserted">+#define E1000_TCTL_RTLC   0x01000000    /* Re-transmit on late collision */</span>
+<span class="token inserted">+#define E1000_TCTL_NRTU   0x02000000    /* No Re-transmit on underrun */</span>
+<span class="token inserted">+#define E1000_TCTL_MULR   0x10000000    /* Multiple request support */</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+#define E1000_TCTL_CT_INIT      0x00000010      /* initial collision threshold */</span>
+<span class="token inserted">+#define E1000_TCTL_COLD_INIT    0x00040000      /* initial collision distance */</span>
+<span class="token inserted">+#define E1000_TIPG_INIT         0x0060200a      /* init values for TIPG in 13.4.34 */</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+#define E1000_TXD_CMD_RS    0x08    /* Transmit Desc Report Status */</span>
+<span class="token inserted">+#define E1000_TXD_CMD_EOP   0x01    /* Transmit Desc End of Packet */</span>
+<span class="token inserted">+#define E1000_TXD_STA_DD    0x1     /* Transmit Desc Status DD field */</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+/* Receive Control Register */</span>
+<span class="token inserted">+/* The value given in the manual is byte indexed. In our code, we use uint32_t index.*/</span>
+<span class="token inserted">+#define E1000_RCTL     (0x00100 / sizeof(uint32_t)) /* RX Control - RW */</span>
+<span class="token inserted">+#define E1000_RDBAL    (0x02800 / sizeof(uint32_t)) /* RX Descriptor Base Address Low - RW */</span>
+<span class="token inserted">+#define E1000_RDLEN    (0x02808 / sizeof(uint32_t)) /* RX Descriptor Length - RW */</span>
+<span class="token inserted">+#define E1000_RDH      (0x02810 / sizeof(uint32_t)) /* RX Descriptor Head - RW */</span>
+<span class="token inserted">+#define E1000_RDT      (0x02818 / sizeof(uint32_t)) /* RX Descriptor Tail - RW */</span>
+<span class="token inserted">+#define E1000_RA       (0x05400 / sizeof(uint32_t)) /* Receive Address - RW Array */</span>
+<span class="token inserted">+#define E1000_RAL      (0x05400 / sizeof(uint32_t)) /* Receive Address Low - RW */</span>
+<span class="token inserted">+#define E1000_RAH      (0x05404 / sizeof(uint32_t)) /* Receive Address HIGH - RW */</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+/* Receive Control Registers */</span>
+<span class="token inserted">+#define E1000_RCTL_EN			0x00000002    /* enable */</span>
+<span class="token inserted">+#define E1000_RCTL_LPE			0x00000020    /* long packet enable */</span>
+<span class="token inserted">+#define E1000_RCTL_LBM_NO		0x00000000    /* no loopback mode */</span>
+<span class="token inserted">+#define E1000_RCTL_RDMTS_HALF	0x00000000    /* rx desc min threshold size */</span>
+<span class="token inserted">+#define E1000_RCTL_MO_0			0x00000000    /* multicast offset 11:0 */</span>
+<span class="token inserted">+#define E1000_RCTL_BAM			0x00008000    /* broadcast enable */</span>
+<span class="token inserted">+#define E1000_RCTL_SECRC		0x04000000    /* Strip Ethernet CRC */</span>
+<span class="token inserted">+#define E1000_RCTL_BSEX			0x02000000    /* Buffer size extension */</span>
+<span class="token inserted">+#define E1000_RCTL_SZ_2048      0x00000000    /* rx buffer size 2048 */</span>
+<span class="token inserted">+#define E1000_RCTL_SZ_4096      0x00030000    /* rx buffer size 4096 */</span>
+<span class="token inserted">+#define E1000_RAH_AV			0x80000000    /* MAC address valid */</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+#define E1000_RXD_STA_DD        0x01    /* Descriptor Done */</span>
+<span class="token inserted">+#define E1000_RXD_STA_EOP       0x02    /* End of Packet */</span>
+<span class="token inserted">+#define E1000_RXD_STA_IXSM      0x04    /* Ignore Checksum Indication */</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+#define NTDESC      64      // the number of the transmit descriptors, somehow arbitrary,</span>
+<span class="token inserted">+                            // According lab 6 instruction(Exercise 5), NTDESC should not be larger than 64</span>
+<span class="token inserted">+#define NRDESC      128     // the number of receive descriptors, Exercise 10 claims at least 128</span>
+<span class="token inserted">+#define MAXPKTLEN   1518    // The maximum size of an Ethernet packet</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+/* Transmit Descriptor */</span>
+<span class="token inserted">+struct e1000_tx_desc {</span>
+<span class="token inserted">+    uint64_t addr;          /* Address of the descriptor's data buffer */</span>
+<span class="token inserted">+    uint16_t length;        /* Data buffer length */</span>
+<span class="token inserted">+    uint8_t cso;            /* Checksum offset */</span>
+<span class="token inserted">+    uint8_t cmd;            /* Descriptor control */</span>
+<span class="token inserted">+    uint8_t status;         /* Descriptor status */</span>
+<span class="token inserted">+    uint8_t css;            /* Checksum start */</span>
+<span class="token inserted">+    uint16_t special;</span>
+<span class="token inserted">+}__attribute__((packed));</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+/* Receive Descriptor */</span>
+<span class="token inserted">+struct e1000_rx_desc {</span>
+<span class="token inserted">+    uint64_t buffer_addr;   /* Address of the descriptor's data buffer */</span>
+<span class="token inserted">+    uint16_t length;        /* Length of data DMAed into data buffer */</span>
+<span class="token inserted">+    uint16_t csum;          /* Packet checksum */</span>
+<span class="token inserted">+    uint8_t status;         /* Descriptor status */</span>
+<span class="token inserted">+    uint8_t errors;         /* Descriptor Errors */</span>
+<span class="token inserted">+    uint16_t special;</span>
+<span class="token inserted">+}__attribute__((packed));</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+int e1000_attach(struct pci_func *pcif);</span>
+<span class="token inserted">+int e1000_tx(void *addr, size_t length);</span>
+<span class="token inserted">+int e1000_rx(void *addr);</span>
+<span class="token inserted">+</span>
+ #endif	// JOS_KERN_E1000_H
+diff --git a/kern/pci.c b/kern/pci.c
+index 784e072..c650aa3 100644
+<span class="token deleted">--- a/kern/pci.c</span>
+<span class="token inserted">+++ b/kern/pci.c</span>
+@@ -31,6 +31,7 @@ struct pci_driver pci_attach_class[] = {
+ // pci_attach_vendor matches the vendor ID and device ID of a PCI device. key1
+ // and key2 should be the vendor ID and device ID respectively
+ struct pci_driver pci_attach_vendor[] = {
+<span class="token inserted">+	{ E1000_VENDOR_ID, E1000_DEV_ID_82540EM, e1000_attach},</span>
+ 	{ 0, 0, 0 },
+ };
+ 
+diff --git a/kern/syscall.c b/kern/syscall.c
+index d953527..cfe237e 100644
+<span class="token deleted">--- a/kern/syscall.c</span>
+<span class="token inserted">+++ b/kern/syscall.c</span>
+<span class="token coord">@@ -12,6 +12,7 @@</span>
+ #include &lt;kern/console.h>
+ #include &lt;kern/sched.h>
+ #include &lt;kern/time.h>
+<span class="token inserted">+#include &lt;kern/e1000.h></span>
+ 
+ // Print a string to the system console.
+ // The string is exactly <span class="token string">'len'</span> characters long.
+@@ -422,7 +423,28 @@ static int
+ sys_time_msec(void)
+ {
+ 	// LAB 6: Your code here.
+<span class="token deleted">-	panic("sys_time_msec not implemented");</span>
+<span class="token inserted">+	// panic("sys_time_msec not implemented");</span>
+<span class="token inserted">+	return time_msec();</span>
+<span class="token inserted">+}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+static int</span>
+<span class="token inserted">+sys_net_transmit(void *addr, size_t length)</span>
+<span class="token inserted">+{</span>
+<span class="token inserted">+	// Check that the user has permission to read memory [s, s+len).</span>
+<span class="token inserted">+	// Destroy the environment if not.</span>
+<span class="token inserted">+	user_mem_assert(curenv, addr, length, PTE_P | PTE_U);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	// e1000_rx will check the sanity of length</span>
+<span class="token inserted">+	return e1000_tx(addr, length);</span>
+<span class="token inserted">+}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+static int</span>
+<span class="token inserted">+sys_net_receive(void *addr)</span>
+<span class="token inserted">+{</span>
+<span class="token inserted">+	// user cannot receive the packet to read-only memory</span>
+<span class="token inserted">+	// user should prepare enough memory for the biggest possible data length (MAXPKTLEN)</span>
+<span class="token inserted">+	user_mem_assert(curenv, addr, MAXPKTLEN, PTE_U | PTE_P | PTE_W);</span>
+<span class="token inserted">+	return e1000_rx(addr);</span>
+ }
+ 
+ // Dispatches to the correct kernel function, passing the arguments.
+@@ -450,6 +472,9 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4,
+ 		case SYS_yield: sys_yield(); return 0;
+ 		case SYS_ipc_try_send: return sys_ipc_try_send((envid_t)a1, (uint32_t)a2, (void *)a3, (unsigned int)a4);
+ 		case SYS_ipc_recv: return sys_ipc_recv((void *)a1);
+<span class="token inserted">+		case SYS_time_msec: return sys_time_msec();</span>
+<span class="token inserted">+		case SYS_net_transmit: return sys_net_transmit((void *)a1, (size_t)a2);</span>
+<span class="token inserted">+		case SYS_net_receive: return sys_net_receive((void *)a1);</span>
+ 		default:
+ 			return -E_INVAL;
+ 	}
+diff --git a/kern/trap.c b/kern/trap.c
+index 6a3d26d..3382a88 100644
+<span class="token deleted">--- a/kern/trap.c</span>
+<span class="token inserted">+++ b/kern/trap.c</span>
+@@ -225,6 +225,7 @@ trap_dispatch(struct Trapframe *tf)
+ 		case T_PGFLT: page_fault_handler(tf);
+ 					  return;
+ 		case IRQ_OFFSET + IRQ_TIMER: lapic_eoi();
+<span class="token inserted">+									 time_tick();</span>
+ 									 sched_yield();
+ 									 return;
+ 		case IRQ_OFFSET + IRQ_KBD:	kbd_intr();
+diff --git a/lib/printfmt.c b/lib/printfmt.c
+index 2817263..654571c 100644
+<span class="token deleted">--- a/lib/printfmt.c</span>
+<span class="token inserted">+++ b/lib/printfmt.c</span>
+@@ -35,6 +35,8 @@ static const char * const error_string[MAXERROR] =
+ 	[E_FILE_EXISTS]	= <span class="token string">"file already exists"</span>,
+ 	[E_NOT_EXEC]	= <span class="token string">"file is not a valid executable"</span>,
+ 	[E_NOT_SUPP]	= <span class="token string">"operation not supported"</span>,
+<span class="token inserted">+	[E_TXD_ARRAY_FULL]	= "trasmit buffer array is full",</span>
+<span class="token inserted">+	[E_RXD_ARRAY_EMPTY]	= "receive buffer array is emtpy",</span>
+ };
+ 
+ /*
+diff --git a/lib/syscall.c b/lib/syscall.c
+index 9e1a1d9..d42d538 100644
+<span class="token deleted">--- a/lib/syscall.c</span>
+<span class="token inserted">+++ b/lib/syscall.c</span>
+@@ -122,3 +122,15 @@ sys_time_msec(void)
+ {
+ 	return (unsigned int) syscall(SYS_time_msec, 0, 0, 0, 0, 0, 0);
+ }
+<span class="token inserted">+</span>
+<span class="token inserted">+int</span>
+<span class="token inserted">+sys_net_transmit(void *addr, size_t length)</span>
+<span class="token inserted">+{</span>
+<span class="token inserted">+	return syscall(SYS_net_transmit, 0, (uint32_t)addr, (uint32_t)length, 0, 0, 0);</span>
+<span class="token inserted">+}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+int</span>
+<span class="token inserted">+sys_net_receive(void *addr)</span>
+<span class="token inserted">+{</span>
+<span class="token inserted">+	return syscall(SYS_net_receive, 0, (uint32_t)addr, 0, 0, 0, 0);</span>
+<span class="token inserted">+}</span>
+\ No newline at end of file
+diff --git a/net/input.c b/net/input.c
+index 4e08f0f..07a9634 100644
+<span class="token deleted">--- a/net/input.c</span>
+<span class="token inserted">+++ b/net/input.c</span>
+<span class="token coord">@@ -1,5 +1,7 @@</span>
+ #include <span class="token string">"ns.h"</span>
+ 
+<span class="token inserted">+#define DEBUG 0</span>
+<span class="token inserted">+</span>
+ extern union Nsipc nsipcbuf;
+ 
+ void
+@@ -13,4 +15,35 @@ input(envid_t ns_envid)
+ 	// Hint: When you IPC a page to the network server, it will be
+ 	// reading from it for a while, so don't immediately receive
+ 	// another packet in to the same physical page.
+<span class="token deleted">-}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	struct jif_pkt *pkt = (struct jif_pkt *)REQVA;</span>
+<span class="token inserted">+	int r, i;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	while (true) {</span>
+<span class="token inserted">+		// we allocate a new physical page at pkt each time we</span>
+<span class="token inserted">+		// receive new data, so we don't need to wait a few schedule</span>
+<span class="token inserted">+		// cycles for the page being read, which is prone to be buggy.</span>
+<span class="token inserted">+		while((r = sys_page_alloc(0, pkt, PTE_P | PTE_U | PTE_W)) &lt; 0) {</span>
+<span class="token inserted">+			if (r != -E_NO_MEM)</span>
+<span class="token inserted">+				panic("sys_page_alloc: %e\n", r);</span>
+<span class="token inserted">+			</span>
+<span class="token inserted">+			sys_yield();</span>
+<span class="token inserted">+		}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		while ((r = sys_net_receive(pkt->jp_data)) &lt; 0) {</span>
+<span class="token inserted">+			if (r != -E_RXD_ARRAY_EMPTY)</span>
+<span class="token inserted">+				panic("Net receive failed. %e\n", r);</span>
+<span class="token inserted">+			</span>
+<span class="token inserted">+			sys_yield();</span>
+<span class="token inserted">+		}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		pkt->jp_len = r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		#if DEBUG</span>
+<span class="token inserted">+		cprintf("ns req %d to %08x [page 0x%08x]\n",</span>
+<span class="token inserted">+			NSREQ_INPUT, ns_envid, uvpt[PGNUM(REQVA)]);</span>
+<span class="token inserted">+		#endif</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		ipc_send(ns_envid, NSREQ_INPUT, pkt, PTE_U | PTE_P | PTE_W);</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+}</span>
+\ No newline at end of file
+diff --git a/net/output.c b/net/output.c
+index f577c4e..e461c54 100644
+<span class="token deleted">--- a/net/output.c</span>
+<span class="token inserted">+++ b/net/output.c</span>
+<span class="token coord">@@ -1,5 +1,7 @@</span>
+ #include <span class="token string">"ns.h"</span>
+ 
+<span class="token inserted">+#define DEBUG 0</span>
+<span class="token inserted">+</span>
+ extern union Nsipc nsipcbuf;
+ 
+ void
+@@ -10,4 +12,43 @@ output(envid_t ns_envid)
+ 	// LAB 6: Your code here:
+ 	// 	- read a packet from the network server
+ 	//	- send the packet to the device driver
+<span class="token inserted">+</span>
+<span class="token inserted">+	int r, perm;</span>
+<span class="token inserted">+	envid_t whom;</span>
+<span class="token inserted">+	struct jif_pkt *pkt = (struct jif_pkt*)REQVA;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	while(true) {</span>
+<span class="token inserted">+		int32_t req = ipc_recv(&amp;whom, pkt, &amp;perm);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		#if DEBUG</span>
+<span class="token inserted">+		cprintf("ns req %d from 0x%08x [page 0x%08x]\n",</span>
+<span class="token inserted">+			req, whom, uvpt[PGNUM(REQVA)]);</span>
+<span class="token inserted">+		#endif</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		assert(whom == ns_envid);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		if (!(perm &amp; PTE_P)) {</span>
+<span class="token inserted">+			#if DEBUG</span>
+<span class="token inserted">+			cprintf("Invalide request from [%08x]: no argument page\n", whom);</span>
+<span class="token inserted">+			#endif</span>
+<span class="token inserted">+			continue;</span>
+<span class="token inserted">+		}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+		if (req == NSREQ_OUTPUT) {</span>
+<span class="token inserted">+			while ((r = sys_net_transmit(pkt->jp_data, pkt->jp_len)) &lt; 0) {</span>
+<span class="token inserted">+				if (r != E_TXD_ARRAY_FULL)</span>
+<span class="token inserted">+					panic("Net transmit failed to output request of [%08x]\n", whom);</span>
+<span class="token inserted">+				#if DEBUG</span>
+<span class="token inserted">+				else</span>
+<span class="token inserted">+					cprintf("Output request of [%08x] failed\n", whom);</span>
+<span class="token inserted">+				#endif</span>
+<span class="token inserted">+				sys_yield();</span>
+<span class="token inserted">+			}</span>
+<span class="token inserted">+		}</span>
+<span class="token inserted">+		#if DEBUG</span>
+<span class="token inserted">+		else {</span>
+<span class="token inserted">+			cprintf("Invalid request code %d from [%08x]\n", req, whom);</span>
+<span class="token inserted">+		}</span>
+<span class="token inserted">+		#endif</span>
+<span class="token inserted">+	}</span>
+ }
+diff --git a/user/httpd.c b/user/httpd.c
+index ede43bf..7ddb82c 100644
+<span class="token deleted">--- a/user/httpd.c</span>
+<span class="token inserted">+++ b/user/httpd.c</span>
+@@ -77,7 +77,18 @@ static int
+ send_data(struct http_request *req, int fd)
+ {
+ 	// LAB 6: Your code here.
+<span class="token deleted">-	panic("send_data not implemented");</span>
+<span class="token inserted">+	// panic("send_data not implemented");</span>
+<span class="token inserted">+	#define BUF_SIZE	1024</span>
+<span class="token inserted">+	int r;</span>
+<span class="token inserted">+	uint8_t buf[BUF_SIZE];</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	while ((r = readn(fd, buf, BUF_SIZE)) > 0)</span>
+<span class="token inserted">+		write(req->sock, buf, r);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (r &lt; 0)</span>
+<span class="token inserted">+		die("send data: read failed\n");</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	return 0;</span>
+ }
+ 
+ static int
+@@ -223,7 +234,25 @@ send_file(struct http_request *req)
+ 	// set file_size to the size of the file
+ 
+ 	// LAB 6: Your code here.
+<span class="token deleted">-	panic("send_file not implemented");</span>
+<span class="token inserted">+	// panic("send_file not implemented");</span>
+<span class="token inserted">+	struct Stat state;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = fd = open(req->url, O_RDONLY)) &lt; 0) {</span>
+<span class="token inserted">+		send_error(req, 404);</span>
+<span class="token inserted">+		goto end;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = fstat(fd, &amp;state)) &lt; 0) {</span>
+<span class="token inserted">+		send_error(req, 404);</span>
+<span class="token inserted">+		goto end;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (state.st_isdir) {</span>
+<span class="token inserted">+		send_error(req, 404);</span>
+<span class="token inserted">+		goto end;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+  </span>
+<span class="token inserted">+	file_size = state.st_size;</span>
+ 
+ 	if ((r = send_header(req, 200)) &lt; 0)
+ 		goto end;
+</pre><h2 class="mume-header" id="grade">Grade</h2>
+
+<p>Finally, we got our grade.</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash">testtime: OK <span class="token punctuation">(</span>8.2s<span class="token punctuation">)</span>
+pci attach: OK <span class="token punctuation">(</span>2.0s<span class="token punctuation">)</span>
+testoutput <span class="token punctuation">[</span>5 packets<span class="token punctuation">]</span>: OK <span class="token punctuation">(</span>3.0s<span class="token punctuation">)</span>
+testoutput <span class="token punctuation">[</span>100 packets<span class="token punctuation">]</span>: OK <span class="token punctuation">(</span>2.6s<span class="token punctuation">)</span>
+Part A score: 35/35
+
+testinput <span class="token punctuation">[</span>5 packets<span class="token punctuation">]</span>: OK <span class="token punctuation">(</span>2.7s<span class="token punctuation">)</span>
+testinput <span class="token punctuation">[</span>100 packets<span class="token punctuation">]</span>: OK <span class="token punctuation">(</span>3.3s<span class="token punctuation">)</span>
+tcp <span class="token keyword">echo</span> server <span class="token punctuation">[</span>echosrv<span class="token punctuation">]</span>: OK <span class="token punctuation">(</span>1.5s<span class="token punctuation">)</span>
+web server <span class="token punctuation">[</span>httpd<span class="token punctuation">]</span>:
+  http://localhost:26002/: OK <span class="token punctuation">(</span>2.3s<span class="token punctuation">)</span>
+  http://localhost:26002/index.html: OK <span class="token punctuation">(</span>1.4s<span class="token punctuation">)</span>
+  http://localhost:26002/random_file.txt: OK <span class="token punctuation">(</span>2.1s<span class="token punctuation">)</span>
+Part B score: 70/70
+
+Score: 105/105
+</pre><div class="code-chunk" data-id="code-chunk-id-3" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><footer style="width:100%;text-align:center;font-family:Times">End of Lab 6 Report<br>Email: <a mailto="caoshuyang1996@pku.edu.cn" href="">caoshuyang@pku.edu.cn</a> GitHub: <a href="https://github.com/CaoSY/JOS-Lab" title="JOS Lab">JOS-Lab</a></footer>
+</div></div>
+      </div>
+      <div class="md-sidebar-toc"><ul>
+<li><a href="#the-network-server">The Network Server</a></li>
+<li><a href="#the-core-network-server-environment">The Core Network Server Environment</a></li>
+<li><a href="#the-output-environment">The Output Environment</a></li>
+<li><a href="#the-input-environment">The Input Environment</a></li>
+<li><a href="#the-timer-environment-exercise-1">The Timer Environment &amp; Exercise 1</a></li>
+<li><a href="#pci-interface-exercise-3">PCI Interface &amp; Exercise 3</a></li>
+<li><a href="#memory-mapped-io-exercise-4">Memory-mapped I/O &amp; Exercise 4</a></li>
+<li><a href="#dma">DMA</a></li>
+<li><a href="#transmitting-packets">Transmitting Packets</a>
+<ul>
+<li><a href="#exercise-5">Exercise 5</a></li>
+<li><a href="#exercise-6">Exercise 6</a></li>
+<li><a href="#exercise-7">Exercise 7</a></li>
+<li><a href="#transmitting-packets-network-server-exercise-8">Transmitting Packets: Network Server &amp; Exercise 8</a></li>
+</ul>
+</li>
+<li><a href="#receiving-packets">Receiving Packets</a>
+<ul>
+<li><a href="#exercise-10">Exercise 10</a></li>
+<li><a href="#exercise-11">Exercise 11</a></li>
+<li><a href="#receiving-packets-network-server-exercise-12">Receiving Packets: Network Server &amp; Exercise 12</a></li>
+</ul>
+</li>
+<li><a href="#the-web-server-exercise-13">The Web Server &amp; Exercise 13</a></li>
+<li><a href="#code-for-lab-6">Code for Lab 6</a></li>
+<li><a href="#grade">Grade</a></li>
+</ul>
+</div>
+      <a id="sidebar-toc-btn">≡</a>
+    </body>
+    
+    
+    
+    
+    
+    
+    
+<script>
+
+var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
+sidebarTOCBtn.addEventListener('click', function(event) {
+  event.stopPropagation()
+  if (document.body.hasAttribute('html-show-sidebar-toc')) {
+    document.body.removeAttribute('html-show-sidebar-toc')
+  } else {
+    document.body.setAttribute('html-show-sidebar-toc', true)
+  }
+})
+</script>
+      
+  </html>

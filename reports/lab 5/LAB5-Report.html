@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>LAB5-Report</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0/katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+      <style> 
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+ 
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview   ">
+      <div class="code-chunk" data-id="global" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><div class="code-chunk" data-id="code-chunk-id-1" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><p><span style="display:inline-block;width:50%;text-align:left">Created: June 18 2018 10:58:00</span><span style="display:inline-block;width:50%;text-align:right">Last Updated: Jun 20 2018 01:17:37</span></p>
+<h1 style="font-style:italic; font-family:Times; font-size:4em"><center>Lab 5 Report</center></h1>
+<div style="font-style:italic; font-family:Times; font-size:1.2em"><center>Shuyang Cao</center><center>Jun 20 2018</center></div>
+</div></div><div class="code-chunk" data-id="code-chunk-id-2" data-cmd="toc"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><ul>
+<li><a href="#the-file-system">The File System</a>
+<ul>
+<li><a href="#disk-access">Disk Access</a></li>
+<li><a href="#exercise-1">Exercise 1</a></li>
+<li><a href="#question-1">Question 1</a></li>
+<li><a href="#the-block-cache">The Block Cache</a></li>
+<li><a href="#exercise-2">Exercise 2</a></li>
+<li><a href="#the-block-bitmap-exericse-3">The Block Bitmap &amp; Exericse 3</a></li>
+<li><a href="#file-operations-exercise-4">File Operations &amp; Exercise 4</a></li>
+<li><a href="#the-file-system-interface">The file system interface</a></li>
+<li><a href="#exercise-5">Exercise 5</a></li>
+<li><a href="#exercise-6">Exercise 6</a></li>
+<li><a href="#spawning-processes-exercise-7">Spawning Processes &amp; Exercise 7</a></li>
+<li><a href="#sharing-library-state-across-fork-and-spawn">Sharing library state across fork and spawn</a></li>
+<li><a href="#exercise-8">Exercise 8</a></li>
+<li><a href="#the-keyboard-interface-exercise-9">The keyboard interface &amp; Exercise 9</a></li>
+<li><a href="#the-shell-exercise-10">The Shell &amp; Exercise 10</a></li>
+</ul>
+</li>
+<li><a href="#challenge">Challenge</a></li>
+<li><a href="#grade">Grade</a></li>
+</ul>
+<h2 class="mume-header" id="the-file-system">The File System</h2>
+
+<p>In this lab, we won’t implement the entire file syetem, but implement only certain key components. In particular, we implement reading blocks into the block cache and flushing them back to disk; allocating disk blocks; mapping file offsets to disk blocks; and the reading, writing, opening IPC interfaces.</p>
+<h3 class="mume-header" id="disk-access">Disk Access</h3>
+
+<p>Instead of taking the conventional “monolithic” operating system strategy of adding an IDE disk driver to the kernel along with the necessary system calls to allow the file system to access it, we instead implement the IDE disk driver as part of the user-level file system enviroment. To do so, we need to give the privileges the file system enviroment needs to allow it to implement disk access itself. As long as we rely on polling, “programmed I/O” (PIO)-based disk access and do not use disk interrupts, it’s easy to implement disk access in user space.</p>
+<p>The x86 processor uses the IOPL bits in the EFLAGS register to determine whether protected-mode code is allowed to perform special device I/O instructions such as the IN and OUT instructions. Only processes with CS PL lower than their own IOPL are allowed to perform special device I/O. Since all of the IDE disk registers we need to access are located in the x86’s I/O space rather than being memory-mapped, giving “I/O privilege” to the file system environment is the only thing we need to do in order to allow the file system to access these registers. In effect, the IOPL bits in the EFLAGS register provides the kernel with a simple “all-or-nothing” method of controlling whether user-mode code can access I/O space. In JOS, we want the file system environment to be able to access I/O space, but we do not want any other environments to be able to access I/O space at all.</p>
+<h3 class="mume-header" id="exercise-1">Exercise 1</h3>
+
+<blockquote>
+<p><code>i386_init</code> identifies the file system environment by passing the type <code>ENV_TYPE_FS</code> to your environment creation function, <code>env_create</code>. Modify <code>env_create</code> in <code>env.c</code>, so that it gives the file system environment I/O privilege, but never gives that privilege to any other environment.</p>
+<p>Make sure you can start the file environment without causing a General Protection fault. You should pass the “fs i/o” test in <code>make grade</code>.</p>
+</blockquote>
+<p>As mentioned in last section, we need to set IOPL larger than CSPL for FS enviroment while setting IOPL to zero for other enviroments.</p>
+<p>The code for this exercise is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/env.c b/kern/env.c
+index 3ddc120..6533465 100644
+<span class="token deleted">--- a/kern/env.c</span>
+<span class="token inserted">+++ b/kern/env.c</span>
+@@ -424,6 +424,9 @@ env_create(uint8_t *binary, enum EnvType type)
+ 	if ((err_code = env_alloc(&amp;e, 0)) != 0)
+ 		panic(<span class="token string">"env_alloc: %e"</span>, err_code);
+ 	
+<span class="token inserted">+	if (type == ENV_TYPE_FS)</span>
+<span class="token inserted">+		e->env_tf.tf_eflags |= FL_IOPL_3;</span>
+<span class="token inserted">+</span>
+ 	load_icode(e, binary);
+ 	e->env_type = type;
+ }
+</pre><h3 class="mume-header" id="question-1">Question 1</h3>
+
+<blockquote>
+<p>Do you have to do anything else to ensure that this I/O privilege setting is saved and restored properly when you subsequently switch from one environment to another? Why?</p>
+</blockquote>
+<h3 class="mume-header" id="the-block-cache">The Block Cache</h3>
+
+<p>In our file system, we will implement a simple “buffer cache”, essentially a block cache, with the help of the processor’s virtual memroy system. The JOS file system is limited to handling disks of size 3GB or less. We reserve a large, fixed 3GB region of the file system environment’s address space, from 0x10000000 (<code>DISKMAP</code>) up to 0xD0000000 (<code>DISKMAP</code>+<code>DISKMAX</code>), as a “memory mapped” version of the disk.</p>
+<p>Since our file system environment has its own virtual address space independent of the virtual address spaces of all other environments in the system, and the only thing the file system environment needs to do is to implement file access, it is reasonable to reserve most of the file system environment’s address space in this way. Of course, it would take a long time to read the entire disk into memory, so instead we’ll implement a form of demand paging, wherein we only allocate pages in the disk map region and read the corresponding block from the disk in response to a page fault in this region. This way, we can pretend that the entire disk is in memory.</p>
+<h3 class="mume-header" id="exercise-2">Exercise 2</h3>
+
+<blockquote>
+<p>Implement the <code>bc_pgfault</code> and <code>flush_block</code> functions in <code>fs/bc.c</code>. <code>bc_pgfault</code> is a page fault handler, just like the one we wrote in the previous lab for copy-on-write fork, except that its job is to load pages in from the disk in response to a page fault. When writing this, keep in mind that</p>
+<blockquote>
+<p>(1) addr may not be aligned to a block boundary<br>
+(2) ide_read operates in sectors, not blocks.</p>
+</blockquote>
+<p>The <code>flush_block</code> function should write a block out to disk if necessary. <code>flush_block</code> shouldn’t do anything if the block isn’t even in the block cache (that is, the page isn’t mapped) or if it’s not dirty. We will use the VM hardware to keep track of whether a disk block has been modified since it was last read from or written to disk. To see whether a block needs writing, we can just look to see if the <code>PTE_D</code> “dirty” bit is set in the <code>uvpt</code> entry. After writing the block to disk, <code>flush_block</code> should clear the <code>PTE_D</code> bit using <code>sys_page_map</code>.</p>
+<p>Use <code>make grade</code> to test your code. Your code should pass “check_bc”, “check_super”, and “check_bitmap”.</p>
+</blockquote>
+<p>Remember to round down the address passed to <code>flush_block</code></p>
+<p>The code for this exercise is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/fs/bc.c b/fs/bc.c
+index e3922c4..86b4f86 100644
+<span class="token deleted">--- a/fs/bc.c</span>
+<span class="token inserted">+++ b/fs/bc.c</span>
+@@ -48,6 +48,12 @@ bc_pgfault(struct UTrapframe *utf)
+ 	// the disk.
+ 	//
+ 	// LAB 5: you code here:
+<span class="token inserted">+	addr = ROUNDDOWN(addr, PGSIZE);</span>
+<span class="token inserted">+	if ((r = sys_page_alloc(0, addr, PTE_U | PTE_P | PTE_W)) &lt; 0)</span>
+<span class="token inserted">+		panic("bc_pgfault, sys_page_alloc: %e\n", r);</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	if ((r = ide_read(blockno * BLKSECTS, addr, BLKSECTS)) &lt; 0)</span>
+<span class="token inserted">+		panic("bc_pgfault, ide_read: %e\n", r);</span>
+ 
+ 	// Clear the dirty bit for the disk block page since we just read the
+ 	// block from disk
+@@ -77,7 +83,17 @@ flush_block(void *addr)
+ 		panic(<span class="token string">"flush_block of bad va %08x"</span>, addr);
+ 
+ 	// LAB 5: Your code here.
+<span class="token deleted">-	panic("flush_block not implemented");</span>
+<span class="token inserted">+	// panic("flush_block not implemented");</span>
+<span class="token inserted">+	int r;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	addr = ROUNDDOWN(addr, PGSIZE);</span>
+<span class="token inserted">+	if (va_is_mapped(addr) &amp;&amp; va_is_dirty(addr)) {</span>
+<span class="token inserted">+		if ((r = ide_write(blockno * BLKSECTS, addr, BLKSECTS)) &lt; 0)</span>
+<span class="token inserted">+			panic("flush_block, ide_write: %e\n", r);</span>
+<span class="token inserted">+		</span>
+<span class="token inserted">+		if ((r = sys_page_map(0, addr, 0, addr, uvpt[PGNUM(addr)] &amp; PTE_SYSCALL)) &lt; 0)</span>
+<span class="token inserted">+			panic("flush_block, sys_page_map: %e\n", r);</span>
+<span class="token inserted">+	}</span>
+ }
+ 
+ // Test that the block cache works, by smashing the superblock and
+</pre><h3 class="mume-header" id="the-block-bitmap-exericse-3">The Block Bitmap &amp; Exericse 3</h3>
+
+<p>After <code>fs_init</code> sets the bitmap pointer, we can treat bitmap as a packed array of bits, one for each block on the disk.</p>
+<blockquote>
+<p>Use <code>free_block</code> as a model to implement <code>alloc_block</code> in <code>fs/fs.c</code>, which should find a free disk block in the bitmap, mark it used, and return the number of that block. When you allocate a block, you should immediately flush the changed bitmap block to disk with flush_block, to help file system consistency.</p>
+<p>Use <code>make grade</code> to test your code. Your code should now pass “alloc_block”.</p>
+</blockquote>
+<p>Just loop through the bitmap to find a free block and follow the hint.</p>
+<p>The code for this exercise is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/fs/fs.c b/fs/fs.c
+index 45ecaf8..261151c 100644
+<span class="token deleted">--- a/fs/fs.c</span>
+<span class="token inserted">+++ b/fs/fs.c</span>
+@@ -62,7 +62,15 @@ alloc_block(void)
+ 	// super->s_nblocks blocks in the disk altogether.
+ 
+ 	// LAB 5: Your code here.
+<span class="token deleted">-	panic("alloc_block not implemented");</span>
+<span class="token inserted">+	//panic("alloc_block not implemented");</span>
+<span class="token inserted">+	for (uint32_t blockno = 0; blockno &lt; super->s_nblocks; ++blockno) {</span>
+<span class="token inserted">+		if (block_is_free(blockno)) {</span>
+<span class="token inserted">+			bitmap[blockno/32] &amp;= ~(1 &lt;&lt; (blockno % 32));</span>
+<span class="token inserted">+			flush_block(bitmap);</span>
+<span class="token inserted">+			return blockno;</span>
+<span class="token inserted">+		}</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+ 	return -E_NO_DISK;
+ }
+</pre><h3 class="mume-header" id="file-operations-exercise-4">File Operations &amp; Exercise 4</h3>
+
+<blockquote>
+<p>Implement <code>file_block_walk</code> and <code>file_get_block</code>. <code>file_block_walk</code> maps from a block offset within a file to the pointer for that block in the struct File or the indirect block, very much like <code>what pgdir_walk</code> did for page tables. <code>file_get_block</code> goes one step further and maps to the actual disk block, allocating a new one if necessary.</p>
+<p>Use <code>make grade</code> to test your code. Your code should pass “file_open”, “file_get_block”, and “file_flush/file_truncated/file rewrite”, and “testfile”.</p>
+</blockquote>
+<p>Review <code>pgdir_walk</code> and follow the hint. It’s easy to finish this part. The code for this exercise is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/fs/fs.c b/fs/fs.c
+index 261151c..3454db4 100644
+<span class="token deleted">--- a/fs/fs.c</span>
+<span class="token inserted">+++ b/fs/fs.c</span>
+@@ -142,8 +142,35 @@ fs_init(void)
+ static int
+ file_block_walk(struct File *f, uint32_t filebno, uint32_t **ppdiskbno, bool alloc)
+ {
+<span class="token deleted">-       // LAB 5: Your code here.</span>
+<span class="token deleted">-       panic("file_block_walk not implemented");</span>
+<span class="token inserted">+    // LAB 5: Your code here.</span>
+<span class="token inserted">+	// panic("file_block_walk not implemented");</span>
+<span class="token inserted">+	int r;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	if (filebno >= NDIRECT + NINDIRECT)</span>
+<span class="token inserted">+		return -E_INVAL;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (filebno &lt; NDIRECT) {</span>
+<span class="token inserted">+		if (ppdiskbno)</span>
+<span class="token inserted">+			*ppdiskbno = f->f_direct + filebno;</span>
+<span class="token inserted">+		return 0;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (!f->f_indirect) {</span>
+<span class="token inserted">+		if (!alloc)</span>
+<span class="token inserted">+			return -E_NOT_FOUND;</span>
+<span class="token inserted">+		</span>
+<span class="token inserted">+		if ((r = alloc_block()) &lt; 0)</span>
+<span class="token inserted">+			return -E_NO_DISK;</span>
+<span class="token inserted">+		</span>
+<span class="token inserted">+		f->f_indirect = r;</span>
+<span class="token inserted">+		memset(diskaddr(r), 0, BLKSIZE);</span>
+<span class="token inserted">+		flush_block(diskaddr(r));</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (ppdiskbno)</span>
+<span class="token inserted">+		*ppdiskbno = (uint32_t *)diskaddr(f->f_indirect) + filebno - NDIRECT;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    return 0;</span>
+ }
+ 
+ // Set *blk to the address in memory where the filebno'th
+@@ -157,8 +184,25 @@ file_block_walk(struct File *f, uint32_t filebno, uint32_t **ppdiskbno, bool all
+ int
+ file_get_block(struct File *f, uint32_t filebno, char **blk)
+ {
+<span class="token deleted">-       // LAB 5: Your code here.</span>
+<span class="token deleted">-       panic("file_get_block not implemented");</span>
+<span class="token inserted">+	// LAB 5: Your code here.</span>
+<span class="token inserted">+	// panic("file_get_block not implemented");</span>
+<span class="token inserted">+	int r;</span>
+<span class="token inserted">+	uint32_t *ppdiskbno;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = file_block_walk(f, filebno, &amp;ppdiskbno, true)) &lt; 0)</span>
+<span class="token inserted">+		return r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if (*ppdiskbno == 0) {</span>
+<span class="token inserted">+		if ((r = alloc_block()) &lt; 0)</span>
+<span class="token inserted">+			return -E_NO_DISK;</span>
+<span class="token inserted">+		</span>
+<span class="token inserted">+		*ppdiskbno = r;</span>
+<span class="token inserted">+		memset(diskaddr(r), 0, BLKSIZE);</span>
+<span class="token inserted">+		flush_block(diskaddr(r));</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	*blk = diskaddr(*ppdiskbno);</span>
+<span class="token inserted">+	return 0;</span>
+ }
+ 
+ // Try to find a file named <span class="token string">"name"</span> in dir.  If so, set *file to it.
+diff --git a/fs/serv.c b/fs/serv.c
+index 76c1d99..07c6d00 100644
+<span class="token deleted">--- a/fs/serv.c</span>
+<span class="token inserted">+++ b/fs/serv.c</span>
+@@ -214,7 +214,19 @@ serve_read(envid_t envid, union Fsipc *ipc)
+ 		cprintf(<span class="token string">"serve_read %08x %08x %08x\n"</span>, envid, req->req_fileid, req->req_n);
+ 
+ 	// Lab 5: Your code here:
+<span class="token deleted">-	return 0;</span>
+<span class="token inserted">+	struct OpenFile *o;</span>
+<span class="token inserted">+	int r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = openfile_lookup(envid, req->req_fileid, &amp;o)) &lt; 0)</span>
+<span class="token inserted">+		return r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	size_t req_n = req->req_n > PGSIZE ? PGSIZE : req->req_n;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = file_read(o->o_file, ret->ret_buf, req_n, o->o_fd->fd_offset)) &lt; 0)</span>
+<span class="token inserted">+		return r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	o->o_fd->fd_offset += r;</span>
+<span class="token inserted">+	return r;</span>
+ }
+</pre><h3 class="mume-header" id="the-file-system-interface">The file system interface</h3>
+
+<p>Now that we have the necessary functionality within the file system environment itself, we must make it accessible to other environments that wish to use the file system. Since other environments can’t directly call functions in the file system environment, we’ll expose access to the file system environment via a remote procedure call, or RPC, abstraction, built atop JOS’s IPC mechanism. Graphically, here’s what a call to the file system server (say, read) looks like</p>
+<img src="data:image/png;charset=utf-8;base64,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"><p>Recall that JOS’s IPC mechanism lets an environment send a single 32-bit number and, optionally, share a page. To send a request from the client to the server, we use the 32-bit number for the request type (the file system server RPCs are numbered, just like how syscalls were numbered) and store the arguments to the request in a union <code>Fsipc</code> on the page shared via the IPC. On the client side, we always share the page at <code>fsipcbuf</code>; on the server side, we map the incoming request page at <code>fsreq</code> (0x0ffff000).</p>
+<p>The server also sends the response back via IPC. We use the 32-bit number for the function’s return code. For most RPCs, this is all they return. <code>FSREQ_READ</code> and <code>FSREQ_STAT</code> also return data, which they simply write to the page that the client sent its request on. There’s no need to send this page in the response IPC, since the client shared it with the file system server in the first place. Also, in its response, <code>FSREQ_OPEN</code> shares with the client a new “Fd page”.</p>
+<h3 class="mume-header" id="exercise-5">Exercise 5</h3>
+
+<blockquote>
+<p>Implement <code>serve_read</code> in <code>fs/serv.c</code>.</p>
+<p><code>serve_read</code>'s heavy lifting will be done by the already-implemented <code>file_read</code> in <code>fs/fs.c</code> (which, in turn, is just a bunch of calls to <code>file_get_block</code>). <code>serve_read</code> just has to provide the RPC interface for file reading. Look at the comments and code in <code>serve_set_size</code> to get a general idea of how the server functions should be structured.</p>
+<p>Use <code>make grade</code> to test your code. Your code should pass “serve_open/file_stat/file_close” and “file_read” for a score of 70/150.</p>
+</blockquote>
+<p>By imitating <code>serve_set_size</code>, it’s easy to implement <code>serve_read</code>. The code for this exercise is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/fs/serv.c b/fs/serv.c
+index 76c1d99..07c6d00 100644
+<span class="token deleted">--- a/fs/serv.c</span>
+<span class="token inserted">+++ b/fs/serv.c</span>
+@@ -214,7 +214,19 @@ serve_read(envid_t envid, union Fsipc *ipc)
+ 		cprintf(<span class="token string">"serve_read %08x %08x %08x\n"</span>, envid, req->req_fileid, req->req_n);
+ 
+ 	// Lab 5: Your code here:
+<span class="token deleted">-	return 0;</span>
+<span class="token inserted">+	struct OpenFile *o;</span>
+<span class="token inserted">+	int r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = openfile_lookup(envid, req->req_fileid, &amp;o)) &lt; 0)</span>
+<span class="token inserted">+		return r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	size_t req_n = req->req_n > PGSIZE ? PGSIZE : req->req_n;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = file_read(o->o_file, ret->ret_buf, req_n, o->o_fd->fd_offset)) &lt; 0)</span>
+<span class="token inserted">+		return r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	o->o_fd->fd_offset += r;</span>
+<span class="token inserted">+	return r;</span>
+ }
+</pre><h3 class="mume-header" id="exercise-6">Exercise 6</h3>
+
+<blockquote>
+<p>Implement <code>serve_write</code> in <code>fs/serv.c</code> and <code>devfile_write</code> in <code>lib/file.c</code>.</p>
+<p>Use <code>make grade</code> to test your code. Your code should pass “file_write”, “file_read after file_write”, “open”, and “large file” for a score of 90/150.</p>
+</blockquote>
+<p>The implementation for <code>serve_write</code> is similar to <code>serve_read</code>. The majority of <code>devfile_write</code>'s work is invoke a RPC. The code for this exercise is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/fs/serv.c b/fs/serv.c
+index 07c6d00..deda7ea 100644
+<span class="token deleted">--- a/fs/serv.c</span>
+<span class="token inserted">+++ b/fs/serv.c</span>
+@@ -241,7 +241,21 @@ serve_write(envid_t envid, struct Fsreq_write *req)
+ 		cprintf(<span class="token string">"serve_write %08x %08x %08x\n"</span>, envid, req->req_fileid, req->req_n);
+ 
+ 	// LAB 5: Your code here.
+<span class="token deleted">-	panic("serve_write not implemented");</span>
+<span class="token inserted">+	// panic("serve_write not implemented");</span>
+<span class="token inserted">+	struct OpenFile *o;</span>
+<span class="token inserted">+	int r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = openfile_lookup(envid, req->req_fileid, &amp;o)) &lt; 0)</span>
+<span class="token inserted">+		return r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	size_t req_n = req->req_n > PGSIZE ? PGSIZE : req->req_n;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	// file_write will extend the file automatically if necessary.</span>
+<span class="token inserted">+	if ((r = file_write(o->o_file, req->req_buf, req_n, o->o_fd->fd_offset)) &lt; 0)</span>
+<span class="token inserted">+		return r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	o->o_fd->fd_offset += r;</span>
+<span class="token inserted">+	return r;</span>
+ }
+ 
+ // Stat ipc->stat.req_fileid.  Return the file's struct Stat to the
+diff --git a/lib/file.c b/lib/file.c
+index 39025b2..f642fda 100644
+<span class="token deleted">--- a/lib/file.c</span>
+<span class="token inserted">+++ b/lib/file.c</span>
+@@ -141,7 +141,21 @@ devfile_write(struct Fd *fd, const void *buf, size_t n)
+ 	// remember that write is always allowed to write *fewer*
+ 	// bytes than requested.
+ 	// LAB 5: Your code here
+<span class="token deleted">-	panic("devfile_write not implemented");</span>
+<span class="token inserted">+	// panic("devfile_write not implemented");</span>
+<span class="token inserted">+	int r;</span>
+<span class="token inserted">+	</span>
+<span class="token inserted">+	if (n > sizeof(fsipcbuf.write.req_buf))</span>
+<span class="token inserted">+		n = sizeof(fsipcbuf.write.req_buf);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	fsipcbuf.write.req_fileid = fd->fd_file.id;</span>
+<span class="token inserted">+	fsipcbuf.write.req_n = n;</span>
+<span class="token inserted">+	memcpy(fsipcbuf.write.req_buf, buf, n);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = fsipc(FSREQ_WRITE, NULL)) &lt; 0)</span>
+<span class="token inserted">+		return r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	assert(r &lt;= n);</span>
+<span class="token inserted">+	return r;</span>
+ }
+ 
+ static int
+</pre><h3 class="mume-header" id="spawning-processes-exercise-7">Spawning Processes &amp; Exercise 7</h3>
+
+<p><code>lib/spawn.c</code> provides <code>spawning</code>, which creates a new environment, loads a program image from the file system into it, and then starts the child environment running this program. JOS implemented <code>spawn</code> rather than a UNIX-style <code>exec</code> because spawn is easier to implement from user space in “exokernel fashion”, without special help from the kernel.</p>
+<blockquote>
+<p><code>spawn</code> relies on the new syscall <code>sys_env_set_trapframe</code> to initialize the state of the newly created environment. Implement <code>sys_env_set_trapframe</code> in <code>kern/syscall.c</code> (don’t forget to dispatch the new system call in <code>syscall()</code>).</p>
+<p>Test your code by running the user/spawnhello program from <code>kern/init.c</code>, which will attempt to spawn /hello from the file system.</p>
+<p>Use <code>make grade</code> to test your code.</p>
+</blockquote>
+<p>Remember to check the sanity of the address passed to JOS kernel. Besides, don’t forget to set IOPL to a appropriate value. Zero is a good choice. The code for this exercise is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/syscall.c b/kern/syscall.c
+index 39e39ad..b7243d0 100644
+<span class="token deleted">--- a/kern/syscall.c</span>
+<span class="token inserted">+++ b/kern/syscall.c</span>
+@@ -141,7 +141,21 @@ sys_env_set_trapframe(envid_t envid, struct Trapframe *tf)
+ 	// LAB 5: Your code here.
+ 	// Remember to check whether the user has supplied us with a good
+ 	// address!
+<span class="token deleted">-	panic("sys_env_set_trapframe not implemented");</span>
+<span class="token inserted">+	// panic("sys_env_set_trapframe not implemented");</span>
+<span class="token inserted">+	struct Env *e;</span>
+<span class="token inserted">+	int r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	if ((r = envid2env(envid, &amp;e, true)) &lt; 0)</span>
+<span class="token inserted">+		return -E_BAD_ENV;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	user_mem_assert(curenv, tf, sizeof(struct Trapframe), PTE_U | PTE_P);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	e->env_tf = *tf;</span>
+<span class="token inserted">+	e->env_tf.tf_cs |= 3;</span>
+<span class="token inserted">+	e->env_tf.tf_eflags |= FL_IF;</span>
+<span class="token inserted">+	e->env_tf.tf_eflags &amp;= ~FL_IOPL_MASK;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	return 0;</span>
+ }
+ 
+ // Set the page fault upcall for <span class="token string">'envid'</span> by modifying the corresponding struct
+@@ -422,6 +436,7 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4,
+ 		case SYS_page_unmap:	return sys_page_unmap((envid_t)a1, (void *)a2);
+ 		case SYS_exofork:	return sys_exofork();
+ 		case SYS_env_set_status:	return sys_env_set_status((envid_t)a1, (int)a2);
+<span class="token inserted">+		case SYS_env_set_trapframe:	return sys_env_set_trapframe((envid_t)a1, (struct Trapframe *)a2);</span>
+ 		case SYS_env_set_pgfault_upcall: return sys_env_set_pgfault_upcall((envid_t)a1, (void *)a2);
+ 		case SYS_yield: sys_yield(); return 0;
+ 		case SYS_ipc_try_send: return sys_ipc_try_send((envid_t)a1, (uint32_t)a2, (void *)a3, (unsigned int)a4);
+</pre><h3 class="mume-header" id="sharing-library-state-across-fork-and-spawn">Sharing library state across fork and spawn</h3>
+
+<p>The UNIX file descriptors are a general notion that also encompasses pipes, console I/O, etc. In JOS, each of these device types has a corresponding <code>struct Dev</code>, with pointers to the functions that implement read/write/etc. for that device type. <code>lib/fd.c</code> implements the general UNIX-like file descriptor interface on top of this. Each struct Fd indicates its device type, and most of the functions in <code>lib/fd.c</code> simply dispatch operations to functions in the appropriate <code>struct Dev</code>.</p>
+<p><code>lib/fd.c</code> also maintains the file descriptor table region in each application environment’s address space, starting at <code>FDTABLE</code>. This area reserves a page’s worth (4KB) of address space for each of the up to <code>MAXFD</code> (currently 32) file descriptors the application can have open at once. At any given time, a particular file descriptor table page is mapped if and only if the corresponding file descriptor is in use. Each file descriptor also has an optional “data page” in the region starting at FILEDATA, which devices can use if they choose.</p>
+<p>JOS chose to share file descriptor state across fork and spawn, but file descriptor state is kept in user-space memory. On fork, the memory will be marked copy-on-write, so the state will be duplicated rather than shared. On spawn, the memory will be left behind, not copied at all.</p>
+<p>We will set an otherwise-unused bit (PTE_SHARE) in the page table entries to notify <code>fork</code> certain regions of memory are used by the “library operating system” and should always be shared.</p>
+<h3 class="mume-header" id="exercise-8">Exercise 8</h3>
+
+<blockquote>
+<p>Change <code>duppage</code> in <code>lib/fork.c</code> to follow the new convention. If the page table entry has the PTE_SHARE bit set, just copy the mapping directly.</p>
+<p>Likewise, implement copy_shared_pages in <code>lib/spawn.c</code>. It should loop through all page table entries in the current process (just like fork did), copying any page mappings that have the PTE_SHARE bit set into the child process.</p>
+<p>Use <code>make run-testpteshare</code> to check that your code is behaving properly. You should see lines that say “fork handles PTE_SHARE right” and “spawn handles PTE_SHARE right”.</p>
+<p>Use <code>make run-testfdsharing</code> to check that file descriptors are shared properly. You should see lines that say “read in child succeeded” and “read in parent succeeded”.</p>
+</blockquote>
+<p>As long as we understand what is a share page in last section, the logic for the change is not complicate. The code for this exercise is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/lib/fork.c b/lib/fork.c
+index 2e54f5f..0151203 100644
+<span class="token deleted">--- a/lib/fork.c</span>
+<span class="token inserted">+++ b/lib/fork.c</span>
+@@ -67,21 +67,21 @@ duppage(envid_t envid, unsigned pn)
+ 
+ 	// LAB 4: Your code here.
+ 	// panic(<span class="token string">"duppage not implemented"</span>);
+<span class="token deleted">-	void *addr = (void *)(pn*PGSIZE);</span>
+<span class="token deleted">-	int perm = PGOFF(uvpt[pn]) &amp; PTE_SYSCALL;</span>
+<span class="token inserted">+	void *addr = (void *)(pn * PGSIZE);</span>
+<span class="token inserted">+	int perm = uvpt[pn] &amp; PTE_SYSCALL;</span>
+ 
+<span class="token deleted">-	if (perm &amp; (PTE_W | PTE_COW)) {</span>
+<span class="token inserted">+	if ((perm &amp; PTE_SHARE) || !(perm &amp; (PTE_W | PTE_COW))) {</span>
+<span class="token inserted">+		if ((r = sys_page_map(0, addr, envid, addr, perm)) &lt; 0)</span>
+<span class="token inserted">+			return r;</span>
+<span class="token inserted">+	} else {</span>
+ 		perm |= PTE_COW;
+ 		perm &amp;= ~PTE_W;
+ 
+ 		if ((r = sys_page_map(0, addr, envid, addr, perm)) &lt; 0)
+<span class="token deleted">-			panic("Failed to duppage on child enviroment: %e\n", r);</span>
+<span class="token inserted">+			return r;</span>
+ 		
+ 		if ((r = sys_page_map(0, addr, 0, addr, perm)) &lt; 0)
+<span class="token deleted">-			panic("Failed to duppage on self enviroment: %e\n", r);</span>
+<span class="token deleted">-	} else {</span>
+<span class="token deleted">-		if ((r = sys_page_map(0, addr, envid, addr, perm)) &lt; 0)</span>
+<span class="token deleted">-			panic("Failed to duppage on child enviroment: %e\n", r);</span>
+<span class="token inserted">+			return r;</span>
+ 	}
+ 	
+ 	return 0;
+diff --git a/lib/spawn.c b/lib/spawn.c
+index 9d0eb07..c11ef20 100644
+<span class="token deleted">--- a/lib/spawn.c</span>
+<span class="token inserted">+++ b/lib/spawn.c</span>
+@@ -302,6 +302,26 @@ static int
+ copy_shared_pages(envid_t child)
+ {
+ 	// LAB 5: Your code here.
+<span class="token inserted">+	int r;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	for (size_t i = 0; i &lt; NPDENTRIES; ++i) {</span>
+<span class="token inserted">+		if (uvpd[i] &amp; PTE_P) {</span>
+<span class="token inserted">+			for (size_t j = 0; j &lt; NPTENTRIES; ++j) {</span>
+<span class="token inserted">+				size_t pn = (i &lt;&lt; (PDXSHIFT - PTXSHIFT)) + j;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+				if (pn == PGNUM(USTACKTOP))</span>
+<span class="token inserted">+					return 0;</span>
+<span class="token inserted">+				</span>
+<span class="token inserted">+				int perm = uvpt[pn];</span>
+<span class="token inserted">+				if ((perm &amp; PTE_P) &amp;&amp; (perm &amp; PTE_SHARE)) {</span>
+<span class="token inserted">+					void *addr = (void *)PGADDR(i, j, 0);</span>
+<span class="token inserted">+					if ((r = sys_page_map(0, addr, child, addr, perm &amp; PTE_SYSCALL)) &lt; 0)</span>
+<span class="token inserted">+						return r;</span>
+<span class="token inserted">+				}</span>
+<span class="token inserted">+			}</span>
+<span class="token inserted">+		}</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+ 	return 0;
+ }
+</pre><h3 class="mume-header" id="the-keyboard-interface-exercise-9">The keyboard interface &amp; Exercise 9</h3>
+
+<p>For the shell to work, we need a way to type at it. QEMU has been displaying output we write to the CGA display and the serial port, but so far we’ve only taken input while in the kernel monitor. In QEMU, input typed in the graphical window appear as input from the keyboard to JOS, while input typed to the console appear as characters on the serial port. <code>kern/console.c</code> already contains the keyboard and serial drivers that have been used by the kernel monitor since lab 1, but now we need to attach these to the rest of the system.</p>
+<blockquote>
+<p>In your <code>kern/trap.c</code>, call <code>kbd_intr</code> to handle trap <code>IRQ_OFFSET+IRQ_KBD</code> and <code>serial_intr</code> to handle trap <code>IRQ_OFFSET+IRQ_SERIAL</code>.</p>
+</blockquote>
+<p>All we need to do is adding another two trap handlers. The code for this exercise is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/trap.c b/kern/trap.c
+index 8e48f15..073be99 100644
+<span class="token deleted">--- a/kern/trap.c</span>
+<span class="token inserted">+++ b/kern/trap.c</span>
+@@ -220,6 +220,10 @@ trap_dispatch(struct Trapframe *tf)
+ 		case IRQ_OFFSET + IRQ_TIMER: lapic_eoi();
+ 									 sched_yield();
+ 									 return;
+<span class="token inserted">+		case IRQ_OFFSET + IRQ_KBD:	kbd_intr();</span>
+<span class="token inserted">+									return;</span>
+<span class="token inserted">+		case IRQ_OFFSET + IRQ_SERIAL:	serial_intr();</span>
+<span class="token inserted">+										return;</span>
+ 		case T_SYSCALL: tf->tf_regs.reg_eax = syscall(
+ 									tf->tf_regs.reg_eax,
+ 									tf->tf_regs.reg_edx,
+
+</pre><h3 class="mume-header" id="the-shell-exercise-10">The Shell &amp; Exercise 10</h3>
+
+<p>Note that the user library routine <code>cprintf</code> prints straight to the console, without using the file descriptor code. This is great for debugging but not great for piping into other programs. To print output to a particular file descriptor (for example, 1, standard output), use <code>fprintf(1, &quot;...&quot;, ...)</code>. <code>printf(&quot;...&quot;, ...)</code> is a short-cut for printing to FD 1.</p>
+<blockquote>
+<p>The shell doesn’t support I/O redirection. It would be nice to run <code>sh &lt; script</code> instead of having to type in all the commands in the script by hand. Add I/O redirection for <code>&lt;</code> to <code>user/sh.c</code>.</p>
+<p>Test your implementation by typing <code>sh &lt; script</code> into your shell.</p>
+<p>Run <code>make run-testshell</code> to test your shell. testshell simply feeds commands in <code>fs/testshell.sh</code> into the shell and then checks that the output matches <code>fs/testshell.key</code>.</p>
+</blockquote>
+<p>The input redirection is just a mirror of the output redirection, which has been implemented in <code>user/sh.c</code>. The code for this exercise is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/kern/pmap.c b/kern/pmap.c
+index 047f266..465475e 100644
+<span class="token deleted">--- a/kern/pmap.c</span>
+<span class="token inserted">+++ b/kern/pmap.c</span>
+@@ -637,7 +637,7 @@ page_lookup(pde_t *pgdir, void *va, pte_t **pte_store)
+ 
+ 	pte_t *pt_entry = pgdir_walk(pgdir, va, false);
+ 
+<span class="token deleted">-	if (pt_entry == NULL)</span>
+<span class="token inserted">+	if (pt_entry == NULL || !(*pt_entry &amp; PTE_P))</span>
+ 		return NULL;
+ 	
+ 	if (pte_store)	// if pte_store is not zero
+diff --git a/user/sh.c b/user/sh.c
+index 26f501a..464cdcb 100644
+<span class="token deleted">--- a/user/sh.c</span>
+<span class="token inserted">+++ b/user/sh.c</span>
+@@ -55,7 +55,15 @@ again:
+ 			// then close the original <span class="token string">'fd'</span>.
+ 
+ 			// LAB 5: Your code here.
+<span class="token deleted">-			panic("&lt; redirection not implemented");</span>
+<span class="token inserted">+			if ((fd = open(t, O_RDONLY)) &lt; 0) {</span>
+<span class="token inserted">+				cprintf("open %s for write: %e\n", t, fd);</span>
+<span class="token inserted">+				exit();</span>
+<span class="token inserted">+			}</span>
+<span class="token inserted">+			if (fd != 0) {</span>
+<span class="token inserted">+				dup(fd, 0);</span>
+<span class="token inserted">+				close(fd);</span>
+<span class="token inserted">+			}</span>
+<span class="token inserted">+			// panic("&lt; redirection not implemented");</span>
+ 			break;
+ 
+ 		case <span class="token string">'>'</span>:	// Output redirection
+</pre><h2 class="mume-header" id="challenge">Challenge</h2>
+
+<blockquote>
+<p>The block cache has no eviction policy. Once a block gets faulted in to it, it never gets removed and will remain in memory forevermore. Add eviction to the buffer cache. Using the PTE_A “accessed” bits in the page tables, which the hardware sets on any access to a page, you can track approximate usage of disk blocks without the need to modify every place in the code that accesses the disk map region. Be careful with dirty blocks.</p>
+</blockquote>
+<p>Instead of cleanning up pages at a specific frequency, we add a counter to <code>bc_pgfault</code>, in which <code>evict_page</code> is called every <code>EVIC_INTER</code> bc page faults.</p>
+<p><code>evict_page</code> executes the following eviction policy:</p>
+<ol>
+<li>Pages not accessed are unmapped.</li>
+<li>Access bits on pages accessed are unset.</li>
+<li>Dirty pages are flushed out and dirty bits are unset.</li>
+</ol>
+<p>The code for this challenge is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/fs/bc.c b/fs/bc.c
+index 86b4f86..9939a39 100644
+<span class="token deleted">--- a/fs/bc.c</span>
+<span class="token inserted">+++ b/fs/bc.c</span>
+@@ -29,10 +29,16 @@ va_is_dirty(void *va)
+ static void
+ bc_pgfault(struct UTrapframe *utf)
+ {
+<span class="token inserted">+	static uint32_t pgfault_count = 0;</span>
+ 	void *addr = (void *) utf->utf_fault_va;
+ 	uint32_t blockno = ((uint32_t)addr - DISKMAP) / BLKSIZE;
+ 	int r;
+ 
+<span class="token inserted">+	if (++pgfault_count > EVIC_INTER) {</span>
+<span class="token inserted">+		evict_page();</span>
+<span class="token inserted">+		pgfault_count = 0;</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+</span>
+ 	// Check that the fault was within the block cache region
+ 	if (addr &lt; (void*)DISKMAP || addr >= (void*)(DISKMAP + DISKSIZE))
+ 		panic(<span class="token string">"page fault in FS: eip %08x, va %08x, err %04x"</span>,
+@@ -96,6 +102,40 @@ flush_block(void *addr)
+ 	}
+ }
+ 
+<span class="token inserted">+</span>
+<span class="token inserted">+// clean up block cache every 100 bc page faults.</span>
+<span class="token inserted">+// strategy:</span>
+<span class="token inserted">+// 		1. unmap page not accessed</span>
+<span class="token inserted">+// 		2. unset access bit on pages accessed</span>
+<span class="token inserted">+// 		3. flush out dirty pages and unset their accessed bit</span>
+<span class="token inserted">+void</span>
+<span class="token inserted">+evict_page()</span>
+<span class="token inserted">+{</span>
+<span class="token inserted">+	// this code is buggy if DISKMAP is not page directory aligned (NPTEENTRIES * PGSIZE);</span>
+<span class="token inserted">+	static_assert(DISKMAP % PTSIZE == 0);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+	for (size_t i = PDX(DISKMAP); i &lt; PDX(ROUNDUP(DISKMAP + DISKSIZE, PTSIZE)); ++i) {</span>
+<span class="token inserted">+		if (uvpd[i] &amp; PTE_P) {</span>
+<span class="token inserted">+			pte_t *pgtable = (pte_t *)(uvpt + i * NPTENTRIES);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+			for (size_t j = 0; j &lt; NPTENTRIES; ++j) {</span>
+<span class="token inserted">+				if (pgtable[j] &amp; PTE_P) {</span>
+<span class="token inserted">+					void *addr = PGADDR(i, j, 0);</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+					if (pgtable[j] &amp; PTE_A) {</span>
+<span class="token inserted">+						if (pgtable[j] &amp; PTE_D)</span>
+<span class="token inserted">+							flush_block(addr);</span>
+<span class="token inserted">+							</span>
+<span class="token inserted">+						sys_page_map(0, addr, 0, addr, pgtable[j] &amp; PTE_SYSCALL);</span>
+<span class="token inserted">+					} else {</span>
+<span class="token inserted">+						sys_page_unmap(0, addr);</span>
+<span class="token inserted">+					}</span>
+<span class="token inserted">+				}</span>
+<span class="token inserted">+			}</span>
+<span class="token inserted">+		}</span>
+<span class="token inserted">+	}</span>
+<span class="token inserted">+}</span>
+<span class="token inserted">+</span>
+ // Test that the block cache works, by smashing the superblock and
+ // reading it back.
+ static void
+diff --git a/fs/fs.h b/fs/fs.h
+index 0350d78..cf84331 100644
+<span class="token deleted">--- a/fs/fs.h</span>
+<span class="token inserted">+++ b/fs/fs.h</span>
+<span class="token coord">@@ -11,6 +11,9 @@</span>
+ /* Maximum disk size we can handle (3GB) */
+ #define DISKSIZE	0xC0000000
+ 
+<span class="token inserted">+/* Block cache eviction interval */</span>
+<span class="token inserted">+#define EVIC_INTER  100</span>
+<span class="token inserted">+</span>
+ struct Super *super;		// superblock
+ uint32_t *bitmap;		// bitmap blocks mapped in memory
+ 
+@@ -26,6 +29,7 @@ void*	diskaddr(uint32_t blockno);
+ bool	va_is_mapped(void *va);
+ bool	va_is_dirty(void *va);
+ void	flush_block(void *addr);
+<span class="token inserted">+void    evict_page();</span>
+ void	bc_init(void);
+ 
+ /* fs.c */
+</pre><h2 class="mume-header" id="grade">Grade</h2>
+
+<p>Finally, we got our grade.</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash">internal FS tests <span class="token punctuation">[</span>fs/test.c<span class="token punctuation">]</span>: OK <span class="token punctuation">(</span>30.5s<span class="token punctuation">)</span>
+  fs i/o: OK
+  check_bc: OK
+  check_super: OK
+  check_bitmap: OK
+  alloc_block: OK
+  file_open: OK
+  file_get_block: OK
+  file_flush/file_truncate/file rewrite: OK
+testfile: OK <span class="token punctuation">(</span>1.9s<span class="token punctuation">)</span>
+  serve_open/file_stat/file_close: OK
+  file_read: OK
+  file_write: OK
+  file_read after file_write: OK
+  open: OK
+  large file: OK
+spawn via spawnhello: OK <span class="token punctuation">(</span>1.2s<span class="token punctuation">)</span>
+Protection I/O space: OK <span class="token punctuation">(</span>1.6s<span class="token punctuation">)</span>
+PTE_SHARE <span class="token punctuation">[</span>testpteshare<span class="token punctuation">]</span>: OK <span class="token punctuation">(</span>1.5s<span class="token punctuation">)</span>
+PTE_SHARE <span class="token punctuation">[</span>testfdsharing<span class="token punctuation">]</span>: OK <span class="token punctuation">(</span>1.8s<span class="token punctuation">)</span>
+start the shell <span class="token punctuation">[</span>icode<span class="token punctuation">]</span>: Timeout<span class="token operator">!</span> OK <span class="token punctuation">(</span>30.6s<span class="token punctuation">)</span>
+testshell: OK <span class="token punctuation">(</span>2.9s<span class="token punctuation">)</span>
+primespipe: OK <span class="token punctuation">(</span>8.2s<span class="token punctuation">)</span>
+Score: 150/150
+</pre><div class="code-chunk" data-id="code-chunk-id-3" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><footer style="width:100%;text-align:center;font-family:Times">End of Lab 5 Report<br>Email: <a mailto="caoshuyang1996@pku.edu.cn" href="">caoshuyang@pku.edu.cn</a> GitHub: <a href="https://github.com/CaoSY/JOS-Lab" title="JOS Lab">JOS-Lab</a></footer>
+</div></div>
+      </div>
+      <div class="md-sidebar-toc"><ul>
+<li><a href="#the-file-system">The File System</a>
+<ul>
+<li><a href="#disk-access">Disk Access</a></li>
+<li><a href="#exercise-1">Exercise 1</a></li>
+<li><a href="#question-1">Question 1</a></li>
+<li><a href="#the-block-cache">The Block Cache</a></li>
+<li><a href="#exercise-2">Exercise 2</a></li>
+<li><a href="#the-block-bitmap-exericse-3">The Block Bitmap &amp; Exericse 3</a></li>
+<li><a href="#file-operations-exercise-4">File Operations &amp; Exercise 4</a></li>
+<li><a href="#the-file-system-interface">The file system interface</a></li>
+<li><a href="#exercise-5">Exercise 5</a></li>
+<li><a href="#exercise-6">Exercise 6</a></li>
+<li><a href="#spawning-processes-exercise-7">Spawning Processes &amp; Exercise 7</a></li>
+<li><a href="#sharing-library-state-across-fork-and-spawn">Sharing library state across fork and spawn</a></li>
+<li><a href="#exercise-8">Exercise 8</a></li>
+<li><a href="#the-keyboard-interface-exercise-9">The keyboard interface &amp; Exercise 9</a></li>
+<li><a href="#the-shell-exercise-10">The Shell &amp; Exercise 10</a></li>
+</ul>
+</li>
+<li><a href="#challenge">Challenge</a></li>
+<li><a href="#grade">Grade</a></li>
+</ul>
+</div>
+      <a id="sidebar-toc-btn">≡</a>
+    </body>
+    
+    
+    
+    
+    
+    
+    
+<script>
+
+var sidebarTOCBtn = document.getElementById('sidebar-toc-btn')
+sidebarTOCBtn.addEventListener('click', function(event) {
+  event.stopPropagation()
+  if (document.body.hasAttribute('html-show-sidebar-toc')) {
+    document.body.removeAttribute('html-show-sidebar-toc')
+  } else {
+    document.body.setAttribute('html-show-sidebar-toc', true)
+  }
+})
+</script>
+      
+  </html>
