@@ -87,6 +87,7 @@ print(authorDiv)
 	* [Receiving Packets: Network Server & Exercise 12](#receiving-packets-network-server-exercise-12)
 * [The Web Server & Exercise 13](#the-web-server-exercise-13)
 * [Code for Lab 6](#code-for-lab-6)
+* [Challenge](#challenge)
 * [Grade](#grade)
 
 <!-- /code_chunk_output -->
@@ -1017,6 +1018,261 @@ index ede43bf..7ddb82c 100644
  
  	if ((r = send_header(req, 200)) < 0)
  		goto end;
+```
+
+## Challenge
+
+> Read about the EEPROM in the developer's manual and write the code to load the E1000's MAC address out of the EEPROM. Currently, QEMU's default MAC address is hard-coded into both your receive initialization and lwIP. Fix your initialization to use the MAC address you read from the EEPROM, add a system call to pass the MAC address to lwIP, and modify lwIP to the MAC address read from the card. Test your change by configuring QEMU to use a different MAC address.
+
+The Ethernet controller provides two different methods for software access to the EEPROM. Software can either use the built-in controller to read the EEPROM, or access the EEPROM directly using the EEPROM's 4-wire interface. In this lab, we choose to use the built-in controller. (Ref: PCI/PCI-X Family of Gigabit Ethernet Controllers Sofrware Developer's Manual)
+
+Software can use the EEPROM Read register (EERD) to cause te Ethernet controller to read a word (16-bit) from the EEPROM that the software can the use. To do this, software writes the address to read the Read Address (EERD.ADDR) field and then simultaneously writes a 1b to the Start Read bit (EEERD.START). The Ethernet controller then reads the word from the EEPROM, sets the Read Dont bit (EERD.DONE), and puts the data in the Read Data filed (EERD.DATA). Software can poll the EEPROM Read register until it sees the EERD.DONE bit set, then use the data from the EERD.DATA field. Any words read this way are not written to the hardware's internal registers. (Ref: PCI/PCI-X Family of Gigabit Ethernet Controllers Sofrware Developer's Manual)
+
+The EEPROM Read Register is described below. (Ref: PCI/PCI-X Family of Gigabit Ethernet Controllers Sofrware Developer's Manual).
+
+```ditaa {cmd args=["-E"]}
+31              16 15         8 7    5  4   3    1   0
++-----------------+------------+------+----+------+-----+
+|       Data      |  Address   | RSV. |DONE| RSV. |START|
++-----------------+------------+------+----+------+-----+
+```
+
+|Field|Bit(s)|Initial Value|Description|
+|:----|:-----|:------------|-----------|
+|START|0     |0b|Start Read.Writing a 1b to this bit causes the EEPROM to read a (16-bit) word at the address stored in the EE_ADDR field and then storing the result in the EE_DATA filed. This bit is self-clearing.|
+|Reserved|3:1|0b|Reserved. Reads as 0b|
+|DONE|4      |0b|Read Done. Set to 1b when the EEPROM read completes. Set to 0b when the EEPROM read is in progress.|
+|Reserved|7:5|0b|Reserved. Reads as 0b.|
+|ADDR|15:8   |X |Read Address. This field is written by software along with Start Read to indicate the word to read.|
+|DATA|31:16  |X |Read Data. Data returned from the EEPROM read.|
+
+To read from EEPROM, I defined a function named `e1000_read_eeprom`, which accepts one parameter as address, sets EERD accordingly and polls until the read is completed.
+
+To add a system call (`SYS_net_mac`) for MAC Address, I declared a 6-byte array `e1000_mac` to store MAC Address in `e1000.c` so we don't need to read EEPROM every time a system call for MAC Address is invoked. This array is initialized in `e1000_attach` by reading values from EEPROM then we use this array to initialize RAL and RAH registers. Each time `SYS_net_mac` is invoked, we copy `e1000_mac` to user memory space.
+
+In `net/lwip/jos/jif/jif.c/low_level_init`, we replace the hardcoded MAC Address with a system call to initialize `netif->hwaddr`.
+
+To test our implementation, I change MAC Address in EEPROM first by modify GNUmakefile. Since the hardcoded MAC Address in `net/testinput.c` is not changed, our change will fail the `testinput` in the grade test. Then we changed the hardcoded MAC Address in `net/testinput.c` accordingly, after which we passed all grade tests again.
+
+The code for this challenge is shown below.
+
+```git
+diff --git a/GNUmakefile b/GNUmakefile
+index f4d6528..f39a3ef 100644
+--- a/GNUmakefile
++++ b/GNUmakefile
+@@ -158,7 +158,7 @@ IMAGES = $(OBJDIR)/kern/kernel.img
+ QEMUOPTS += -smp $(CPUS)
+ QEMUOPTS += -drive file=$(OBJDIR)/fs/fs.img,index=1,media=disk,format=raw
+ IMAGES += $(OBJDIR)/fs/fs.img
+-QEMUOPTS += -net user -net nic,model=e1000 -redir tcp:$(PORT7)::7 \
++QEMUOPTS += -net user -net nic,model=e1000,macaddr=52:54:00:12:34:5F -redir tcp:$(PORT7)::7 \
+ 	   -redir tcp:$(PORT80)::80 -redir udp:$(PORT7)::7 -net dump,file=qemu.pcap
+ QEMUOPTS += $(QEMUEXTRA)
+ 
+diff --git a/inc/lib.h b/inc/lib.h
+index ad0254b..3899492 100644
+--- a/inc/lib.h
++++ b/inc/lib.h
+@@ -62,6 +62,7 @@ int	sys_ipc_recv(void *rcv_pg);
+ unsigned int sys_time_msec(void);
+ int sys_net_transmit(void *addr, size_t length);
+ int sys_net_receive(void *addr);
++int sys_net_mac(void *addr);
+ 
+ // This must be inlined.  Exercise for reader: why?
+ static inline envid_t __attribute__((always_inline))
+diff --git a/inc/syscall.h b/inc/syscall.h
+index 499ad54..4dcd21d 100644
+--- a/inc/syscall.h
++++ b/inc/syscall.h
+@@ -20,6 +20,7 @@ enum {
+ 	SYS_time_msec,
+ 	SYS_net_transmit,
+ 	SYS_net_receive,
++	SYS_net_mac,
+ 	NSYSCALLS
+ };
+ 
+diff --git a/kern/e1000.c b/kern/e1000.c
+index 5e60d9b..e50a253 100644
+--- a/kern/e1000.c
++++ b/kern/e1000.c
+@@ -13,6 +13,9 @@ uint8_t tx_packets[NTDESC][MAXPKTLEN];
+ struct e1000_tx_desc rx_descs[NRDESC];
+ uint8_t rx_packets[NRDESC][MAXPKTLEN];
+ 
++// store mac address
++uint8_t e1000_mac[E1000_MAC_LENGTH];
++
+ // LAB 6: Your driver code here
+ int
+ e1000_attach(struct pci_func *pcif)
+@@ -45,8 +48,11 @@ e1000_attach(struct pci_func *pcif)
+     }
+ 
+     // perform receive initialization
+-    e1000[E1000_RAL] = 0x12005452; // hardcoded 52:54:00:12:34:56
+-    e1000[E1000_RAH] = 0x00005634 | E1000_RAH_AV; // hardcoded 52:54:00:12:34:56
++    *(uint16_t *)e1000_mac = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_2_1);
++    *(uint16_t *)(e1000_mac + 2) = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_4_3);
++    *(uint16_t *)(e1000_mac + 4) = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_6_5);
++    e1000[E1000_RAL] = *(uint32_t *)e1000_mac;
++    e1000[E1000_RAH] = *(uint16_t *)(e1000_mac + 4) | E1000_RAH_AV;
+     e1000[E1000_RDBAL] = PADDR(rx_descs);
+     e1000[E1000_RDLEN] = sizeof(rx_descs);
+     e1000[E1000_RDH] = 0;
+@@ -60,6 +66,8 @@ e1000_attach(struct pci_func *pcif)
+     e1000[E1000_RCTL] |= E1000_RCTL_SZ_2048;
+     e1000[E1000_RCTL] |= E1000_RCTL_SECRC;
+ 
++    cprintf("ral: 0x%08x    rah: 0x%08x\n", e1000[E1000_RAL], e1000[E1000_RAH]);
++
+     // init receive descriptors
+     memset(rx_descs, 0, sizeof(rx_descs));
+     for (size_t i = 0; i < NRDESC; ++i) {
+@@ -76,7 +84,7 @@ e1000_attach(struct pci_func *pcif)
+             e1000_tx(int_packet, sizeof(int_packet));
+         }
+     #endif
+-
++    
+     return 0;
+ }
+ 
+@@ -140,4 +148,15 @@ e1000_rx(void *addr) {
+     e1000[E1000_RDT] = tail;
+ 
+     return length;
++}
++
++uint16_t
++e1000_read_eeprom(uint8_t addr)
++{
++    e1000[E1000_EERD] = (addr << E1000_EERD_ADDR_SHIFT) | E1000_EERD_START;
++
++    while ((e1000[E1000_EERD] & E1000_EERD_DONE) == 0)
++        ;   /* polling */
++    
++    return e1000[E1000_EERD] >> E1000_EERD_DATA_SHIFT;
+ }
+\ No newline at end of file
+diff --git a/kern/e1000.h b/kern/e1000.h
+index 6780c9e..2db11cd 100644
+--- a/kern/e1000.h
++++ b/kern/e1000.h
+@@ -8,7 +8,23 @@
+ #define E1000_DEV_ID_82540EM             0x100E
+ 
+ /* The value given in the manual is byte indexed. In our code, we use uint32_t index.*/
+-#define E1000_STATUS    (0x00008 / sizeof(uint32_t))  /* Device Status - RO */
++#define E1000_STATUS    (0x00008 / sizeof(uint32_t))    /* Device Status - RO */
++
++/* EEPROM Register */
++/* The value given in the manual is byte indexed. In our code, we use uint32_t index.*/
++#define E1000_EERD      (0x00014 / sizeof(uint32_t))    /* EEPROM Read Register */
++
++/* EERD MASK */
++#define E1000_EERD_DATA_SHIFT       16  /* Shift to the data bits */
++#define E1000_EERD_ADDR_SHIFT       8   /* Shift to the address bits */
++#define E1000_EERD_START            0x00000001  /* Mask of EERD.START */
++#define E1000_EERD_DONE             0x00000010  /* Mask of EERD.DONE */
++
++/* EEPROM ADDRESS */
++#define E1000_EEPROM_MAC_ADDR_BYTE_2_1  0x00    /* Ethernet address byte 2 & 1 */
++#define E1000_EEPROM_MAC_ADDR_BYTE_4_3  0x01    /* Ethernet address byte 4 & 3 */
++#define E1000_EEPROM_MAC_ADDR_BYTE_6_5  0x02    /* Ethernet address byte 6 & 5 */
++#define E1000_MAC_LENGTH                6       /* length of mac address in byte */
+ 
+ /* Transmit Control Register */
+ /* The value given in the manual is byte indexed. In our code, we use uint32_t index.*/
+@@ -96,9 +112,11 @@ struct e1000_rx_desc {
+     uint16_t special;
+ }__attribute__((packed));
+ 
++extern uint8_t e1000_mac[E1000_MAC_LENGTH];
+ 
+ int e1000_attach(struct pci_func *pcif);
+ int e1000_tx(void *addr, size_t length);
+ int e1000_rx(void *addr);
++uint16_t e1000_read_eeprom(uint8_t addr);
+ 
+ #endif	// JOS_KERN_E1000_H
+diff --git a/kern/syscall.c b/kern/syscall.c
+index cfe237e..b0a1dd5 100644
+--- a/kern/syscall.c
++++ b/kern/syscall.c
+@@ -447,6 +447,14 @@ sys_net_receive(void *addr)
+ 	return e1000_rx(addr);
+ }
+ 
++static int
++sys_net_mac(uint8_t *addr)
++{
++	user_mem_assert(curenv, addr, E1000_MAC_LENGTH, PTE_U | PTE_W | PTE_P);
++	memcpy(addr, e1000_mac, E1000_MAC_LENGTH);
++	return 0;
++}
++
+ // Dispatches to the correct kernel function, passing the arguments.
+ int32_t
+ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5)
+@@ -475,6 +483,7 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4,
+ 		case SYS_time_msec: return sys_time_msec();
+ 		case SYS_net_transmit: return sys_net_transmit((void *)a1, (size_t)a2);
+ 		case SYS_net_receive: return sys_net_receive((void *)a1);
++		case SYS_net_mac: return sys_net_mac((uint8_t *)a1);
+ 		default:
+ 			return -E_INVAL;
+ 	}
+diff --git a/lib/syscall.c b/lib/syscall.c
+index d42d538..9831e85 100644
+--- a/lib/syscall.c
++++ b/lib/syscall.c
+@@ -133,4 +133,10 @@ int
+ sys_net_receive(void *addr)
+ {
+ 	return syscall(SYS_net_receive, 0, (uint32_t)addr, 0, 0, 0, 0);
++}
++
++int
++sys_net_mac(void *addr)
++{
++	return syscall(SYS_net_mac, 0, (uint32_t)addr, 0, 0, 0, 0);
+ }
+\ No newline at end of file
+diff --git a/net/lwip/jos/jif/jif.c b/net/lwip/jos/jif/jif.c
+index 54f89ab..f15c089 100644
+--- a/net/lwip/jos/jif/jif.c
++++ b/net/lwip/jos/jif/jif.c
+@@ -60,13 +60,7 @@ low_level_init(struct netif *netif)
+     netif->mtu = 1500;
+     netif->flags = NETIF_FLAG_BROADCAST;
+ 
+-    // MAC address is hardcoded to eliminate a system call
+-    netif->hwaddr[0] = 0x52;
+-    netif->hwaddr[1] = 0x54;
+-    netif->hwaddr[2] = 0x00;
+-    netif->hwaddr[3] = 0x12;
+-    netif->hwaddr[4] = 0x34;
+-    netif->hwaddr[5] = 0x56;
++    sys_net_mac(netif->hwaddr);
+ }
+ 
+ /*
+diff --git a/net/testinput.c b/net/testinput.c
+index 22cf937..a63f092 100644
+--- a/net/testinput.c
++++ b/net/testinput.c
+@@ -16,7 +16,7 @@ announce(void)
+ 	// listens for very specific ARP requests, such as requests
+ 	// for the gateway IP.
+ 
+-	uint8_t mac[6] = {0x52, 0x54, 0x00, 0x12, 0x34, 0x56};
++	uint8_t mac[6] = {0x52, 0x54, 0x00, 0x12, 0x34, 0x5F};
+ 	uint32_t myip = inet_addr(IP);
+ 	uint32_t gwip = inet_addr(DEFAULT);
+ 	int r;
 ```
 
 ## Grade

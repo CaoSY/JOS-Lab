@@ -214,9 +214,9 @@ code.language-yaml {
     </head>
     <body for="html-export">
       <div class="mume markdown-preview   ">
-      <div class="code-chunk" data-id="global" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><div class="code-chunk" data-id="code-chunk-id-1" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><p><span style="display:inline-block;width:50%;text-align:left">Created: June 24 2018 22:47:00</span><span style="display:inline-block;width:50%;text-align:right">Last Updated: Jun 25 2018 22:56:01</span></p>
+      <div class="code-chunk" data-id="global" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><div class="code-chunk" data-id="code-chunk-id-1" data-cmd="python"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"><p><span style="display:inline-block;width:50%;text-align:left">Created: June 24 2018 22:47:00</span><span style="display:inline-block;width:50%;text-align:right">Last Updated: Jun 29 2018 21:48:18</span></p>
 <h1 style="font-style:italic; font-family:Times; font-size:4em"><center>Lab 6 Report</center></h1>
-<div style="font-style:italic; font-family:Times; font-size:1.2em"><center>Shuyang Cao</center><center>Jun 25 2018</center></div>
+<div style="font-style:italic; font-family:Times; font-size:1.2em"><center>Shuyang Cao</center><center>Jun 29 2018</center></div>
 </div></div><div class="code-chunk" data-id="code-chunk-id-2" data-cmd="toc"><div class="input-div"><div class="btn-group"><div class="run-btn btn"><span>▶︎</span></div><div class="run-all-btn btn">all</div></div><div class="status">running...</div></div><div class="output-div"></div></div><ul>
 <li><a href="#the-network-server">The Network Server</a></li>
 <li><a href="#the-core-network-server-environment">The Core Network Server Environment</a></li>
@@ -243,6 +243,7 @@ code.language-yaml {
 </li>
 <li><a href="#the-web-server-exercise-13">The Web Server &amp; Exercise 13</a></li>
 <li><a href="#code-for-lab-6">Code for Lab 6</a></li>
+<li><a href="#challenge">Challenge</a></li>
 <li><a href="#grade">Grade</a></li>
 </ul>
 <h2 class="mume-header" id="the-network-server">The Network Server</h2>
@@ -1116,6 +1117,283 @@ index ede43bf..7ddb82c 100644
  
  	if ((r = send_header(req, 200)) &lt; 0)
  		goto end;
+</pre><h2 class="mume-header" id="challenge">Challenge</h2>
+
+<blockquote>
+<p>Read about the EEPROM in the developer’s manual and write the code to load the E1000’s MAC address out of the EEPROM. Currently, QEMU’s default MAC address is hard-coded into both your receive initialization and lwIP. Fix your initialization to use the MAC address you read from the EEPROM, add a system call to pass the MAC address to lwIP, and modify lwIP to the MAC address read from the card. Test your change by configuring QEMU to use a different MAC address.</p>
+</blockquote>
+<p>The Ethernet controller provides two different methods for software access to the EEPROM. Software can either use the built-in controller to read the EEPROM, or access the EEPROM directly using the EEPROM’s 4-wire interface. In this lab, we choose to use the built-in controller. (Ref: PCI/PCI-X Family of Gigabit Ethernet Controllers Sofrware Developer’s Manual)</p>
+<p>Software can use the EEPROM Read register (EERD) to cause te Ethernet controller to read a word (16-bit) from the EEPROM that the software can the use. To do this, software writes the address to read the Read Address (EERD.ADDR) field and then simultaneously writes a 1b to the Start Read bit (EEERD.START). The Ethernet controller then reads the word from the EEPROM, sets the Read Dont bit (EERD.DONE), and puts the data in the Read Data filed (EERD.DATA). Software can poll the EEPROM Read register until it sees the EERD.DONE bit set, then use the data from the EERD.DATA field. Any words read this way are not written to the hardware’s internal registers. (Ref: PCI/PCI-X Family of Gigabit Ethernet Controllers Sofrware Developer’s Manual)</p>
+<p>The EEPROM Read Register is described below. (Ref: PCI/PCI-X Family of Gigabit Ethernet Controllers Sofrware Developer’s Manual).</p>
+<img src="data:image/png;charset=utf-8;base64,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"><table>
+<thead>
+<tr>
+<th style="text-align:left">Field</th>
+<th style="text-align:left">Bit(s)</th>
+<th style="text-align:left">Initial Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">START</td>
+<td style="text-align:left">0</td>
+<td style="text-align:left">0b</td>
+<td>Start Read.Writing a 1b to this bit causes the EEPROM to read a (16-bit) word at the address stored in the EE_ADDR field and then storing the result in the EE_DATA filed. This bit is self-clearing.</td>
+</tr>
+<tr>
+<td style="text-align:left">Reserved</td>
+<td style="text-align:left">3:1</td>
+<td style="text-align:left">0b</td>
+<td>Reserved. Reads as 0b</td>
+</tr>
+<tr>
+<td style="text-align:left">DONE</td>
+<td style="text-align:left">4</td>
+<td style="text-align:left">0b</td>
+<td>Read Done. Set to 1b when the EEPROM read completes. Set to 0b when the EEPROM read is in progress.</td>
+</tr>
+<tr>
+<td style="text-align:left">Reserved</td>
+<td style="text-align:left">7:5</td>
+<td style="text-align:left">0b</td>
+<td>Reserved. Reads as 0b.</td>
+</tr>
+<tr>
+<td style="text-align:left">ADDR</td>
+<td style="text-align:left">15:8</td>
+<td style="text-align:left">X</td>
+<td>Read Address. This field is written by software along with Start Read to indicate the word to read.</td>
+</tr>
+<tr>
+<td style="text-align:left">DATA</td>
+<td style="text-align:left">31:16</td>
+<td style="text-align:left">X</td>
+<td>Read Data. Data returned from the EEPROM read.</td>
+</tr>
+</tbody>
+</table>
+<p>To read from EEPROM, I defined a function named <code>e1000_read_eeprom</code>, which accepts one parameter as address, sets EERD accordingly and polls until the read is completed.</p>
+<p>To add a system call (<code>SYS_net_mac</code>) for MAC Address, I declared a 6-byte array <code>e1000_mac</code> to store MAC Address in <code>e1000.c</code> so we don’t need to read EEPROM every time a system call for MAC Address is invoked. This array is initialized in <code>e1000_attach</code> by reading values from EEPROM then we use this array to initialize RAL and RAH registers. Each time <code>SYS_net_mac</code> is invoked, we copy <code>e1000_mac</code> to user memory space.</p>
+<p>In <code>net/lwip/jos/jif/jif.c/low_level_init</code>, we replace the hardcoded MAC Address with a system call to initialize <code>netif-&gt;hwaddr</code>.</p>
+<p>To test our implementation, I change MAC Address in EEPROM first by modify GNUmakefile. Since the hardcoded MAC Address in <code>net/testinput.c</code> is not changed, our change will fail the <code>testinput</code> in the grade test. Then we changed the hardcoded MAC Address in <code>net/testinput.c</code> accordingly, after which we passed all grade tests again.</p>
+<p>The code for this challenge is shown below.</p>
+<pre data-role="codeBlock" data-info="git" class="language-git">diff --git a/GNUmakefile b/GNUmakefile
+index f4d6528..f39a3ef 100644
+<span class="token deleted">--- a/GNUmakefile</span>
+<span class="token inserted">+++ b/GNUmakefile</span>
+@@ -158,7 +158,7 @@ IMAGES = $(OBJDIR)/kern/kernel.img
+ QEMUOPTS += -smp $(CPUS)
+ QEMUOPTS += -drive file=$(OBJDIR)/fs/fs.img,index=1,media=disk,format=raw
+ IMAGES += $(OBJDIR)/fs/fs.img
+<span class="token deleted">-QEMUOPTS += -net user -net nic,model=e1000 -redir tcp:$(PORT7)::7 \</span>
+<span class="token inserted">+QEMUOPTS += -net user -net nic,model=e1000,macaddr=52:54:00:12:34:5F -redir tcp:$(PORT7)::7 \</span>
+ 	   -redir tcp:$(PORT80)::80 -redir udp:$(PORT7)::7 -net dump,file=qemu.pcap
+ QEMUOPTS += $(QEMUEXTRA)
+ 
+diff --git a/inc/lib.h b/inc/lib.h
+index ad0254b..3899492 100644
+<span class="token deleted">--- a/inc/lib.h</span>
+<span class="token inserted">+++ b/inc/lib.h</span>
+@@ -62,6 +62,7 @@ int	sys_ipc_recv(void *rcv_pg);
+ unsigned int sys_time_msec(void);
+ int sys_net_transmit(void *addr, size_t length);
+ int sys_net_receive(void *addr);
+<span class="token inserted">+int sys_net_mac(void *addr);</span>
+ 
+ // This must be inlined.  Exercise for reader: why?
+ static inline envid_t __attribute__((always_inline))
+diff --git a/inc/syscall.h b/inc/syscall.h
+index 499ad54..4dcd21d 100644
+<span class="token deleted">--- a/inc/syscall.h</span>
+<span class="token inserted">+++ b/inc/syscall.h</span>
+@@ -20,6 +20,7 @@ enum {
+ 	SYS_time_msec,
+ 	SYS_net_transmit,
+ 	SYS_net_receive,
+<span class="token inserted">+	SYS_net_mac,</span>
+ 	NSYSCALLS
+ };
+ 
+diff --git a/kern/e1000.c b/kern/e1000.c
+index 5e60d9b..e50a253 100644
+<span class="token deleted">--- a/kern/e1000.c</span>
+<span class="token inserted">+++ b/kern/e1000.c</span>
+@@ -13,6 +13,9 @@ uint8_t tx_packets[NTDESC][MAXPKTLEN];
+ struct e1000_tx_desc rx_descs[NRDESC];
+ uint8_t rx_packets[NRDESC][MAXPKTLEN];
+ 
+<span class="token inserted">+// store mac address</span>
+<span class="token inserted">+uint8_t e1000_mac[E1000_MAC_LENGTH];</span>
+<span class="token inserted">+</span>
+ // LAB 6: Your driver code here
+ int
+ e1000_attach(struct pci_func *pcif)
+@@ -45,8 +48,11 @@ e1000_attach(struct pci_func *pcif)
+     }
+ 
+     // perform receive initialization
+<span class="token deleted">-    e1000[E1000_RAL] = 0x12005452; // hardcoded 52:54:00:12:34:56</span>
+<span class="token deleted">-    e1000[E1000_RAH] = 0x00005634 | E1000_RAH_AV; // hardcoded 52:54:00:12:34:56</span>
+<span class="token inserted">+    *(uint16_t *)e1000_mac = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_2_1);</span>
+<span class="token inserted">+    *(uint16_t *)(e1000_mac + 2) = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_4_3);</span>
+<span class="token inserted">+    *(uint16_t *)(e1000_mac + 4) = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_6_5);</span>
+<span class="token inserted">+    e1000[E1000_RAL] = *(uint32_t *)e1000_mac;</span>
+<span class="token inserted">+    e1000[E1000_RAH] = *(uint16_t *)(e1000_mac + 4) | E1000_RAH_AV;</span>
+     e1000[E1000_RDBAL] = PADDR(rx_descs);
+     e1000[E1000_RDLEN] = sizeof(rx_descs);
+     e1000[E1000_RDH] = 0;
+@@ -60,6 +66,8 @@ e1000_attach(struct pci_func *pcif)
+     e1000[E1000_RCTL] |= E1000_RCTL_SZ_2048;
+     e1000[E1000_RCTL] |= E1000_RCTL_SECRC;
+ 
+<span class="token inserted">+    cprintf("ral: 0x%08x    rah: 0x%08x\n", e1000[E1000_RAL], e1000[E1000_RAH]);</span>
+<span class="token inserted">+</span>
+     // init receive descriptors
+     memset(rx_descs, 0, sizeof(rx_descs));
+     for (size_t i = 0; i &lt; NRDESC; ++i) {
+@@ -76,7 +84,7 @@ e1000_attach(struct pci_func *pcif)
+             e1000_tx(int_packet, sizeof(int_packet));
+         }
+     #endif
+<span class="token deleted">-</span>
+<span class="token inserted">+    </span>
+     return 0;
+ }
+ 
+@@ -140,4 +148,15 @@ e1000_rx(void *addr) {
+     e1000[E1000_RDT] = tail;
+ 
+     return length;
+<span class="token inserted">+}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+uint16_t</span>
+<span class="token inserted">+e1000_read_eeprom(uint8_t addr)</span>
+<span class="token inserted">+{</span>
+<span class="token inserted">+    e1000[E1000_EERD] = (addr &lt;&lt; E1000_EERD_ADDR_SHIFT) | E1000_EERD_START;</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+    while ((e1000[E1000_EERD] &amp; E1000_EERD_DONE) == 0)</span>
+<span class="token inserted">+        ;   /* polling */</span>
+<span class="token inserted">+    </span>
+<span class="token inserted">+    return e1000[E1000_EERD] >> E1000_EERD_DATA_SHIFT;</span>
+ }
+\ No newline at end of file
+diff --git a/kern/e1000.h b/kern/e1000.h
+index 6780c9e..2db11cd 100644
+<span class="token deleted">--- a/kern/e1000.h</span>
+<span class="token inserted">+++ b/kern/e1000.h</span>
+<span class="token coord">@@ -8,7 +8,23 @@</span>
+ #define E1000_DEV_ID_82540EM             0x100E
+ 
+ /* The value given in the manual is byte indexed. In our code, we use uint32_t index.*/
+<span class="token deleted">-#define E1000_STATUS    (0x00008 / sizeof(uint32_t))  /* Device Status - RO */</span>
+<span class="token inserted">+#define E1000_STATUS    (0x00008 / sizeof(uint32_t))    /* Device Status - RO */</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+/* EEPROM Register */</span>
+<span class="token inserted">+/* The value given in the manual is byte indexed. In our code, we use uint32_t index.*/</span>
+<span class="token inserted">+#define E1000_EERD      (0x00014 / sizeof(uint32_t))    /* EEPROM Read Register */</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+/* EERD MASK */</span>
+<span class="token inserted">+#define E1000_EERD_DATA_SHIFT       16  /* Shift to the data bits */</span>
+<span class="token inserted">+#define E1000_EERD_ADDR_SHIFT       8   /* Shift to the address bits */</span>
+<span class="token inserted">+#define E1000_EERD_START            0x00000001  /* Mask of EERD.START */</span>
+<span class="token inserted">+#define E1000_EERD_DONE             0x00000010  /* Mask of EERD.DONE */</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+/* EEPROM ADDRESS */</span>
+<span class="token inserted">+#define E1000_EEPROM_MAC_ADDR_BYTE_2_1  0x00    /* Ethernet address byte 2 &amp; 1 */</span>
+<span class="token inserted">+#define E1000_EEPROM_MAC_ADDR_BYTE_4_3  0x01    /* Ethernet address byte 4 &amp; 3 */</span>
+<span class="token inserted">+#define E1000_EEPROM_MAC_ADDR_BYTE_6_5  0x02    /* Ethernet address byte 6 &amp; 5 */</span>
+<span class="token inserted">+#define E1000_MAC_LENGTH                6       /* length of mac address in byte */</span>
+ 
+ /* Transmit Control Register */
+ /* The value given in the manual is byte indexed. In our code, we use uint32_t index.*/
+@@ -96,9 +112,11 @@ struct e1000_rx_desc {
+     uint16_t special;
+ }__attribute__((packed));
+ 
+<span class="token inserted">+extern uint8_t e1000_mac[E1000_MAC_LENGTH];</span>
+ 
+ int e1000_attach(struct pci_func *pcif);
+ int e1000_tx(void *addr, size_t length);
+ int e1000_rx(void *addr);
+<span class="token inserted">+uint16_t e1000_read_eeprom(uint8_t addr);</span>
+ 
+ #endif	// JOS_KERN_E1000_H
+diff --git a/kern/syscall.c b/kern/syscall.c
+index cfe237e..b0a1dd5 100644
+<span class="token deleted">--- a/kern/syscall.c</span>
+<span class="token inserted">+++ b/kern/syscall.c</span>
+@@ -447,6 +447,14 @@ sys_net_receive(void *addr)
+ 	return e1000_rx(addr);
+ }
+ 
+<span class="token inserted">+static int</span>
+<span class="token inserted">+sys_net_mac(uint8_t *addr)</span>
+<span class="token inserted">+{</span>
+<span class="token inserted">+	user_mem_assert(curenv, addr, E1000_MAC_LENGTH, PTE_U | PTE_W | PTE_P);</span>
+<span class="token inserted">+	memcpy(addr, e1000_mac, E1000_MAC_LENGTH);</span>
+<span class="token inserted">+	return 0;</span>
+<span class="token inserted">+}</span>
+<span class="token inserted">+</span>
+ // Dispatches to the correct kernel function, passing the arguments.
+ int32_t
+ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5)
+@@ -475,6 +483,7 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4,
+ 		case SYS_time_msec: return sys_time_msec();
+ 		case SYS_net_transmit: return sys_net_transmit((void *)a1, (size_t)a2);
+ 		case SYS_net_receive: return sys_net_receive((void *)a1);
+<span class="token inserted">+		case SYS_net_mac: return sys_net_mac((uint8_t *)a1);</span>
+ 		default:
+ 			return -E_INVAL;
+ 	}
+diff --git a/lib/syscall.c b/lib/syscall.c
+index d42d538..9831e85 100644
+<span class="token deleted">--- a/lib/syscall.c</span>
+<span class="token inserted">+++ b/lib/syscall.c</span>
+@@ -133,4 +133,10 @@ int
+ sys_net_receive(void *addr)
+ {
+ 	return syscall(SYS_net_receive, 0, (uint32_t)addr, 0, 0, 0, 0);
+<span class="token inserted">+}</span>
+<span class="token inserted">+</span>
+<span class="token inserted">+int</span>
+<span class="token inserted">+sys_net_mac(void *addr)</span>
+<span class="token inserted">+{</span>
+<span class="token inserted">+	return syscall(SYS_net_mac, 0, (uint32_t)addr, 0, 0, 0, 0);</span>
+ }
+\ No newline at end of file
+diff --git a/net/lwip/jos/jif/jif.c b/net/lwip/jos/jif/jif.c
+index 54f89ab..f15c089 100644
+<span class="token deleted">--- a/net/lwip/jos/jif/jif.c</span>
+<span class="token inserted">+++ b/net/lwip/jos/jif/jif.c</span>
+@@ -60,13 +60,7 @@ low_level_init(struct netif *netif)
+     netif->mtu = 1500;
+     netif->flags = NETIF_FLAG_BROADCAST;
+ 
+<span class="token deleted">-    // MAC address is hardcoded to eliminate a system call</span>
+<span class="token deleted">-    netif->hwaddr[0] = 0x52;</span>
+<span class="token deleted">-    netif->hwaddr[1] = 0x54;</span>
+<span class="token deleted">-    netif->hwaddr[2] = 0x00;</span>
+<span class="token deleted">-    netif->hwaddr[3] = 0x12;</span>
+<span class="token deleted">-    netif->hwaddr[4] = 0x34;</span>
+<span class="token deleted">-    netif->hwaddr[5] = 0x56;</span>
+<span class="token inserted">+    sys_net_mac(netif->hwaddr);</span>
+ }
+ 
+ /*
+diff --git a/net/testinput.c b/net/testinput.c
+index 22cf937..a63f092 100644
+<span class="token deleted">--- a/net/testinput.c</span>
+<span class="token inserted">+++ b/net/testinput.c</span>
+@@ -16,7 +16,7 @@ announce(void)
+ 	// listens for very specific ARP requests, such as requests
+ 	// for the gateway IP.
+ 
+<span class="token deleted">-	uint8_t mac[6] = {0x52, 0x54, 0x00, 0x12, 0x34, 0x56};</span>
+<span class="token inserted">+	uint8_t mac[6] = {0x52, 0x54, 0x00, 0x12, 0x34, 0x5F};</span>
+ 	uint32_t myip = inet_addr(IP);
+ 	uint32_t gwip = inet_addr(DEFAULT);
+ 	int r;
 </pre><h2 class="mume-header" id="grade">Grade</h2>
 
 <p>Finally, we got our grade.</p>
@@ -1164,6 +1442,7 @@ Score: 105/105
 </li>
 <li><a href="#the-web-server-exercise-13">The Web Server &amp; Exercise 13</a></li>
 <li><a href="#code-for-lab-6">Code for Lab 6</a></li>
+<li><a href="#challenge">Challenge</a></li>
 <li><a href="#grade">Grade</a></li>
 </ul>
 </div>
