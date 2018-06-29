@@ -13,6 +13,9 @@ uint8_t tx_packets[NTDESC][MAXPKTLEN];
 struct e1000_tx_desc rx_descs[NRDESC];
 uint8_t rx_packets[NRDESC][MAXPKTLEN];
 
+// store mac address
+uint8_t e1000_mac[E1000_MAC_LENGTH];
+
 // LAB 6: Your driver code here
 int
 e1000_attach(struct pci_func *pcif)
@@ -45,9 +48,11 @@ e1000_attach(struct pci_func *pcif)
     }
 
     // perform receive initialization
-    e1000[E1000_RAL] = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_2_1) |
-                    (e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_4_3) << 16);
-    e1000[E1000_RAH] = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_6_5) | E1000_RAH_AV;
+    *(uint16_t *)e1000_mac = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_2_1);
+    *(uint16_t *)(e1000_mac + 2) = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_4_3);
+    *(uint16_t *)(e1000_mac + 4) = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_6_5);
+    e1000[E1000_RAL] = *(uint32_t *)e1000_mac;
+    e1000[E1000_RAH] = *(uint16_t *)(e1000_mac + 4) | E1000_RAH_AV;
     e1000[E1000_RDBAL] = PADDR(rx_descs);
     e1000[E1000_RDLEN] = sizeof(rx_descs);
     e1000[E1000_RDH] = 0;

@@ -24,7 +24,7 @@
 #define E1000_EEPROM_MAC_ADDR_BYTE_2_1  0x00    /* Ethernet address byte 2 & 1 */
 #define E1000_EEPROM_MAC_ADDR_BYTE_4_3  0x01    /* Ethernet address byte 4 & 3 */
 #define E1000_EEPROM_MAC_ADDR_BYTE_6_5  0x02    /* Ethernet address byte 6 & 5 */
-
+#define E1000_MAC_LENGTH                6       /* length of mac address in byte */
 
 /* Transmit Control Register */
 /* The value given in the manual is byte indexed. In our code, we use uint32_t index.*/
@@ -112,6 +112,7 @@ struct e1000_rx_desc {
     uint16_t special;
 }__attribute__((packed));
 
+extern uint8_t e1000_mac[E1000_MAC_LENGTH];
 
 int e1000_attach(struct pci_func *pcif);
 int e1000_tx(void *addr, size_t length);

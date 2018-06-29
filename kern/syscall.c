@@ -447,6 +447,14 @@ sys_net_receive(void *addr)
 	return e1000_rx(addr);
 }
 
+static int
+sys_net_mac(uint8_t *addr)
+{
+	user_mem_assert(curenv, addr, E1000_MAC_LENGTH, PTE_U | PTE_W | PTE_P);
+	memcpy(addr, e1000_mac, E1000_MAC_LENGTH);
+	return 0;
+}
+
 // Dispatches to the correct kernel function, passing the arguments.
 int32_t
 syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5)
@@ -475,6 +483,7 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 		case SYS_time_msec: return sys_time_msec();
 		case SYS_net_transmit: return sys_net_transmit((void *)a1, (size_t)a2);
 		case SYS_net_receive: return sys_net_receive((void *)a1);
+		case SYS_net_mac: return sys_net_mac((uint8_t *)a1);
 		default:
 			return -E_INVAL;
 	}
