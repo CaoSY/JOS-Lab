@@ -66,6 +66,8 @@ e1000_attach(struct pci_func *pcif)
     e1000[E1000_RCTL] |= E1000_RCTL_SZ_2048;
     e1000[E1000_RCTL] |= E1000_RCTL_SECRC;
 
+    cprintf("ral: 0x%08x    rah: 0x%08x\n", e1000[E1000_RAL], e1000[E1000_RAH]);
+
     // init receive descriptors
     memset(rx_descs, 0, sizeof(rx_descs));
     for (size_t i = 0; i < NRDESC; ++i) {
