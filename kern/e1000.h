@@ -8,7 +8,23 @@
 #define E1000_DEV_ID_82540EM             0x100E
 
 /* The value given in the manual is byte indexed. In our code, we use uint32_t index.*/
-#define E1000_STATUS    (0x00008 / sizeof(uint32_t))  /* Device Status - RO */
+#define E1000_STATUS    (0x00008 / sizeof(uint32_t))    /* Device Status - RO */
+
+/* EEPROM Register */
+/* The value given in the manual is byte indexed. In our code, we use uint32_t index.*/
+#define E1000_EERD      (0x00014 / sizeof(uint32_t))    /* EEPROM Read Register */
+
+/* EERD MASK */
+#define E1000_EERD_DATA_SHIFT       16  /* Shift to the data bits */
+#define E1000_EERD_ADDR_SHIFT       8   /* Shift to the address bits */
+#define E1000_EERD_START            0x00000001  /* Mask of EERD.START */
+#define E1000_EERD_DONE             0x00000010  /* Mask of EERD.DONE */
+
+/* EEPROM ADDRESS */
+#define E1000_EEPROM_MAC_ADDR_BYTE_2_1  0x00    /* Ethernet address byte 2 & 1 */
+#define E1000_EEPROM_MAC_ADDR_BYTE_4_3  0x01    /* Ethernet address byte 4 & 3 */
+#define E1000_EEPROM_MAC_ADDR_BYTE_6_5  0x02    /* Ethernet address byte 6 & 5 */
+
 
 /* Transmit Control Register */
 /* The value given in the manual is byte indexed. In our code, we use uint32_t index.*/
@@ -100,5 +116,6 @@ struct e1000_rx_desc {
 int e1000_attach(struct pci_func *pcif);
 int e1000_tx(void *addr, size_t length);
 int e1000_rx(void *addr);
+uint16_t e1000_read_eeprom(uint8_t addr);
 
 #endif	// JOS_KERN_E1000_H

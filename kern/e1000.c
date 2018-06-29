@@ -60,6 +60,12 @@ e1000_attach(struct pci_func *pcif)
     e1000[E1000_RCTL] |= E1000_RCTL_SZ_2048;
     e1000[E1000_RCTL] |= E1000_RCTL_SECRC;
 
+    uint32_t ral = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_2_1) |
+                    (e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_4_3) << 16);
+    uint32_t rah = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_6_5) | E1000_RAH_AV;
+
+    cprintf("ral: 0x%08x    rah: 0x%08x\n", ral, rah);
+
     // init receive descriptors
     memset(rx_descs, 0, sizeof(rx_descs));
     for (size_t i = 0; i < NRDESC; ++i) {
@@ -76,7 +82,7 @@ e1000_attach(struct pci_func *pcif)
             e1000_tx(int_packet, sizeof(int_packet));
         }
     #endif
-
+    
     return 0;
 }
 
@@ -140,4 +146,15 @@ e1000_rx(void *addr) {
     e1000[E1000_RDT] = tail;
 
     return length;
+}
+
+uint16_t
+e1000_read_eeprom(uint8_t addr)
+{
+    e1000[E1000_EERD] = (addr << E1000_EERD_ADDR_SHIFT) | E1000_EERD_START;
+
+    while ((e1000[E1000_EERD] & E1000_EERD_DONE) == 0)
+        ;   /* polling */
+    
+    return e1000[E1000_EERD] >> E1000_EERD_DATA_SHIFT;
 }
