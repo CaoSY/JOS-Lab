@@ -45,8 +45,9 @@ e1000_attach(struct pci_func *pcif)
     }
 
     // perform receive initialization
-    e1000[E1000_RAL] = 0x12005452; // hardcoded 52:54:00:12:34:56
-    e1000[E1000_RAH] = 0x00005634 | E1000_RAH_AV; // hardcoded 52:54:00:12:34:56
+    e1000[E1000_RAL] = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_2_1) |
+                    (e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_4_3) << 16);
+    e1000[E1000_RAH] = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_6_5) | E1000_RAH_AV;
     e1000[E1000_RDBAL] = PADDR(rx_descs);
     e1000[E1000_RDLEN] = sizeof(rx_descs);
     e1000[E1000_RDH] = 0;
@@ -59,12 +60,6 @@ e1000_attach(struct pci_func *pcif)
     e1000[E1000_RCTL] |= E1000_RCTL_BAM;
     e1000[E1000_RCTL] |= E1000_RCTL_SZ_2048;
     e1000[E1000_RCTL] |= E1000_RCTL_SECRC;
-
-    uint32_t ral = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_2_1) |
-                    (e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_4_3) << 16);
-    uint32_t rah = e1000_read_eeprom(E1000_EEPROM_MAC_ADDR_BYTE_6_5) | E1000_RAH_AV;
-
-    cprintf("ral: 0x%08x    rah: 0x%08x\n", ral, rah);
 
     // init receive descriptors
     memset(rx_descs, 0, sizeof(rx_descs));
