@@ -134,3 +134,9 @@ sys_net_receive(void *addr)
 {
 	return syscall(SYS_net_receive, 0, (uint32_t)addr, 0, 0, 0, 0);
 }
+
+int
+sys_net_mac(void *addr)
+{
+	return syscall(SYS_net_mac, 0, (uint32_t)addr, 0, 0, 0, 0);
+}
